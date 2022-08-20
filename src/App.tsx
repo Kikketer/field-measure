@@ -5,6 +5,7 @@ const App = () => {
     <div>
       <header>
         <h1>Field Measure</h1>
+        <p>Hi there</p>
       </header>
     </div>
   )
