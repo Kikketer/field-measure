@@ -2,13 +2,21 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import GlobalStyles from './GlobalStyles'
+import './GlobalStyles'
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+
+const client = new ApolloClient({
+  uri: 'https://flyby-gateway.herokuapp.com/',
+  cache: new InMemoryCache(),
+})
+
 root.render(
   <React.StrictMode>
-    <GlobalStyles />
-    <App />
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
   </React.StrictMode>
 )
 

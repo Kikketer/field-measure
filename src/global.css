@@ -1,10 +1,7 @@
-/**
- * @author Chris Weed (chris@cjweed.com) 2022
- */
+:root {
+  --warning: red;
+}
 
-import { createGlobalStyle } from 'styled-components'
-
-export default createGlobalStyle`
 html {
   box-sizing: border-box;
   font-size: 16px;
@@ -28,4 +25,3 @@ img {
   max-width: 100%;
   height: auto;
 }
-`
