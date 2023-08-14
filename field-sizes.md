@@ -1,8 +1,12 @@
-Field sizes confirmed from 2016 US Soccer Rules
+Field sizes confirmed from 2017 US Soccer Rules
+[PDF](https://www.usyouthsoccer.org/assets/1/6/pdi_february_2017.pdf)
+MAYSA uses the following field sizes:
+[PDF](https://cdn1.sportngin.com/attachments/document/cf91-2472169/Field_Dimensions_Reference_Sheet.pdf)
 
-Full Size:
-Length: 300 - 345
-Width: 210
+Full Size (13+):
+Length: 300 - 360 (recommended: 330 - 345)
+Width: 150 - 300 (recommended: 210 - 240)
+_These recommended sizes come from the 17+ size recommendations_
 Goal box depth: 18
 Goal box width: 66
 Penalty box depth: 54
