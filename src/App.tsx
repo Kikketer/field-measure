@@ -1,14 +1,26 @@
-import { Component } from 'solid-js'
+import { Component, createEffect, createSignal } from 'solid-js'
 import styles from './App.module.css'
-import { Settings } from './Settings'
 import { Field } from './Field'
-import { Reference } from './Reference'
+import { Menu } from './Menu'
 
 const App: Component = () => {
+  const [locked, setLocked] = createSignal(false)
+
+  const timeLock = createEffect(() => {
+    if (!locked) {
+      setTimeout(() => {
+        setLocked(true)
+      }, 3000)
+    }
+  })
+
+  const unlock = () => {
+    console.log('Unlocking!')
+  }
+
   return (
-    <div class={styles.App}>
-      <Reference />
-      <Settings />
+    <div onDblClick={unlock} class={styles.App}>
+      <Menu />
       <Field />
     </div>
   )
