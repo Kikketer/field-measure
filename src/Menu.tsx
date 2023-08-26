@@ -3,7 +3,11 @@ import { FieldSize } from './types'
 
 type MenuProps = {
   isOpen: () => boolean
-  onSetFieldSize: (size: FieldSize) => void
+  onSetFieldSize: (T: {
+    size: FieldSize
+    width?: number
+    length?: number
+  }) => void
   onClose: () => void
 }
 
@@ -16,7 +20,7 @@ export const Menu: Component<MenuProps> = ({
     <dialog open={isOpen()}>
       <article>
         <header>
-          <button aria-label="Close" class="close" onClick={onClose}></button>
+          <a aria-label="Close" class="close" onClick={onClose}></a>
           Settings
         </header>
         <label for="field-size">Field Size</label>
@@ -32,6 +36,7 @@ export const Menu: Component<MenuProps> = ({
         <input type="text" id="width"></input>
         <label for="length">Custom Length</label>
         <input type="text" id="length"></input>
+        <button type="button">Save</button>
       </article>
     </dialog>
   )

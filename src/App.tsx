@@ -4,6 +4,7 @@ import styles from './App.module.css'
 import { Field } from './Field'
 import { LockedIndicator } from './LockedIndicator'
 import { Menu } from './Menu'
+import { FieldSize } from './types'
 
 const App: Component = () => {
   // We lock to prevent any touching of the screen and interacting while we are messing
@@ -11,6 +12,10 @@ const App: Component = () => {
   // TODO This may be better served as a sort of swipe-to-buy style interaction
   const [locked, setLocked] = createSignal(true)
   const [showSettings, setShowSettings] = createSignal(false)
+  const [currentFieldSize, setCurrentFieldSize] = createSignal(FieldSize.full)
+  const [customWidth, setCustomWidth] = createSignal()
+  const [customLength, setCustomLength] = createSignal()
+
   let lockedTimeout: ReturnType<typeof setTimeout>
 
   const timeLock = createEffect(() => {
@@ -33,15 +38,31 @@ const App: Component = () => {
     }
   }, 500)
 
+  const saveSettings = ({
+    size,
+    width,
+    length,
+  }: {
+    size: FieldSize
+    width?: number
+    length?: number
+  }) => {
+    setCurrentFieldSize(size)
+    setCustomWidth(width)
+    setCustomLength(length)
+  }
+
   return (
     <div id="base" onClick={unlock} class={styles.App}>
       <LockedIndicator show={locked} />
       <Menu
         isOpen={showSettings}
-        onSetFieldSize={() => undefined}
+        onSetFieldSize={saveSettings}
         onClose={() => setShowSettings(false)}
       />
-      <Field />
+      <div id="field-wrapper" class={styles.Wrapper}>
+        <Field />
+      </div>
     </div>
   )
 }

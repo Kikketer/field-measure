@@ -1,5 +1,6 @@
 /* @refresh reload */
 import { render } from 'solid-js/web'
+import './styles.css'
 import './pico.min.css'
 import SolidSvg from 'vite-plugin-solid-svg'
 import App from './App'
