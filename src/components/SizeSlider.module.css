@@ -1,0 +1,25 @@
+.SizeSliderWrap {
+  border: 1px solid var(--form-element-border-color);
+  background: rgb(250, 200, 200);
+  height: 0.5rem;
+  position: relative;
+}
+
+.RecommendedZone {
+  background: rgb(200, 250, 200);
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 40%;
+}
+
+.Spot {
+  border: 1px solid black;
+  background: white;
+  border-radius: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  position: absolute;
+  left: 50%;
+  top: -2px;
+}

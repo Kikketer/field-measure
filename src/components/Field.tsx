@@ -25,15 +25,12 @@ export const Field: Component<FieldProps> = ({
 
   window.addEventListener(
     'resize',
-    throttle(() => {
-      console.log('Re-size')
-      setFieldHeight(document.getElementById('soccer-field')?.clientHeight)
-    }, 200),
+    throttle(
+      () =>
+        setFieldHeight(document.getElementById('soccer-field')?.clientHeight),
+      200,
+    ),
   )
-
-  const actualWidth = customWidth?.() ?? SIZES[fieldSize()].recommendedMaxWidth
-  const actualLength =
-    customLength?.() ?? SIZES[fieldSize()].recommendedMaxLength
 
   return (
     <div
@@ -51,13 +48,19 @@ export const Field: Component<FieldProps> = ({
           >
             {convertToFeet(
               label.getLength({
-                fieldWidth: actualWidth,
-                fieldLength: actualLength,
+                fieldSize: fieldSize(),
+                fieldWidth: customWidth?.(),
+                fieldLength: customLength?.(),
               }),
             )}
           </div>
         )}
       </For>
+      <div class={styles.Label} style={{ left: '45%', top: '90%' }}>
+        {fieldSize()}:{' '}
+        {customWidth?.() ?? SIZES[fieldSize()].recommendedMaxWidth} x{' '}
+        {customLength?.() ?? SIZES[fieldSize()].recommendedMaxLength}
+      </div>
     </div>
   )
 }

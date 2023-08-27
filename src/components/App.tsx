@@ -5,6 +5,7 @@ import { Field } from './Field'
 import { LockedIndicator } from './LockedIndicator'
 import { Menu } from './Menu'
 import { FieldSize } from '../types'
+import { Settings } from './Settings'
 
 const App: Component = () => {
   // We lock to prevent any touching of the screen and interacting while we are messing
@@ -55,13 +56,19 @@ const App: Component = () => {
 
   return (
     <div id="base" onClick={unlock} class={styles.App}>
-      <LockedIndicator show={locked} />
-      <Menu
+      {/* <LockedIndicator show={locked} /> */}
+      {/* <Menu
         isOpen={showSettings}
         onSetFieldSize={saveSettings}
         onClose={() => setShowSettings(false)}
-      />
+      /> */}
       <Field
+        fieldSize={currentFieldSize}
+        customWidth={customWidth}
+        customLength={customLength}
+      />
+      <Settings
+        onSetFieldSize={saveSettings}
         fieldSize={currentFieldSize}
         customWidth={customWidth}
         customLength={customLength}

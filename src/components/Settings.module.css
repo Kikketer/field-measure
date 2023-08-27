@@ -1,0 +1,13 @@
+.Settings {
+  padding: 1rem;
+}
+
+.Grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.Grid input {
+  margin: 0;
+}

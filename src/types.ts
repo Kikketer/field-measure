@@ -1,6 +1,6 @@
 export enum FieldSize {
-  full = 'full',
-  elevenThirteen = '11_13',
-  nineTen = '9_10',
-  sevenEight = '7_8',
+  full = 'Full',
+  elevenThirteen = '11/13',
+  nineTen = '9/10',
+  sevenEight = '7/8',
 }
