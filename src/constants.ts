@@ -1,6 +1,31 @@
 import { FieldSize } from './types'
 
-export const SIZES = {
+export type FieldDimensions = {
+  // Lengths and Widths:
+  minWidth: number
+  maxWidth: number
+  recommendedMinWidth: number
+  recommendedMaxWidth: number
+  minLength: number
+  maxLength: number
+  recommendedMinLength: number
+  recommendedMaxLength: number
+  // Boxes:
+  goalBoxDepth: number
+  goalBoxWidth: number
+  penaltyBoxDepth?: number
+  penaltyBoxWidth?: number
+  // Spots:
+  penaltyKickSpot: number
+  arcFromKickSpot?: number
+  // Circles:
+  hasArc: boolean
+  circleRadius: number
+  // Goals:
+  goalWidth: number
+}
+
+export const SIZES: { [T: string]: FieldDimensions } = {
   [FieldSize.full]: {
     // Lengths and Widths:
     minWidth: 150,

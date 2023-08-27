@@ -1,10 +1,10 @@
 import { Component } from 'solid-js'
-import fieldReference from './fieldReference'
+import { SIZES } from '../constants'
 
 export const Reference: Component = () => {
   return (
     <div>
-      <pre>{JSON.stringify(fieldReference, null, 2)}</pre>
+      <pre>{JSON.stringify(SIZES, null, 2)}</pre>
     </div>
   )
 }

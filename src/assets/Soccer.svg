@@ -20,13 +20,13 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="1.3111111"
-     inkscape:cx="262.75424"
-     inkscape:cy="184.57627"
+     inkscape:zoom="1.8541911"
+     inkscape:cx="482.95993"
+     inkscape:cy="370.51197"
      inkscape:window-width="1312"
      inkscape:window-height="749"
      inkscape:window-x="103"
-     inkscape:window-y="27"
+     inkscape:window-y="23"
      inkscape:window-maximized="0"
      inkscape:current-layer="g2" />
   <title
@@ -119,5 +119,9 @@
        style="fill:none;fill-opacity:0.940425;stroke:#808080;stroke-width:2;stroke-dasharray:4, 2;stroke-dashoffset:0;stroke-opacity:1"
        d="m 160.29661,360.72034 78.55932,41.18644"
        id="path5" />
+    <path
+       style="fill:none;fill-opacity:0.940425;stroke:#808080;stroke-width:2;stroke-dasharray:4, 2;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 571.96487,360.50672 -32.89845,82.51576"
+       id="path1" />
   </g>
 </svg>

@@ -4,7 +4,7 @@ import styles from './App.module.css'
 import { Field } from './Field'
 import { LockedIndicator } from './LockedIndicator'
 import { Menu } from './Menu'
-import { FieldSize } from './types'
+import { FieldSize } from '../types'
 
 const App: Component = () => {
   // We lock to prevent any touching of the screen and interacting while we are messing
@@ -13,8 +13,9 @@ const App: Component = () => {
   const [locked, setLocked] = createSignal(true)
   const [showSettings, setShowSettings] = createSignal(false)
   const [currentFieldSize, setCurrentFieldSize] = createSignal(FieldSize.full)
-  const [customWidth, setCustomWidth] = createSignal()
-  const [customLength, setCustomLength] = createSignal()
+  const [customWidth, setCustomWidth] = createSignal<number>()
+  const [customLength, setCustomLength] = createSignal<number>()
+  const [selectedLineGroup, setSelectedLineGroup] = createSignal<string>()
 
   let lockedTimeout: ReturnType<typeof setTimeout>
 
@@ -60,9 +61,11 @@ const App: Component = () => {
         onSetFieldSize={saveSettings}
         onClose={() => setShowSettings(false)}
       />
-      <div id="field-wrapper" class={styles.Wrapper}>
-        <Field />
-      </div>
+      <Field
+        fieldSize={currentFieldSize}
+        customWidth={customWidth}
+        customLength={customLength}
+      />
     </div>
   )
 }

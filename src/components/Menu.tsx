@@ -1,5 +1,5 @@
 import { Component } from 'solid-js'
-import { FieldSize } from './types'
+import { FieldSize } from '../types'
 
 type MenuProps = {
   isOpen: () => boolean
