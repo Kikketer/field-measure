@@ -6,6 +6,7 @@ import { LockedIndicator } from './LockedIndicator'
 import { Menu } from './Menu'
 import { FieldSize } from '../types'
 import { Settings } from './Settings'
+import { SIZES } from '../constants'
 
 const App: Component = () => {
   // We lock to prevent any touching of the screen and interacting while we are messing
@@ -13,7 +14,9 @@ const App: Component = () => {
   // TODO This may be better served as a sort of swipe-to-buy style interaction
   const [locked, setLocked] = createSignal(true)
   const [showSettings, setShowSettings] = createSignal(false)
-  const [currentFieldSize, setCurrentFieldSize] = createSignal(FieldSize.full)
+  const [currentFieldSize, setCurrentFieldSize] = createSignal(
+    FieldSize.nineTen,
+  )
   const [customWidth, setCustomWidth] = createSignal<number>()
   const [customLength, setCustomLength] = createSignal<number>()
   const [selectedLineGroup, setSelectedLineGroup] = createSignal<string>()
@@ -40,18 +43,10 @@ const App: Component = () => {
     }
   }, 500)
 
-  const saveSettings = ({
-    size,
-    width,
-    length,
-  }: {
-    size: FieldSize
-    width?: number
-    length?: number
-  }) => {
-    setCurrentFieldSize(size)
-    setCustomWidth(width)
-    setCustomLength(length)
+  const resetAndSaveFieldSize = (fieldSize: FieldSize) => {
+    setCurrentFieldSize(fieldSize)
+    setCustomWidth(SIZES[fieldSize].recommendedMaxWidth)
+    setCustomLength(SIZES[fieldSize].recommendedMaxLength)
   }
 
   return (
@@ -68,10 +63,12 @@ const App: Component = () => {
         customLength={customLength}
       />
       <Settings
-        onSetFieldSize={saveSettings}
+        setFieldSize={resetAndSaveFieldSize}
         fieldSize={currentFieldSize}
         customWidth={customWidth}
+        setCustomLength={setCustomLength}
         customLength={customLength}
+        setCustomWidth={setCustomWidth}
       />
     </div>
   )

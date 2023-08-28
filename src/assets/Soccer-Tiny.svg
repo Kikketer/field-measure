@@ -3,7 +3,7 @@
    viewBox="0 0 540.1347 685.21948"
    version="1.1"
    id="svg2"
-   sodipodi:docname="Soccer-Buildout.svg"
+   sodipodi:docname="Soccer-Tiny.svg"
    inkscape:version="1.3 (0e150ed, 2023-07-21)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -23,9 +23,9 @@
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="1.1062419"
-     inkscape:cx="353.90091"
-     inkscape:cy="312.77066"
+     inkscape:zoom="0.92709555"
+     inkscape:cx="284.22097"
+     inkscape:cy="272.89528"
      inkscape:window-width="1312"
      inkscape:window-height="749"
      inkscape:window-x="103"
@@ -66,11 +66,6 @@
        cy="360"
        cx="160" />
     <path
-       style="fill:none;fill-opacity:0.940425;stroke:#000000;stroke-width:5;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       d="m 357.5,699.5 -1.90678,-677"
-       id="path7"
-       sodipodi:nodetypes="cc" />
-    <path
        id="svg_7"
        fill-opacity="0"
        stroke-width="5"
@@ -82,12 +77,6 @@
        stroke-width="5"
        stroke="#000000"
        d="m 50,269.39999 h 55 V 451.60001 H 50 Z" />
-    <path
-       id="svg_11"
-       fill-opacity="0"
-       stroke-width="5"
-       stroke="#000000"
-       d="M 50,159.39999 H 215 V 561.59998 H 50 Z" />
     <path
        id="svg_15"
        fill-opacity="0"
@@ -109,9 +98,9 @@
        y="20.245539" />
     <path
        style="fill:none;fill-opacity:0.940425;stroke:#808080;stroke-width:2;stroke-dasharray:4, 2;stroke-dashoffset:0;stroke-opacity:1"
-       d="M 48.177966,19.025424 572.16101,359.19492 214.44915,561.31356 51.228814,356.90678"
+       d="M 48.177966,19.025424 572.16101,359.19492"
        id="path3"
-       sodipodi:nodetypes="cccc" />
+       sodipodi:nodetypes="cc" />
     <path
        style="fill:none;fill-opacity:0.940425;stroke:#808080;stroke-width:2;stroke-dasharray:4, 2;stroke-dashoffset:0;stroke-opacity:1"
        d="m 571.39831,359.19492 -466.01695,-89.23729 -54.915258,89.23729 112.118648,0"
@@ -119,16 +108,11 @@
        sodipodi:nodetypes="cccc" />
     <path
        style="fill:none;fill-opacity:0.940425;stroke:#808080;stroke-width:2;stroke-dasharray:4, 2;stroke-dashoffset:0;stroke-opacity:1"
-       d="M 572.16102,360.72034 355.4774,21.221605 50.466102,357.66949"
-       id="path6"
-       sodipodi:nodetypes="ccc" />
-    <path
-       style="fill:none;fill-opacity:0.940425;stroke:#808080;stroke-width:2;stroke-dasharray:4, 2;stroke-dashoffset:0;stroke-opacity:1"
        d="m 571.96487,360.50672 -32.89845,82.51576"
        id="path1" />
   </g>
   <metadata
-     id="metadata5">
+     id="metadata1">
     <rdf:RDF>
       <cc:Work
          rdf:about="">

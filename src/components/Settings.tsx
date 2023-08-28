@@ -5,48 +5,52 @@ import { SizeSlider } from './SizeSlider'
 import { SIZES } from '../constants'
 
 export type SettingsProps = {
-  onSetFieldSize: (T: {
-    size: FieldSize
-    customWidth?: number
-    customLength?: number
-  }) => void
+  setFieldSize: (fieldSize: FieldSize) => void
   fieldSize: () => FieldSize
   customWidth?: () => number | undefined
+  setCustomWidth?: (width: number) => void
   customLength?: () => number | undefined
+  setCustomLength?: (length: number) => void
 }
 
 export const Settings: Component<SettingsProps> = ({
-  onSetFieldSize,
+  setFieldSize,
   fieldSize,
   customLength,
+  setCustomLength,
   customWidth,
+  setCustomWidth,
 }) => {
-  const onSet = ({
-    fieldSize,
-    customWidth,
-    customLength,
-  }: {
-    fieldSize?: FieldSize
-    customWidth?: number
-    customLength?: number
-  }) => {
-    onSetFieldSize({
-      size: fieldSize ?? FieldSize.full,
-      customWidth,
-      customLength,
-    })
-  }
-
   return (
     <div class={styles.Settings}>
       <select
         id="field-size"
-        onChange={(e) => onSet({ fieldSize: e.target.value as FieldSize })}
+        onChange={(e) => setFieldSize(e.target.value as FieldSize)}
       >
-        <option value={FieldSize.full}>Full Size</option>
-        <option value={FieldSize.elevenThirteen}>11-13</option>
-        <option value={FieldSize.nineTen}>9-10</option>
-        <option value={FieldSize.sevenEight}>7-8</option>
+        <option
+          value={FieldSize.full}
+          selected={fieldSize() === FieldSize.full}
+        >
+          Full Size
+        </option>
+        <option
+          value={FieldSize.elevenThirteen}
+          selected={fieldSize() === FieldSize.elevenThirteen}
+        >
+          11-13
+        </option>
+        <option
+          value={FieldSize.nineTen}
+          selected={fieldSize() === FieldSize.nineTen}
+        >
+          9-10
+        </option>
+        <option
+          value={FieldSize.sevenEight}
+          selected={fieldSize() === FieldSize.sevenEight}
+        >
+          7-8
+        </option>
       </select>
       <div class={styles.Grid}>
         <div>
@@ -54,20 +58,24 @@ export const Settings: Component<SettingsProps> = ({
           <input
             type="number"
             id="width"
+            min={SIZES[fieldSize()].minWidth}
+            max={SIZES[fieldSize()].maxWidth}
             value={customWidth?.() ?? SIZES[fieldSize()].recommendedMaxWidth}
-            onChange={(e) => onSet({ customWidth: Number(e.target.value) })}
+            onChange={(e) => setCustomWidth?.(Number(e.target.value))}
           ></input>
-          <SizeSlider />
+          <SizeSlider fieldSize={fieldSize} type="width" />
         </div>
         <div>
           <label for="length">Length</label>
           <input
             type="number"
             id="length"
-            value={customWidth?.() ?? SIZES[fieldSize()].recommendedMaxLength}
-            onChange={(e) => onSet({ customLength: Number(e.target.value) })}
+            min={SIZES[fieldSize()].minLength}
+            max={SIZES[fieldSize()].maxLength}
+            value={customLength?.() ?? SIZES[fieldSize()].recommendedMaxLength}
+            onChange={(e) => setCustomLength?.(Number(e.target.value))}
           ></input>
-          <SizeSlider />
+          <SizeSlider fieldSize={fieldSize} type="length" />
         </div>
       </div>
     </div>

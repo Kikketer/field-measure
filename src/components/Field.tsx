@@ -1,12 +1,16 @@
-import { type Component, createSignal, For } from 'solid-js'
-import { throttle } from 'lodash-es'
+import { type Component, For, Show } from 'solid-js'
 import styles from './Field.module.css'
-import Soccer from '../assets/Soccer.svg'
+import SoccerFull from '../assets/Soccer.svg'
+import SoccerBuildout from '../assets/Soccer-Buildout.svg'
+import SoccerTiny from '../assets/Soccer-Tiny.svg'
 import { convertToFeet } from '../convertToFeet'
-import { LINE_LABELS } from '../lineLabels'
+import {
+  FULL_LINE_LABELS,
+  BUILDOUT_LINE_LABELS,
+  TINY_LINE_LABELS,
+} from '../lineLabels'
 import { FieldSize } from '../types'
 import { SIZES } from '../constants'
-// import SoccerBuildout from '../assets/Soccer-Buildout.svg'
 
 type FieldProps = {
   fieldSize: () => FieldSize
@@ -14,49 +18,68 @@ type FieldProps = {
   customLength?: () => number | undefined
 }
 
+const getSoccerFieldImage = (size: FieldSize) => {
+  switch (size) {
+    case FieldSize.full:
+    case FieldSize.elevenThirteen:
+      return <SoccerFull />
+    case FieldSize.nineTen:
+      return <SoccerBuildout />
+    case FieldSize.sevenEight:
+      return <SoccerTiny />
+  }
+}
+
+const getLabelsForField = (fieldSize: FieldSize) => {
+  switch (fieldSize) {
+    case FieldSize.full:
+    case FieldSize.elevenThirteen:
+      return FULL_LINE_LABELS
+    case FieldSize.nineTen:
+      return BUILDOUT_LINE_LABELS
+    case FieldSize.sevenEight:
+      return TINY_LINE_LABELS
+  }
+}
+
 export const Field: Component<FieldProps> = ({
   fieldSize,
   customWidth,
   customLength,
 }) => {
-  const [fieldHeight, setFieldHeight] = createSignal(
-    document.getElementById('soccer-field')?.clientHeight,
-  )
-
-  window.addEventListener(
-    'resize',
-    throttle(
-      () =>
-        setFieldHeight(document.getElementById('soccer-field')?.clientHeight),
-      200,
-    ),
-  )
-
   return (
-    <div
-      class={styles.FieldWrapper}
-      style={{
-        height: `${fieldHeight()}px`,
-      }}
-    >
-      <Soccer id="soccer-field" style={{ width: '100%' }} />
-      <For each={LINE_LABELS}>
+    <div class={styles.FieldWrapper}>
+      {getSoccerFieldImage(fieldSize())}
+      <For each={getLabelsForField(fieldSize())}>
         {(label) => (
-          <div
-            class={styles.Label}
-            style={{ left: `${label.x}%`, top: `${label.y}%` }}
-          >
-            {convertToFeet(
-              label.getLength({
+          <Show
+            when={
+              !!label.getLength({
                 fieldSize: fieldSize(),
                 fieldWidth: customWidth?.(),
                 fieldLength: customLength?.(),
-              }),
-            )}
-          </div>
+              })
+            }
+          >
+            <div
+              class={styles.Label}
+              style={{ left: `${label.x}%`, top: `${label.y}%` }}
+            >
+              {convertToFeet(
+                label.getLength({
+                  fieldSize: fieldSize(),
+                  fieldWidth: customWidth?.(),
+                  fieldLength: customLength?.(),
+                }),
+              )}
+            </div>
+          </Show>
         )}
       </For>
-      <div class={styles.Label} style={{ left: '45%', top: '90%' }}>
+      <div
+        class={styles.Label}
+        style={{ left: '20%', top: '90%', width: '60%' }}
+      >
         {fieldSize()}:{' '}
         {customWidth?.() ?? SIZES[fieldSize()].recommendedMaxWidth} x{' '}
         {customLength?.() ?? SIZES[fieldSize()].recommendedMaxLength}

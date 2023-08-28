@@ -5,12 +5,16 @@
   position: relative;
 }
 
+.Green {
+  background: rgb(200, 250, 200);
+}
+
 .RecommendedZone {
   background: rgb(200, 250, 200);
   position: absolute;
   height: 100%;
   top: 0;
-  left: 40%;
+  left: 25%;
 }
 
 .Spot {
@@ -22,4 +26,12 @@
   position: absolute;
   left: 50%;
   top: -2px;
+}
+
+.Label {
+  display: inline-block;
+  transform: rotate(90deg);
+  position: absolute;
+  top: 0.8rem;
+  left: 0;
 }
