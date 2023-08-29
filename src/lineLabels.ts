@@ -283,19 +283,20 @@ export const BUILDOUT_LINE_LABELS: LineLabel[] = [
     group: 'buildout',
     x: 65,
     y: 6,
-    getLength: ({ fieldLength, fieldSize }) => {
+    getLength: ({ fieldLength, fieldWidth, fieldSize }) => {
       // This line is exactly midway between the top of the penalty box and the midfield line
       const penaltyBoxDepth = SIZES[fieldSize].penaltyBoxDepth ?? 0
       const halfFieldLength =
         (fieldLength ?? SIZES[fieldSize].recommendedMaxLength) / 2
-      // const distanceFromGoalline =
-      //   penaltyBoxDepth +
-      //   (halfFieldLength - SIZES[fieldSize].circleRadius - penaltyBoxDepth)
+      const halfFieldWidth =
+        (fieldWidth ?? SIZES[fieldSize].recommendedMaxWidth) / 2
+      const distanceFromPenaltyBox =
+        (halfFieldLength - SIZES[fieldSize].circleRadius - penaltyBoxDepth) / 2
       const distanceFromMidfield =
-        halfFieldLength -
-        (halfFieldLength - SIZES[fieldSize].circleRadius - penaltyBoxDepth)
-      const hypotenuse = Math.sqrt(distanceFromMidfield ** 2 + 45 ** 2)
-      console.log('Not correct... yet')
+        halfFieldLength - SIZES[fieldSize].circleRadius - distanceFromPenaltyBox
+      const hypotenuse = Math.sqrt(
+        halfFieldWidth ** 2 + distanceFromMidfield ** 2,
+      )
       return hypotenuse
     },
   },
@@ -305,7 +306,20 @@ export const BUILDOUT_LINE_LABELS: LineLabel[] = [
     group: 'buildout',
     x: 45,
     y: 6,
-    getLength: ({ fieldSize }) => SIZES[fieldSize].goalBoxDepth,
+    getLength: ({ fieldLength, fieldWidth, fieldSize }) => {
+      // This line is exactly midway between the top of the penalty box and the midfield line
+      const penaltyBoxDepth = SIZES[fieldSize].penaltyBoxDepth ?? 0
+      const halfFieldLength =
+        (fieldLength ?? SIZES[fieldSize].recommendedMaxLength) / 2
+      const halfFieldWidth =
+        (fieldWidth ?? SIZES[fieldSize].recommendedMaxWidth) / 2
+      const distanceFromPenaltyBox =
+        (halfFieldLength - SIZES[fieldSize].circleRadius - penaltyBoxDepth) / 2
+      const distanceFromGoal =
+        halfFieldLength - penaltyBoxDepth - distanceFromPenaltyBox
+      const hypotenuse = Math.sqrt(halfFieldWidth ** 2 + distanceFromGoal ** 2)
+      return hypotenuse
+    },
   },
   // Penalty Kick Spot
   {
@@ -362,46 +376,6 @@ export const TINY_LINE_LABELS: LineLabel[] = [
     getLength: ({ fieldSize, fieldWidth }) =>
       (fieldWidth ?? SIZES[fieldSize].recommendedMaxWidth) / 2,
   },
-  // Penalty Box
-  {
-    lineName: 'Goaline to Penalty Box',
-    id: 'goaline-penalty',
-    group: 'penalty-box',
-    x: 0,
-    y: 15,
-    getLength: ({ fieldSize }) => (SIZES[fieldSize].penaltyBoxWidth ?? 0) / 2,
-  },
-  {
-    lineName: 'Midfield to Penalty Box',
-    id: 'midfield-penalty',
-    group: 'penalty-box',
-    x: 45,
-    y: 70,
-    getLength: ({ fieldSize, fieldLength }) => {
-      const penaltyBoxWidth = (SIZES[fieldSize].penaltyBoxWidth ?? 0) / 2
-      const penaltyBoxDepth = SIZES[fieldSize].penaltyBoxDepth ?? 0
-      // We make this a right triangle by finding the distance of the top of the box
-      // to the mid-field line
-      const midToBoxTop =
-        (fieldLength ?? SIZES[fieldSize].recommendedMaxLength) / 2 -
-        penaltyBoxDepth
-      const hypotenuse = Math.sqrt(penaltyBoxWidth ** 2 + midToBoxTop ** 2)
-      return hypotenuse
-    },
-  },
-  {
-    lineName: 'Goal to Penalty Box',
-    id: 'goal-penalty',
-    group: 'penalty-box',
-    x: 20,
-    y: 70,
-    getLength: ({ fieldSize }) => {
-      const penaltyBoxWidth = (SIZES[fieldSize].penaltyBoxWidth ?? 0) / 2
-      const penaltyBoxDepth = SIZES[fieldSize].penaltyBoxDepth ?? 0
-      const hypotenuse = Math.sqrt(penaltyBoxWidth ** 2 + penaltyBoxDepth ** 2)
-      return hypotenuse
-    },
-  },
   // Goal Box
   {
     lineName: 'Goaline to Goal Box',
@@ -450,15 +424,6 @@ export const TINY_LINE_LABELS: LineLabel[] = [
     x: 10,
     y: 50,
     getLength: ({ fieldSize }) => SIZES[fieldSize].penaltyKickSpot,
-  },
-  // Penalty Arc
-  {
-    lineName: 'Penalty Arc',
-    id: 'penalty-arc',
-    group: 'penalty-arcs',
-    x: 25,
-    y: 52,
-    getLength: ({ fieldSize }) => SIZES[fieldSize].arcFromKickSpot ?? 0,
   },
   // Circle
   {
