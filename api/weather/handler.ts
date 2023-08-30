@@ -5,5 +5,6 @@ export default async (request: VercelRequest, response: VercelResponse) => {
     body: request.body,
     query: request.query,
     cookies: request.cookies,
+    stuff: 'This is stuff',
   })
 }
