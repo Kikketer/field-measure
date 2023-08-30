@@ -18,10 +18,10 @@
     "vite-plugin-solid": "^2.7.0"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.33.1",
     "classnames": "^2.3.1",
     "json5": "^2.2.3",
     "lodash-es": "^4.17.21",
-    "solid-js": "^1.7.6",
-    "vite-plugin-solid-svg": "^0.6.4"
+    "solid-js": "^1.7.6"
   }
 }

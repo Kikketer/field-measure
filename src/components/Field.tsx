@@ -1,8 +1,8 @@
 import { type Component, For, Show } from 'solid-js'
 import styles from './Field.module.css'
-import SoccerFull from '../assets/Soccer.svg'
-import SoccerBuildout from '../assets/Soccer-Buildout.svg'
-import SoccerTiny from '../assets/Soccer-Tiny.svg'
+import { FullField } from '../assets/FullField'
+import { BuildoutField } from '../assets/BuildoutField'
+import { BabyField } from '../assets/BabyField'
 import { convertToFeet } from '../convertToFeet'
 import {
   FULL_LINE_LABELS,
@@ -22,11 +22,11 @@ const getSoccerFieldImage = (size: FieldSize) => {
   switch (size) {
     case FieldSize.full:
     case FieldSize.elevenThirteen:
-      return <SoccerFull />
+      return <FullField />
     case FieldSize.nineTen:
-      return <SoccerBuildout />
+      return <BuildoutField />
     case FieldSize.sevenEight:
-      return <SoccerTiny />
+      return <BabyField />
   }
 }
 

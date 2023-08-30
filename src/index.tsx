@@ -2,13 +2,7 @@
 import { render } from 'solid-js/web'
 import './styles.css'
 import './pico.min.css'
-import SolidSvg from 'vite-plugin-solid-svg'
 import App from './components/App'
-
-// Sets up the SVG loader to be able to import SVGs as components
-SolidSvg({
-  defaultAsComponent: true,
-})
 
 const root = document.getElementById('root')
 
