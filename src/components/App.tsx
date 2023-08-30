@@ -1,12 +1,10 @@
-import { Component, createEffect, createSignal } from 'solid-js'
 import { debounce } from 'lodash-es'
+import { Component, createEffect, createSignal } from 'solid-js'
+import { SIZES } from '../constants'
+import { FieldSize } from '../types'
 import styles from './App.module.css'
 import { Field } from './Field'
-import { LockedIndicator } from './LockedIndicator'
-import { Menu } from './Menu'
-import { FieldSize } from '../types'
 import { Settings } from './Settings'
-import { SIZES } from '../constants'
 
 const App: Component = () => {
   // We lock to prevent any touching of the screen and interacting while we are messing
@@ -23,41 +21,33 @@ const App: Component = () => {
 
   let lockedTimeout: ReturnType<typeof setTimeout>
 
-  const timeLock = createEffect(() => {
-    if (!locked()) {
-      clearTimeout(lockedTimeout)
-      lockedTimeout = setTimeout(() => {
-        setLocked(true)
-      }, 3000)
-    }
-  })
-
-  const unlock = debounce((e) => {
-    // Prevents anything else bubbling up from messing with the lock
-    if (e.target.id === 'base') {
-      if (!locked()) {
-        // Show settings if we are already unlocked
-        setShowSettings(true)
-      }
-      setLocked(false)
-    }
-  }, 500)
-
   const resetAndSaveFieldSize = (fieldSize: FieldSize) => {
     setCurrentFieldSize(fieldSize)
     setCustomWidth(SIZES[fieldSize].recommendedMaxWidth)
     setCustomLength(SIZES[fieldSize].recommendedMaxLength)
   }
 
+  const testApi = async () => {
+    try {
+      const result = await fetch('/api/weather', {
+        headers: { Accept: 'application/json' },
+      })
+      console.log(await result.json())
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   return (
-    <div id="base" onClick={unlock} class={styles.App}>
+    <div id="base" class={styles.App}>
       {/* <LockedIndicator show={locked} /> */}
       {/* <Menu
         isOpen={showSettings}
         onSetFieldSize={saveSettings}
         onClose={() => setShowSettings(false)}
       /> */}
-      <Field
+      <button onClick={testApi}>API Test</button>
+      {/* <Field
         fieldSize={currentFieldSize}
         customWidth={customWidth}
         customLength={customLength}
@@ -69,7 +59,7 @@ const App: Component = () => {
         setCustomLength={setCustomLength}
         customLength={customLength}
         setCustomWidth={setCustomWidth}
-      />
+      /> */}
     </div>
   )
 }

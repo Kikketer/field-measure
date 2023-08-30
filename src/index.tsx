@@ -1,8 +1,9 @@
 /* @refresh reload */
+import { Route, Router, Routes } from '@solidjs/router'
 import { render } from 'solid-js/web'
-import './styles.css'
-import './pico.min.css'
 import App from './components/App'
+import './pico.min.css'
+import './styles.css'
 
 const root = document.getElementById('root')
 
@@ -12,4 +13,13 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   )
 }
 
-render(() => <App />, root!)
+render(
+  () => (
+    <Router>
+      <Routes>
+        <Route path="/" element={<App />} />
+      </Routes>
+    </Router>
+  ),
+  root!,
+)
