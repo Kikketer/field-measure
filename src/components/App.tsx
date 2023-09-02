@@ -1,10 +1,12 @@
 import { debounce } from 'lodash-es'
-import { Component, createEffect, createSignal } from 'solid-js'
+import { createClient } from '@supabase/supabase-js'
+import { Component, createEffect, createResource, createSignal } from 'solid-js'
 import { SIZES } from '../constants'
 import { FieldSize } from '../types'
 import styles from './App.module.css'
 import { Field } from './Field'
 import { Settings } from './Settings'
+import { getFields } from './FieldStore'
 
 const App: Component = () => {
   // We lock to prevent any touching of the screen and interacting while we are messing
@@ -18,6 +20,8 @@ const App: Component = () => {
   const [customWidth, setCustomWidth] = createSignal<number>()
   const [customLength, setCustomLength] = createSignal<number>()
   const [selectedLineGroup, setSelectedLineGroup] = createSignal<string>()
+
+  const [fields] = createResource(getFields)
 
   let lockedTimeout: ReturnType<typeof setTimeout>
 
@@ -47,6 +51,8 @@ const App: Component = () => {
         onClose={() => setShowSettings(false)}
       /> */}
       <button onClick={testApi}>API Test</button>
+      <p>Result:</p>
+      <pre>{JSON.stringify(fields() ?? {}, null, 2)}</pre>
       {/* <Field
         fieldSize={currentFieldSize}
         customWidth={customWidth}
