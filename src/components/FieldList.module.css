@@ -1,0 +1,29 @@
+.FieldList {
+  margin: 0;
+  padding: 1rem;
+}
+
+.FieldItemWrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: var(--border-radius);
+  background: var(--card-background-color);
+  box-shadow: var(--card-box-shadow);
+}
+
+.FieldItemDetail {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.FieldAction {
+}
+
+.StatusContainer {
+  padding: 0 0.5rem;
+}

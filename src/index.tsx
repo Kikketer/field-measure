@@ -13,13 +13,4 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   )
 }
 
-render(
-  () => (
-    <Router>
-      <Routes>
-        <Route path="/" element={<App />} />
-      </Routes>
-    </Router>
-  ),
-  root!,
-)
+render(() => <App />, root!)

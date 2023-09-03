@@ -7,6 +7,10 @@ import styles from './App.module.css'
 import { Field } from './Field'
 import { Settings } from './Settings'
 import { getFields } from './FieldStore'
+import { FieldList } from './FieldList'
+import { Field as FieldType } from '../types'
+import { Route, Router, Routes } from '@solidjs/router'
+import { FieldDetail } from './FieldDetail'
 
 const App: Component = () => {
   // We lock to prevent any touching of the screen and interacting while we are messing
@@ -31,28 +35,21 @@ const App: Component = () => {
     setCustomLength(SIZES[fieldSize].recommendedMaxLength)
   }
 
-  const testApi = async () => {
-    try {
-      const result = await fetch('/api/weather', {
-        headers: { Accept: 'application/json' },
-      })
-      console.log(await result.json())
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
   return (
     <div id="base" class={styles.App}>
+      <Router>
+        <Routes>
+          <Route path="/field/:id" component={FieldDetail} />
+          <Route path="/" element={<FieldList fields={fields} />} />
+        </Routes>
+      </Router>
+
       {/* <LockedIndicator show={locked} /> */}
       {/* <Menu
         isOpen={showSettings}
         onSetFieldSize={saveSettings}
         onClose={() => setShowSettings(false)}
       /> */}
-      <button onClick={testApi}>API Test</button>
-      <p>Result:</p>
-      <pre>{JSON.stringify(fields() ?? {}, null, 2)}</pre>
       {/* <Field
         fieldSize={currentFieldSize}
         customWidth={customWidth}
