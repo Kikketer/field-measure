@@ -1,7 +1,14 @@
+import { A } from '@solidjs/router'
 import { Component, For } from 'solid-js'
 import { Field } from '../types'
+import {
+  formatDate,
+  getPredictedNextPaintDate,
+  getPredictedNextPaintLabel,
+} from '../utils'
 import styles from './FieldList.module.css'
-import { A } from '@solidjs/router'
+import { Page } from './Page'
+import { StatusLabel } from './StatusLabel'
 
 type FieldListProps = {
   fields: () => Field[] | undefined
@@ -10,27 +17,39 @@ type FieldListProps = {
 
 export const FieldList: Component<FieldListProps> = ({ fields, loading }) => {
   return (
-    <ul class={styles.FieldList}>
-      <For each={fields()} fallback={<div>Loading...</div>}>
-        {(field) => (
-          <A href={`/field/${field.id}`}>
-            <li class={styles.FieldItemWrapper}>
-              <div class={styles.FieldItemDetail}>
-                <div>{field.name}</div>
-                <div>
-                  {new Date(field.last_painted).toLocaleDateString('en-US')}
+    <Page>
+      <ul class={styles.FieldList}>
+        <For each={fields()} fallback={<div>Loading...</div>}>
+          {(field) => (
+            <A href={`/field/${field.id}`} class={styles.FieldItemTag}>
+              <li class={styles.FieldItemWrapper}>
+                <div class={styles.FieldItemDetail}>
+                  <div>{field.name}</div>
+                  <div>Painted: {formatDate(field.lastPainted)}</div>
                 </div>
-              </div>
-              <div class={styles.StatusContainer}>
-                <span role="img" aria-label="Green">
-                  🟢
-                </span>
-              </div>
-              <div class={styles.FieldAction}>&gt;</div>
-            </li>
-          </A>
-        )}
-      </For>
-    </ul>
+                <div class={styles.StatusContainer}>
+                  <StatusLabel field={field} />
+                  <div>
+                    {getPredictedNextPaintLabel(
+                      getPredictedNextPaintDate(field),
+                    )}{' '}
+                    {formatDate(getPredictedNextPaintDate(field))}
+                  </div>
+                </div>
+                <div class={styles.FieldAction}>&gt;</div>
+              </li>
+            </A>
+          )}
+        </For>
+      </ul>
+      <div class={styles.ActionContainer}>
+        {/* <A class="button" href="/field/new">
+          + Add Field
+        </A> */}
+        <A class="button" href="/quick">
+          Quick Size
+        </A>
+      </div>
+    </Page>
   )
 }

@@ -1,25 +1,35 @@
-import type { Component } from 'solid-js'
-import { FieldSize } from '../types'
+import { For, type Component, Show } from 'solid-js'
+import { Field, FieldSize } from '../types'
 import styles from './Settings.module.css'
 import { SizeSlider } from './SizeSlider'
 import { SIZES } from '../constants'
 
 export type SettingsProps = {
+  /**
+   * Determines if we should allow saving and other items
+   * really just used to edit a field size
+   */
+  isQuickDraw?: boolean
   setFieldSize: (fieldSize: FieldSize) => void
   fieldSize: () => FieldSize
   customWidth?: () => number | undefined
   setCustomWidth?: (width: number) => void
   customLength?: () => number | undefined
   setCustomLength?: (length: number) => void
+  archivedFields: () => Field[] | undefined
+  currentArchivedField: () => string | undefined
 }
 
 export const Settings: Component<SettingsProps> = ({
+  isQuickDraw,
   setFieldSize,
   fieldSize,
   customLength,
   setCustomLength,
   customWidth,
   setCustomWidth,
+  archivedFields,
+  currentArchivedField,
 }) => {
   return (
     <div class={styles.Settings}>
@@ -51,6 +61,16 @@ export const Settings: Component<SettingsProps> = ({
         >
           7-8
         </option>
+        <For each={archivedFields()}>
+          {(archivedField) => (
+            <option
+              value={archivedField.code}
+              selected={currentArchivedField() === archivedField.code}
+            >
+              {archivedField.name}
+            </option>
+          )}
+        </For>
       </select>
       <div class={styles.Grid}>
         <div>
@@ -78,6 +98,12 @@ export const Settings: Component<SettingsProps> = ({
           <SizeSlider fieldSize={fieldSize} type="length" />
         </div>
       </div>
+      <Show when={!isQuickDraw}>
+        <div>
+          <label for="name">Name</label>
+          <input type="text" required name="name" id="name" />
+        </div>
+      </Show>
     </div>
   )
 }
