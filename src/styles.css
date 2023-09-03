@@ -45,6 +45,11 @@ body {
   text-decoration: none;
 }
 
+h1 {
+  font-size: 1.4rem;
+  margin: 0.2rem 0;
+}
+
 ul,
 ol {
   padding: 0;

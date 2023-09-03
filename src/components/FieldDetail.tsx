@@ -30,6 +30,7 @@ export const FieldDetail: Component = () => {
       <Header />
       <Show when={!field.loading} fallback={<div>Loading...</div>}>
         <Page>
+          <h1>{field()?.name}</h1>
           <ul class="none">
             <li>
               <div class={styles.StatusRow}>
@@ -55,6 +56,9 @@ export const FieldDetail: Component = () => {
               {field()?.customWidth ??
                 SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxWidth}
               W)
+            </li>
+            <li>
+              <strong>Location:</strong> {field()?.description}
             </li>
           </ul>
           <div>

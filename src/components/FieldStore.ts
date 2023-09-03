@@ -57,7 +57,7 @@ export const getFields = async (): Promise<Field[]> => {
       code: 'NKE-14',
       name: 'NKE-14',
       size: 'Full',
-      description: 'Neverwood Knoll',
+      description: 'Netherwood Knoll',
       degrade_factor: 1,
       rainfall_total: 0,
       last_painted: '2023-08-10T12:00:00',
