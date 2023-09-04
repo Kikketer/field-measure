@@ -40,7 +40,44 @@ A typical field will degrade in 7 days with "average" rainfall.
 At each paint, the paintFactor is set to 14
 Every day the paintFactor is reduced by the degradeFactor (starts at 1)
 Rainfall within the day will increase the paintFactor slightly more, any rainfall over .5 inches adjust the rainFactor by 1 (meaning it'll reduce paint time by 1 day)
-Clicking the "unplayable" button will adjust the rainFactor high enough to account for the days and rainfall since the last paint.
 DegradeFactor will remain relatively static, it's set by our abnormally dry year of 14 base days. PVE may have about 10.
 
 (rainFactor \* rainDays) - (days \* degradeFactor) = paintFactor
+
+typical dry field = 14 days = 1/14 degradeFactor
+degradeFactor = 0.07142857142857142
+typical field 1 day of rain = 1 day lost
+rainfactor = degradefactor
+
+(1 \* 0) - (7 \* (1/14)) = 0.5 -- Not yet
+(1 \* 0) - (10 \* (1/14)) = 0.714 -- Not yet... close
+(1 \* 0) - (14 \* (1/14)) = 1 --- YES SHOULD PAINT
+One day of rain reduces the date by one (so this should equal 0.5):
+Math.abs((1/14 \* 1) - (8 \* (1/14))) = 0.5
+
+Clicking the "unplayable" button before the field is determined to be unplayable using the equasions will determine the max dry days based on "undoing" the rain factor for that period and adjusting the dry days to match how many days it would take to get to that point.
+
+5 days into a field painting
+14 days is the typical "dry_days" for this field
+0 rain days
+= set the "dry_days" to 5
+
+5 days into a field painting
+14 days is the typical "dry_days" for this field
+3 rain days
+14dry - 3rain - 5days = 6 is what it should have been... so we adjust the dry_days to 13 (difference between 6 and 5 = 1, so subtract that 1 from the dry_days to make up the difference)
+
+daysSinceLastPaint = today - lastPainted
+rainDays
+maxDryDays
+
+shouldPaint = (maxDryDays - daysSinceLastPaint - rainDays) / maxDryDays
+(14 - 0 - 0) / 14 = 1
+(14 - 7 - 0) / 14 = 0.5
+(10 - 7 - 0) / 14 = 0.214
+(7 - 7 - 0) / 14 = 0 PAINT!!
+(8 - 7 - 0) / 14 = -0.7 PAINT!!
+
+RAIN should be the changing factor when you push the "unplayable" button. It should adjust the total paint time using the rainDays factor to make the shouldPaint equal to the number of days since last paint.
+
+So a 14 day field, at day 10 we say "unplayable". We then look at the total rainfallDays and adjust a "rainfallFactor" number to then account for a single day of rainfall actually reduces this field by more than 1 day (rainfallFactor > 1 in this case)
