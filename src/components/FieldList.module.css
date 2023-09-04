@@ -33,6 +33,11 @@
 .FieldAction {
 }
 
+.EmptyList {
+  margin-top: 1rem;
+  text-align: center;
+}
+
 .ActionContainer {
   display: flex;
   flex-direction: column;

@@ -71,7 +71,7 @@ daysSinceLastPaint = today - lastPainted
 rainDays
 maxDryDays
 
-shouldPaint = (maxDryDays - daysSinceLastPaint - rainDays) / maxDryDays
+shouldPaint = (maxDryDays - daysSinceLastPaint - (rainDays \* rainFactor)) / maxDryDays
 (14 - 0 - 0) / 14 = 1
 (14 - 7 - 0) / 14 = 0.5
 (10 - 7 - 0) / 14 = 0.214

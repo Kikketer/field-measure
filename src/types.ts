@@ -44,7 +44,7 @@ export type Field = {
   rainfallFactor: number
   lastPainted: Date
   /**
-   * A number between 0 and 1 that indicates how much the field needs to be painted
+   * Predicted amount of days until it needs to be painted again
    * <=0 = needs to be painted
    */
   shouldPaint: number

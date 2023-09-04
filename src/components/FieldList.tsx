@@ -19,7 +19,10 @@ export const FieldList: Component<FieldListProps> = ({ fields, loading }) => {
   return (
     <Page>
       <ul class={styles.FieldList}>
-        <For each={fields()} fallback={<div>Loading...</div>}>
+        <For
+          each={fields()}
+          fallback={<div class={styles.EmptyList}>There are no fields</div>}
+        >
           {(field) => (
             <A href={`/field/${field.id}`} class={styles.FieldItemTag}>
               <li class={styles.FieldItemWrapper}>

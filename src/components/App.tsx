@@ -1,12 +1,11 @@
 import { Route, Router, Routes } from '@solidjs/router'
 import { Component, createResource, createSignal } from 'solid-js'
-import { SIZES } from '../constants'
-import { FieldSize } from '../types'
 import { AddField } from './AddField'
 import styles from './App.module.css'
 import { FieldDetail } from './FieldDetail'
 import { FieldList } from './FieldList'
 import { getFields } from './FieldStore'
+import { Login } from './Login'
 
 const App: Component = () => {
   // We lock to prevent any touching of the screen and interacting while we are messing
@@ -26,7 +25,8 @@ const App: Component = () => {
           <Route path="/field/new" component={AddField} />
           <Route path="/field/:id" component={FieldDetail} />
           <Route path="/quick" component={AddField} />
-          <Route path="/" element={<FieldList fields={fields} />} />
+          <Route path="/fields" element={<FieldList fields={fields} />} />
+          <Route path="/" component={Login} />
         </Routes>
       </Router>
 

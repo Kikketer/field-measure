@@ -45,8 +45,13 @@ export const FieldDetail: Component = () => {
               {formatDate(getPredictedNextPaintDate(field()))}
             </li>
             <li>
-              <strong>Rainfall since painting:</strong> {field()?.rainfallTotal}
-              "
+              <strong>Max dry days:</strong> {field()?.maxDryDays}
+            </li>
+            <li>
+              <strong>Rainfall factor:</strong> {field()?.rainfallFactor}
+            </li>
+            <li>
+              <strong>Rainfall days:</strong> {field()?.rainfallDays}
             </li>
             <li>
               <strong>Size:</strong> {field()?.size} (

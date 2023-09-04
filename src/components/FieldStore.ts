@@ -1,11 +1,5 @@
-// import { createClient } from '@supabase/supabase-js'
-
+import { supabase } from './supabase'
 import { Field } from '../types'
-
-// const supabase = createClient(
-//   import.meta.env.VITE_PUBLIC_SUPABASE_URL,
-//   import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY,
-// )
 
 const mapFields = (fields: any[]): Field[] => {
   // Convert all keys with underscores to camelCase:
@@ -33,40 +27,9 @@ const mapFields = (fields: any[]): Field[] => {
 }
 
 export const getFields = async (): Promise<Field[]> => {
-  // const { data } = await supabase.from('fields').select('*')
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-  const data: any[] = [
-    {
-      id: 'a18e716b-8d31-48a5-b1f4-a2b566db618e',
-      created_at: '2023-09-02T14:02:54.319276+00:00',
-      code: 'JPW-23',
-      name: 'JPW-23',
-      size: 'Full',
-      description: 'Jaycee Park near shed',
-      degrade_factor: 1,
-      rainfall_total: 0,
-      last_painted: '2023-08-26T12:00:00',
-      playable: 1,
-      archived: 0,
-      sort_order: 0,
-      paint_factor: 0,
-    },
-    {
-      id: 'a18e716b-8d31-48a5-b1f4-a2b566db6181',
-      created_at: '2023-09-02T14:02:54.319276+00:00',
-      code: 'NKE-14',
-      name: 'NKE-14',
-      size: 'Full',
-      description: 'Netherwood Knoll',
-      degrade_factor: 1,
-      rainfall_total: 0,
-      last_painted: '2023-08-10T12:00:00',
-      playable: 1,
-      archived: 0,
-      sort_order: 1,
-      paint_factor: 0,
-    },
-  ]
+  const { data } = await supabase.from('fields').select('*')
+
+  if (!data?.length) return []
 
   // Sort the data by sort_order ascending:
   data.sort((a, b) => a.sort_order - b.sort_order)
@@ -76,6 +39,7 @@ export const getFields = async (): Promise<Field[]> => {
 
 export const getField = async (id: Field['id']): Promise<Field> => {
   console.log('Getting field by ID', id)
+
   return (await getFields()).find((field) => field.id === id)!
 }
 
@@ -115,4 +79,10 @@ export const getArchivedFields = async () => {
   ]
 
   return mapFields(data)
+}
+
+export const saveField = async (field: Partial<Field>) => {
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+
+  return field
 }
