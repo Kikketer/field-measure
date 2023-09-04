@@ -35,3 +35,12 @@ rain_days = similar to "man hours" but for rain, the more rain days the more the
 - This is also useful for determining a potential "when will it need to be painted" date
 
 A typical field will degrade in 14 days if there is minimal to no rain.
+A typical field will degrade in 7 days with "average" rainfall.
+
+At each paint, the paintFactor is set to 14
+Every day the paintFactor is reduced by the degradeFactor (starts at 1)
+Rainfall within the day will increase the paintFactor slightly more, any rainfall over .5 inches adjust the rainFactor by 1 (meaning it'll reduce paint time by 1 day)
+Clicking the "unplayable" button will adjust the rainFactor high enough to account for the days and rainfall since the last paint.
+DegradeFactor will remain relatively static, it's set by our abnormally dry year of 14 base days. PVE may have about 10.
+
+(rainFactor \* rainDays) - (days \* degradeFactor) = paintFactor
