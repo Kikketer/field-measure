@@ -18,6 +18,46 @@
 //     constraint fields_pkey primary key (id)
 //   ) tablespace pg_default;
 
+export type RawField = {
+  id: string
+  createdAt: Date
+  size: string
+  customWidth?: number
+  customLength?: number
+  code: string
+  name: string
+  description: string
+  /**
+   * The number of days a typical field will need to be repainted
+   * regardless of rainfall
+   */
+  max_dry_days: number
+  /**
+   * Number of days that had significant rain since the last painting
+   */
+  rainfall_days: number
+  /**
+   * The effect that a day of rain has on the field
+   * 1 = 1 day of rainfall = 1 less day of playable field
+   * This number is adjusted when we click the "Unplayable" button UNLESS there hasn't been any rainfall
+   */
+  rainfall_factor: number
+  last_painted: string // As a date
+  /**
+   * Predicted amount of days until it needs to be painted again
+   * <=0 = needs to be painted
+   */
+  should_paint: number
+  archived: boolean
+  /**
+   * The date the field was marked unplayable
+   * This allows us to determine what the maxDryDays should be
+   */
+  marked_unplayable: string // As a date
+  sort_order: number
+  active?: boolean
+}
+
 export type Field = {
   id: string
   createdAt: Date
@@ -55,6 +95,7 @@ export type Field = {
    */
   markedUnplayable: Date
   sortOrder: number
+  active?: boolean
 }
 
 export enum FieldSize {

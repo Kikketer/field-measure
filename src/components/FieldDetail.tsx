@@ -12,12 +12,23 @@ import {
 } from '../utils'
 import { SIZES } from '../constants'
 import { FieldSize } from '../types'
+import { saveField } from './FieldStore'
 
 export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)
   const [field] = createResource(fieldId, getField)
+  const [saveError, setSaveError] = createSignal<string | null>(null)
 
-  const paintField = () => {
+  const paintField = async () => {
+    if (!field) return
+
+    try {
+      await saveField({ ...field(), lastPainted: new Date() })
+    } catch (err) {
+      console.error(err)
+      setSaveError((err as Error).message)
+    }
+
     // setTimeout(() => {
     //   // Do something
     // }, 1000)
@@ -48,10 +59,10 @@ export const FieldDetail: Component = () => {
               <strong>Max dry days:</strong> {field()?.maxDryDays}
             </li>
             <li>
-              <strong>Rainfall factor:</strong> {field()?.rainfallFactor}
+              <strong>Rainfall days:</strong> {field()?.rainfallDays}
             </li>
             <li>
-              <strong>Rainfall days:</strong> {field()?.rainfallDays}
+              <strong>Rainfall factor:</strong> {field()?.rainfallFactor}
             </li>
             <li>
               <strong>Size:</strong> {field()?.size} (

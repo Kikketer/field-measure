@@ -6,6 +6,7 @@ import { FieldDetail } from './FieldDetail'
 import { FieldList } from './FieldList'
 import { getFields } from './FieldStore'
 import { Login } from './Login'
+import { Authenticated } from './Authenticated'
 
 const App: Component = () => {
   // We lock to prevent any touching of the screen and interacting while we are messing
@@ -14,18 +15,14 @@ const App: Component = () => {
   const [locked, setLocked] = createSignal(true)
   const [showSettings, setShowSettings] = createSignal(false)
 
-  const [fields] = createResource(getFields)
-
   let lockedTimeout: ReturnType<typeof setTimeout>
 
   return (
     <div id="base" class={styles.App}>
       <Router>
         <Routes>
-          <Route path="/field/new" component={AddField} />
-          <Route path="/field/:id" component={FieldDetail} />
+          <Route path={['field/*', 'fields']} component={Authenticated} />
           <Route path="/quick" component={AddField} />
-          <Route path="/fields" element={<FieldList fields={fields} />} />
           <Route path="/" component={Login} />
         </Routes>
       </Router>
