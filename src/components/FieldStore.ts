@@ -1,5 +1,15 @@
+import { differenceInHours } from 'date-fns'
+import { Field } from '../utilities/types'
 import { supabase } from './supabase'
-import { Field } from '../types'
+
+const fieldStore: { lastFetch: Date | undefined; fields: Field[] | undefined } =
+  {
+    lastFetch: undefined,
+    fields: undefined,
+  }
+
+const saveToCache = () => {}
+const restoreFromCache = () => {}
 
 const mapFields = (fields: any[]): Field[] => {
   // Convert all keys with underscores to camelCase:
@@ -37,15 +47,30 @@ const unmapFields = (field: Field) => {
 }
 
 export const getFields = async (): Promise<Field[]> => {
-  const { data } = await supabase
-    .from('fields')
-    .select('*')
-    .eq('active', true)
-    .order('sort_order')
+  let fields = fieldStore.fields
 
-  if (!data?.length) return []
+  // TODO Check for online status, if we are online then fetch instantly
+  // If we are offline, then keep the cache and inform the user
+  if (!fields) {
+    fields = mapFields(
+      (
+        await supabase
+          .from('fields')
+          .select('*')
+          .eq('active', true)
+          .order('sort_order')
+      ).data as any[],
+    )
 
-  return mapFields(data)
+    // Set the cache
+    fieldStore.fields = fields
+    fieldStore.lastFetch = new Date()
+    localStorage.setItem('fieldStore', JSON.stringify(fieldStore))
+  }
+
+  if (!fields?.length) return []
+
+  return mapFields(fields)
 }
 
 export const getField = async (id: Field['id']): Promise<Field> => {

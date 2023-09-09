@@ -1,9 +1,8 @@
 import classNames from 'classnames'
-import { differenceInCalendarDays } from 'date-fns'
 import { Component } from 'solid-js'
-import { Field } from '../types'
+import { Field } from '../utilities/types'
+import { getIsFieldPlayable } from '../utilities/utils'
 import styles from './StatusLabel.module.css'
-import { getIsFieldPlayable } from '../utils'
 
 export const StatusLabel: Component<{ field?: Field }> = ({ field }) => {
   if (!field) return null

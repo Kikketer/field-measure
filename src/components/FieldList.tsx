@@ -4,7 +4,7 @@ import {
   formatDate,
   getPredictedNextPaintDate,
   getPredictedNextPaintLabel,
-} from '../utils'
+} from '../utilities/utils'
 import styles from './FieldList.module.css'
 import { getFields } from './FieldStore'
 import { Page } from './Page'

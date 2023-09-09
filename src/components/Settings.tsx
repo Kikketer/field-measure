@@ -1,8 +1,8 @@
-import { For, type Component, Show } from 'solid-js'
-import { Field, FieldSize } from '../types'
+import { For, Show, type Component } from 'solid-js'
+import { SIZES } from '../utilities/constants'
+import { Field, FieldSize } from '../utilities/types'
 import styles from './Settings.module.css'
 import { SizeSlider } from './SizeSlider'
-import { SIZES } from '../constants'
 
 export type SettingsProps = {
   /**

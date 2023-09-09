@@ -1,18 +1,17 @@
 import { useParams } from '@solidjs/router'
 import { Component, Show, createResource, createSignal } from 'solid-js'
-import { getField } from './FieldStore'
-import { Header } from './Header'
-import { Page } from './Page'
-import { StatusLabel } from './StatusLabel'
-import styles from './FieldDetail.module.css'
+import { SIZES } from '../utilities/constants'
+import { FieldSize } from '../utilities/types'
 import {
   formatDate,
   getIsFieldPlayable,
   getPredictedNextPaintDate,
-} from '../utils'
-import { SIZES } from '../constants'
-import { FieldSize } from '../types'
-import { saveField } from './FieldStore'
+} from '../utilities/utils'
+import styles from './FieldDetail.module.css'
+import { getField, saveField } from './FieldStore'
+import { Header } from './Header'
+import { Page } from './Page'
+import { StatusLabel } from './StatusLabel'
 
 export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)
@@ -28,13 +27,11 @@ export const FieldDetail: Component = () => {
       console.error(err)
       setSaveError((err as Error).message)
     }
-
-    // setTimeout(() => {
-    //   // Do something
-    // }, 1000)
   }
 
-  const setPlayable = (playable: boolean) => {}
+  const setPlayable = (playable: boolean) => {
+    // TODO playable will just extend the "base days" or "rain factor" by 1
+  }
 
   return (
     <>

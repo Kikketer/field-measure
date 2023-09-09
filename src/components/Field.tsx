@@ -3,14 +3,14 @@ import styles from './Field.module.css'
 import { FullField } from '../assets/FullField'
 import { BuildoutField } from '../assets/BuildoutField'
 import { BabyField } from '../assets/BabyField'
-import { convertToFeet } from '../convertToFeet'
+import { convertToFeet } from '../utilities/convertToFeet'
 import {
   FULL_LINE_LABELS,
   BUILDOUT_LINE_LABELS,
   TINY_LINE_LABELS,
-} from '../lineLabels'
-import { FieldSize } from '../types'
-import { SIZES } from '../constants'
+} from '../utilities/lineLabels'
+import { FieldSize } from '../utilities/types'
+import { SIZES } from '../utilities/constants'
 
 type FieldProps = {
   fieldSize: () => FieldSize

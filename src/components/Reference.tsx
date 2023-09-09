@@ -1,5 +1,5 @@
 import { Component } from 'solid-js'
-import { SIZES } from '../constants'
+import { SIZES } from '../utilities/constants'
 
 export const Reference: Component = () => {
   return (

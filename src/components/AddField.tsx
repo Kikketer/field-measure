@@ -1,13 +1,7 @@
-import { useLocation, useMatch, useParams } from '@solidjs/router'
-import {
-  Component,
-  Show,
-  createMemo,
-  createResource,
-  createSignal,
-} from 'solid-js'
-import { SIZES } from '../constants'
-import { FieldSize } from '../types'
+import { useLocation } from '@solidjs/router'
+import { Component, Show, createResource, createSignal } from 'solid-js'
+import { SIZES } from '../utilities/constants'
+import { FieldSize } from '../utilities/types'
 import { Field } from './Field'
 import { getArchivedFields } from './FieldStore'
 import { Header } from './Header'
