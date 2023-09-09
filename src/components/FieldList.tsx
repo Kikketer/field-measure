@@ -1,21 +1,18 @@
 import { A } from '@solidjs/router'
-import { Component, For } from 'solid-js'
-import { Field } from '../types'
+import { Component, For, createResource } from 'solid-js'
 import {
   formatDate,
   getPredictedNextPaintDate,
   getPredictedNextPaintLabel,
 } from '../utils'
 import styles from './FieldList.module.css'
+import { getFields } from './FieldStore'
 import { Page } from './Page'
 import { StatusLabel } from './StatusLabel'
 
-type FieldListProps = {
-  fields: () => Field[] | undefined
-  loading?: boolean
-}
+export const FieldList: Component = () => {
+  const [fields] = createResource(getFields)
 
-export const FieldList: Component<FieldListProps> = ({ fields, loading }) => {
   return (
     <Page>
       <ul class={styles.FieldList}>

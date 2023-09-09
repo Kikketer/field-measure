@@ -3,14 +3,17 @@ import { Page } from './Page'
 import { supabase } from './supabase'
 import styles from './Login.module.css'
 import logo from '../assets/fav.png'
+import { createEffect, createResource } from 'solid-js'
 
 export const Login = () => {
   const navigate = useNavigate()
 
   const signIn = () => {
-    console.log('signing in!')
     supabase.auth.signInWithOAuth({
       provider: 'google',
+      options: {
+        redirectTo: import.meta.env.VITE_REDIRECT_URL,
+      },
     })
   }
 

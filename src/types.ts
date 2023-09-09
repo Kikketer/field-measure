@@ -55,6 +55,7 @@ export type Field = {
    */
   markedUnplayable: Date
   sortOrder: number
+  active?: boolean
 }
 
 export enum FieldSize {
