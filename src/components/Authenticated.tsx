@@ -1,16 +1,11 @@
+import { Outlet, useNavigate } from '@solidjs/router'
 import {
   Component,
-  JSX,
   Show,
   createEffect,
   createResource,
   createSignal,
 } from 'solid-js'
-import { initializeDatabase, syncDatabase } from './FieldStore'
-import { Outlet, Route, Routes, useNavigate } from '@solidjs/router'
-import { AddField } from './AddField'
-import { FieldDetail } from './FieldDetail'
-import { FieldList } from './FieldList'
 import { supabase } from './supabase'
 
 export const Authenticated: Component = () => {
