@@ -28,6 +28,7 @@ export const Login = () => {
       <div class={styles.VerticalAlign}>
         <div>
           <h1>Field Manager</h1>
+          <pre>{import.meta.env.VITE_REDIRECT_URL}</pre>
           <img class={styles.Logo} src={logo} />
         </div>
         <button onClick={signIn}>Sign In</button>
