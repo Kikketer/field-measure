@@ -1,22 +1,31 @@
 import { useParams } from '@solidjs/router'
-import { Component, Show, createResource, createSignal } from 'solid-js'
+import {
+  Component,
+  Show,
+  createResource,
+  createSignal,
+  useContext,
+} from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
 import {
   formatDate,
-  getIsFieldPlayable,
+  getPredictedDaysUntilPaint,
   getPredictedNextPaintDate,
 } from '../utilities/utils'
+import { ErrorPrompt } from './ErrorPrompt'
 import styles from './FieldDetail.module.css'
 import { getField, saveField } from './FieldStore'
 import { Header } from './Header'
+import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
 import { Page } from './Page'
 import { StatusLabel } from './StatusLabel'
 
 export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)
   const [field] = createResource(fieldId, getField)
-  const [saveError, setSaveError] = createSignal<string | null>(null)
+  const [saveError, setSaveError] = createSignal<string>()
+  const isOnline = useContext(OnlineContext)
 
   const paintField = async () => {
     if (!field) return
@@ -36,6 +45,7 @@ export const FieldDetail: Component = () => {
   return (
     <>
       <Header />
+      <ErrorPrompt error={saveError} />
       <Show when={!field.loading} fallback={<div>Loading...</div>}>
         <Page>
           <h1>{field()?.name}</h1>
@@ -50,7 +60,8 @@ export const FieldDetail: Component = () => {
             </li>
             <li>
               <strong>Predicted next painting:</strong>{' '}
-              {formatDate(getPredictedNextPaintDate(field()))}
+              {formatDate(getPredictedNextPaintDate(field()))} (
+              {getPredictedDaysUntilPaint(field())} days)
             </li>
             <li>
               <strong>Max dry days:</strong> {field()?.maxDryDays}
@@ -75,13 +86,18 @@ export const FieldDetail: Component = () => {
             </li>
           </ul>
           <div>
-            <Show when={getIsFieldPlayable(field())}>
-              <button class="contrast">Unplayable</button>
-            </Show>
-            <button onClick={paintField}>Mark Painted</button>
-            <a role="button" class="secondary">
+            <button onClick={paintField} disabled={!isOnline?.()}>
+              Mark Painted
+            </button>
+            {/* <Show when={getIsFieldPlayable(field())}>
+              <a role="button" class="contrast">
+                Mark Unplayable
+              </a>
+            </Show> */}
+            {/* <a role="button" class="secondary">
               Archive
-            </a>
+            </a> */}
+            <OnlineStatus />
           </div>
         </Page>
       </Show>

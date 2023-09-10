@@ -7,6 +7,7 @@ import {
 } from '../utilities/utils'
 import styles from './FieldList.module.css'
 import { getFields } from './FieldStore'
+import { OnlineStatus } from './OnlineStatusProvider'
 import { Page } from './Page'
 import { StatusLabel } from './StatusLabel'
 
@@ -43,12 +44,13 @@ export const FieldList: Component = () => {
         </For>
       </ul>
       <div class={styles.ActionContainer}>
-        {/* <A class="button" href="/field/new">
+        <A class="button" href="/field/new">
           + Add Field
-        </A> */}
+        </A>
         <A class="button" href="/quick">
           Quick Size
         </A>
+        <OnlineStatus />
       </div>
     </Page>
   )

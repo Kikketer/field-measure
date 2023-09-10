@@ -18,13 +18,18 @@ export const getPredictedNextPaintLabel = (predictedPaintDate?: Date) => {
   return 'Until '
 }
 
-export const getPredictedNextPaintDate = (field?: Field): Date | undefined => {
-  if (!field) return
+export const getPredictedDaysUntilPaint = (field?: Field) => {
+  if (!field) return 0
 
-  const predictedTimeLeft =
+  return (
     field.maxDryDays -
     differenceInCalendarDays(new Date(), field.lastPainted) -
     field.rainfallDays * field.rainfallFactor
+  )
+}
+
+export const getPredictedNextPaintDate = (field?: Field): Date | undefined => {
+  const predictedTimeLeft = getPredictedDaysUntilPaint(field)
 
   // (maxDryDays - daysSinceLastPaint - (rainDays * rainFactor))
 

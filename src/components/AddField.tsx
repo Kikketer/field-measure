@@ -3,7 +3,7 @@ import { Component, Show, createResource, createSignal } from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
 import { Field } from './Field'
-import { getArchivedFields } from './FieldStore'
+import { getArchivedFields, saveField as saveFieldToDb } from './FieldStore'
 import { Header } from './Header'
 import { Page } from './Page'
 import { Settings } from './Settings'
@@ -36,6 +36,15 @@ export const AddField: Component = () => {
 
   const isQuickDraw = useLocation().pathname === '/quick'
 
+  const saveField = async (e: SubmitEvent) => {
+    // TODO after validation, save the field
+    e.preventDefault()
+    e.stopPropagation()
+
+    // Check validation for the form (if needed)
+    // saveFieldToDb()
+  }
+
   return (
     <div>
       <Header />
@@ -45,21 +54,23 @@ export const AddField: Component = () => {
           customWidth={customWidth}
           customLength={customLength}
         />
-        <Settings
-          isQuickDraw={isQuickDraw}
-          setFieldSize={resetAndSaveFieldSize}
-          archivedFields={archivedFields}
-          currentArchivedField={currentArchivedField}
-          fieldSize={currentFieldSize}
-          customWidth={customWidth}
-          setCustomLength={setCustomLength}
-          customLength={customLength}
-          setCustomWidth={setCustomWidth}
-        />
+        <form onSubmit={saveField}>
+          <Settings
+            isQuickDraw={isQuickDraw}
+            setFieldSize={resetAndSaveFieldSize}
+            archivedFields={archivedFields}
+            currentArchivedField={currentArchivedField}
+            fieldSize={currentFieldSize}
+            customWidth={customWidth}
+            setCustomLength={setCustomLength}
+            customLength={customLength}
+            setCustomWidth={setCustomWidth}
+          />
 
-        <Show when={!isQuickDraw}>
-          <button>Save</button>
-        </Show>
+          <Show when={!isQuickDraw}>
+            <button type="submit">Save</button>
+          </Show>
+        </form>
       </Page>
     </div>
   )
