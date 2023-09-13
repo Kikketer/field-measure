@@ -8,6 +8,7 @@ import { FieldDetail } from './FieldDetail'
 import { FieldList } from './FieldList'
 import { Login } from './Login'
 import { OnlineStatusProvider } from './OnlineStatusProvider'
+import { AuthenticationProvider } from './AuthenticationProvider'
 
 // Simply refreshes the site if there's a new version available
 // I don't forsee the need to prompt the user (there are no intense forms)
@@ -18,19 +19,22 @@ const App: Component = () => {
   return (
     <div id="base" class={styles.App}>
       <OnlineStatusProvider>
-        <Router>
-          <Routes>
-            <Route path={'/fields'} component={Authenticated}>
-              <Route path="/" component={FieldList} />
-            </Route>
-            <Route path="/field" component={Authenticated}>
-              <Route path="/:id" component={FieldDetail} />
-              <Route path="/new" component={AddField} />
-            </Route>
-            <Route path="/quick" component={AddField} />
-            <Route path="/" component={Login} />
-          </Routes>
-        </Router>
+        <AuthenticationProvider>
+          <Router>
+            <Routes>
+              <Route path={'/fields'} component={Authenticated}>
+                <Route path="/" component={FieldList} />
+              </Route>
+              <Route path="/field" component={Authenticated}>
+                <Route path="/:id" component={FieldDetail} />
+                <Route path="/new" component={AddField} />
+              </Route>
+              <Route path="/" component={Login} />
+
+              <Route path="/quick" component={AddField} />
+            </Routes>
+          </Router>
+        </AuthenticationProvider>
       </OnlineStatusProvider>
     </div>
   )

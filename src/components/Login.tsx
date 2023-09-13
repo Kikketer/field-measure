@@ -1,9 +1,8 @@
-import { A, useNavigate } from '@solidjs/router'
+import { useNavigate } from '@solidjs/router'
+import logo from '../assets/fav.png'
+import styles from './Login.module.css'
 import { Page } from './Page'
 import { supabase } from './supabase'
-import styles from './Login.module.css'
-import logo from '../assets/fav.png'
-import { createEffect, createResource } from 'solid-js'
 
 export const Login = () => {
   const navigate = useNavigate()
@@ -28,7 +27,6 @@ export const Login = () => {
       <div class={styles.VerticalAlign}>
         <div>
           <h1>Field Manager</h1>
-          <pre>{import.meta.env.VITE_REDIRECT_URL}</pre>
           <img class={styles.Logo} src={logo} />
         </div>
         <button onClick={signIn}>Sign In</button>

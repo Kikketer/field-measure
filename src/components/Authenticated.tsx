@@ -3,25 +3,23 @@ import {
   Component,
   Show,
   createEffect,
-  createResource,
   createSignal,
+  useContext,
 } from 'solid-js'
-import { supabase } from './supabase'
+import { AuthenticationContext } from './AuthenticationProvider'
+import { OnlineContext } from './OnlineStatusProvider'
 
 export const Authenticated: Component = () => {
   const [ready, setReady] = createSignal(false)
-  const [user] = createResource(() => supabase.auth.getUser())
+  const authContext = useContext(AuthenticationContext)
+  // const [user] = createResource(() => supabase.auth.getUser())
   const navigate = useNavigate()
+  const isOnline = useContext(OnlineContext)
 
   createEffect(async () => {
-    // Redirect home if the user is not set
-    if (!user.loading && !user()?.data?.user) {
+    if (!authContext?.loading && !authContext?.user?.()) {
       navigate('/', { replace: true })
-    } else if (!user.loading && !user.error && user()?.data?.user) {
-      // // Sync up the database every time we see this page since we are authenticated
-      // const db = await initializeDatabase()
-      // // Await for the entire DB to download before we set ready
-      // await (await syncDatabase(db)).awaitInSync()
+    } else {
       setReady(true)
     }
   })
