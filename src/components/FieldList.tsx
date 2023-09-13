@@ -1,5 +1,11 @@
 import { A } from '@solidjs/router'
-import { Component, For, createResource } from 'solid-js'
+import {
+  Component,
+  For,
+  createResource,
+  createSignal,
+  useContext,
+} from 'solid-js'
 import {
   formatDate,
   getPredictedNextPaintDate,
@@ -7,12 +13,12 @@ import {
 } from '../utilities/utils'
 import styles from './FieldList.module.css'
 import { getFields } from './FieldStore'
-import { OnlineStatus } from './OnlineStatusProvider'
-import { Page } from './Page'
+import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
 import { StatusLabel } from './StatusLabel'
 
 export const FieldList: Component = () => {
-  const [fields] = createResource(getFields)
+  const isOnline = useContext(OnlineContext)
+  const [fields] = createResource(isOnline, getFields)
 
   return (
     <>

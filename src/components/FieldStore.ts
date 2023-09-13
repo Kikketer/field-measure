@@ -32,7 +32,7 @@ const mapFields = (fields: any[]): Field[] => {
   return duplicateFields
 }
 
-const unmapFields = (field: Partial<Field>) => {
+const unmapField = (field: Partial<Field>) => {
   const duplicateField: any = { ...field }
   // Convert all keys with camelCase to underscores:
   Object.keys(duplicateField).forEach((key) => {
@@ -46,12 +46,20 @@ const unmapFields = (field: Partial<Field>) => {
   return duplicateField
 }
 
-export const getFields = async (): Promise<Field[]> => {
-  let fields = fieldStore.fields
+const unmapFields = (fields: Field[]) => {
+  return fields.map((field) => unmapField(field))
+}
 
-  // TODO Check for online status, if we are online then fetch instantly
-  // If we are offline, then keep the cache and inform the user
-  if (!fields) {
+export const getFields = async (isOnline?: boolean): Promise<Field[]> => {
+  const localStorageFields = localStorage.getItem('fieldStore')
+  let hydratedFieldStore = localStorageFields
+    ? JSON.parse(localStorageFields)
+    : fieldStore
+
+  let fields = hydratedFieldStore?.fields
+
+  // Always fetch if we are online
+  if (isOnline) {
     fields = mapFields(
       (
         await supabase
@@ -62,11 +70,18 @@ export const getFields = async (): Promise<Field[]> => {
       ).data as any[],
     )
 
-    // Set the cache
-    fieldStore.fields = fields
     fieldStore.lastFetch = new Date()
-    localStorage.setItem('fieldStore', JSON.stringify(fieldStore))
+    // Save to local storage for fetch later (if we are offline)
+    localStorage.setItem(
+      'fieldStore',
+      JSON.stringify({
+        ...fieldStore,
+        fields: unmapFields(fieldStore.fields ?? []),
+      }),
+    )
   }
+
+  fieldStore.fields = fields
 
   if (!fields?.length) return []
 
@@ -90,15 +105,27 @@ export const getArchivedFields = async () => {
   return mapFields(data)
 }
 
-export const saveField = async (field: Partial<Field>) => {
+export const saveField = async (
+  field: Partial<Field>,
+): Promise<Field | undefined> => {
   const { data } = await supabase
     .from('fields')
-    .upsert(unmapFields(field))
+    .upsert(unmapField(field))
     .select('*')
 
   console.log('saveField', data)
+  if (!data?.length) return
 
-  if (!data?.length) return []
+  const updatedField = mapFields(data)[0]
+  // Now either add or update the field in the cache
+  const fieldIndex = fieldStore.fields?.findIndex(
+    (field) => field.id === updatedField.id,
+  )
+  if (fieldIndex === undefined || fieldIndex === -1) {
+    fieldStore.fields?.push(updatedField)
+  } else {
+    fieldStore.fields?.splice(fieldIndex, 1, updatedField)
+  }
 
-  return data
+  return updatedField
 }

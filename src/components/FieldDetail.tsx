@@ -23,7 +23,7 @@ import { StatusLabel } from './StatusLabel'
 
 export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)
-  const [field] = createResource(fieldId, getField)
+  const [field, { refetch, mutate }] = createResource(fieldId, getField)
   const [saveError, setSaveError] = createSignal<string>()
   const isOnline = useContext(OnlineContext)
 
@@ -31,7 +31,11 @@ export const FieldDetail: Component = () => {
     if (!field) return
 
     try {
-      await saveField({ ...field(), lastPainted: new Date() })
+      const savedField = await saveField({
+        ...field(),
+        lastPainted: new Date(),
+      })
+      mutate(savedField)
     } catch (err) {
       console.error(err)
       setSaveError((err as Error).message)
@@ -51,7 +55,7 @@ export const FieldDetail: Component = () => {
         <ul class="none">
           <li>
             <div class={styles.StatusRow}>
-              <StatusLabel field={field()} />
+              <StatusLabel field={field} />
             </div>
           </li>
           <li>
