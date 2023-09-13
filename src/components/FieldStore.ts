@@ -56,19 +56,19 @@ export const getFields = async (isOnline?: boolean): Promise<Field[]> => {
     ? JSON.parse(localStorageFields)
     : fieldStore
 
+  // await new Promise((resolve) => setTimeout(resolve, 100))
+
   let fields = hydratedFieldStore?.fields
 
   // Always fetch if we are online
   if (isOnline) {
-    fields = mapFields(
-      (
-        await supabase
-          .from('fields')
-          .select('*')
-          .eq('active', true)
-          .order('sort_order')
-      ).data as any[],
-    )
+    const result = await supabase
+      .from('fields')
+      .select('*')
+      .eq('active', true)
+      .order('sort_order')
+
+    fields = result.data
 
     fieldStore.lastFetch = new Date()
     // Save to local storage for fetch later (if we are offline)
@@ -76,7 +76,7 @@ export const getFields = async (isOnline?: boolean): Promise<Field[]> => {
       'fieldStore',
       JSON.stringify({
         ...fieldStore,
-        fields: unmapFields(fieldStore.fields ?? []),
+        fields: fields ?? [],
       }),
     )
   }
