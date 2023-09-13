@@ -15,7 +15,7 @@ export const FieldList: Component = () => {
   const [fields] = createResource(getFields)
 
   return (
-    <Page>
+    <>
       <ul class={styles.FieldList}>
         <For
           each={fields()}
@@ -52,6 +52,6 @@ export const FieldList: Component = () => {
         </A>
         <OnlineStatus />
       </div>
-    </Page>
+    </>
   )
 }

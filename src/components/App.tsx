@@ -17,26 +17,28 @@ registerSW({ immediate: true })
 
 const App: Component = () => {
   return (
-    <div id="base" class={styles.App}>
-      <OnlineStatusProvider>
-        <AuthenticationProvider>
-          <Router>
-            <Routes>
-              <Route path={'/fields'} component={Authenticated}>
-                <Route path="/" component={FieldList} />
-              </Route>
-              <Route path="/field" component={Authenticated}>
-                <Route path="/:id" component={FieldDetail} />
-                <Route path="/new" component={AddField} />
-              </Route>
-              <Route path="/" component={Login} />
+    <ion-app>
+      <ion-content class="ion-padding">
+        <OnlineStatusProvider>
+          <AuthenticationProvider>
+            <Router>
+              <Routes>
+                <Route path={'/fields'} component={Authenticated}>
+                  <Route path="/" component={FieldList} />
+                </Route>
+                <Route path="/field" component={Authenticated}>
+                  <Route path="/:id" component={FieldDetail} />
+                  <Route path="/new" component={AddField} />
+                </Route>
+                <Route path="/" component={Login} />
 
-              <Route path="/quick" component={AddField} />
-            </Routes>
-          </Router>
-        </AuthenticationProvider>
-      </OnlineStatusProvider>
-    </div>
+                <Route path="/quick" component={AddField} />
+              </Routes>
+            </Router>
+          </AuthenticationProvider>
+        </OnlineStatusProvider>
+      </ion-content>
+    </ion-app>
   )
 }
 

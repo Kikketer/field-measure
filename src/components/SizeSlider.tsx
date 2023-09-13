@@ -1,8 +1,8 @@
-import { Component, Show, createEffect, createSignal } from 'solid-js'
 import classNames from 'classnames'
-import styles from './SizeSlider.module.css'
-import { FieldSize } from '../types'
+import { Component, Show, createEffect, createSignal } from 'solid-js'
 import { SIZES } from '../utilities/constants'
+import { FieldSize } from '../utilities/types'
+import styles from './SizeSlider.module.css'
 
 type SizeSliderProps = {
   fieldSize: () => FieldSize

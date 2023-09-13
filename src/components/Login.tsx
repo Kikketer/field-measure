@@ -23,14 +23,12 @@ export const Login = () => {
   })
 
   return (
-    <Page>
-      <div class={styles.VerticalAlign}>
-        <div>
-          <h1>Field Manager</h1>
-          <img class={styles.Logo} src={logo} />
-        </div>
-        <button onClick={signIn}>Sign In</button>
+    <div class={styles.VerticalAlign}>
+      <div>
+        <h1>Field Manager</h1>
+        <img class={styles.Logo} src={logo} />
       </div>
-    </Page>
+      <button onClick={signIn}>Sign In</button>
+    </div>
   )
 }

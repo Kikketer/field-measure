@@ -47,59 +47,57 @@ export const FieldDetail: Component = () => {
       <Header />
       <ErrorPrompt error={saveError} />
       <Show when={!field.loading} fallback={<div>Loading...</div>}>
-        <Page>
-          <h1>{field()?.name}</h1>
-          <ul class="none">
-            <li>
-              <div class={styles.StatusRow}>
-                <StatusLabel field={field()} />
-              </div>
-            </li>
-            <li>
-              <strong>Last painted:</strong> {formatDate(field()?.lastPainted)}
-            </li>
-            <li>
-              <strong>Predicted next painting:</strong>{' '}
-              {formatDate(getPredictedNextPaintDate(field()))} (
-              {getPredictedDaysUntilPaint(field())} days)
-            </li>
-            <li>
-              <strong>Max dry days:</strong> {field()?.maxDryDays}
-            </li>
-            <li>
-              <strong>Rainfall days:</strong> {field()?.rainfallDays}
-            </li>
-            <li>
-              <strong>Rainfall factor:</strong> {field()?.rainfallFactor}
-            </li>
-            <li>
-              <strong>Size:</strong> {field()?.size} (
-              {field()?.customLength ??
-                SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxLength}
-              L x{' '}
-              {field()?.customWidth ??
-                SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxWidth}
-              W)
-            </li>
-            <li>
-              <strong>Location:</strong> {field()?.description}
-            </li>
-          </ul>
-          <div>
-            <button onClick={paintField} disabled={!isOnline?.()}>
-              Mark Painted
-            </button>
-            {/* <Show when={getIsFieldPlayable(field())}>
+        <h1>{field()?.name}</h1>
+        <ul class="none">
+          <li>
+            <div class={styles.StatusRow}>
+              <StatusLabel field={field()} />
+            </div>
+          </li>
+          <li>
+            <strong>Last painted:</strong> {formatDate(field()?.lastPainted)}
+          </li>
+          <li>
+            <strong>Predicted next painting:</strong>{' '}
+            {formatDate(getPredictedNextPaintDate(field()))} (
+            {getPredictedDaysUntilPaint(field())} days)
+          </li>
+          <li>
+            <strong>Max dry days:</strong> {field()?.maxDryDays}
+          </li>
+          <li>
+            <strong>Rainfall days:</strong> {field()?.rainfallDays}
+          </li>
+          <li>
+            <strong>Rainfall factor:</strong> {field()?.rainfallFactor}
+          </li>
+          <li>
+            <strong>Size:</strong> {field()?.size} (
+            {field()?.customLength ??
+              SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxLength}
+            L x{' '}
+            {field()?.customWidth ??
+              SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxWidth}
+            W)
+          </li>
+          <li>
+            <strong>Location:</strong> {field()?.description}
+          </li>
+        </ul>
+        <div>
+          <button onClick={paintField} disabled={!isOnline?.()}>
+            Mark Painted
+          </button>
+          {/* <Show when={getIsFieldPlayable(field())}>
               <a role="button" class="contrast">
                 Mark Unplayable
               </a>
             </Show> */}
-            {/* <a role="button" class="secondary">
+          {/* <a role="button" class="secondary">
               Archive
             </a> */}
-            <OnlineStatus />
-          </div>
-        </Page>
+          <OnlineStatus />
+        </div>
       </Show>
     </>
   )
