@@ -18,7 +18,6 @@ import styles from './FieldDetail.module.css'
 import { getField, saveField } from './FieldStore'
 import { Header } from './Header'
 import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
-import { Page } from './Page'
 import { StatusLabel } from './StatusLabel'
 
 export const FieldDetail: Component = () => {
