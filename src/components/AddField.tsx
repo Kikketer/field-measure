@@ -1,14 +1,12 @@
 import { useLocation } from '@solidjs/router'
 import { Component, For, Show, createResource, createSignal } from 'solid-js'
 import { SIZES } from '../utilities/constants'
-import { FieldSize } from '../utilities/types'
+import { Field as FieldModel, FieldSize } from '../utilities/types'
 import styles from './AddField.module.css'
 import { Field } from './Field'
 import { getArchivedFields, saveField as saveFieldToDb } from './FieldStore'
 import { Header } from './Header'
-import { Page } from './Page'
 import { SizeSlider } from './SizeSlider'
-import { Field as FieldModel } from '../utilities/types'
 
 export const AddField: Component = () => {
   const [currentFieldSize, setCurrentFieldSize] = createSignal(
