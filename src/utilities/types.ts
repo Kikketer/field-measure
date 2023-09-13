@@ -20,13 +20,13 @@
 
 export type Field = {
   id: string
-  createdAt: Date
+  createdAt?: Date
   size: string
   customWidth?: number
   customLength?: number
   code: string
   name: string
-  description: string
+  description?: string
   /**
    * The number of days a typical field will need to be repainted
    * regardless of rainfall
@@ -48,7 +48,7 @@ export type Field = {
    * <=0 = needs to be painted
    */
   shouldPaint: number
-  archived: boolean
+  archived?: boolean
   /**
    * The date the field was marked unplayable
    * This allows us to determine what the maxDryDays should be

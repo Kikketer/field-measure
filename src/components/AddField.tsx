@@ -1,12 +1,14 @@
 import { useLocation } from '@solidjs/router'
-import { Component, Show, createResource, createSignal } from 'solid-js'
+import { Component, For, Show, createResource, createSignal } from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
+import styles from './AddField.module.css'
 import { Field } from './Field'
 import { getArchivedFields, saveField as saveFieldToDb } from './FieldStore'
 import { Header } from './Header'
 import { Page } from './Page'
-import { Settings } from './Settings'
+import { SizeSlider } from './SizeSlider'
+import { Field as FieldModel } from '../utilities/types'
 
 export const AddField: Component = () => {
   const [currentFieldSize, setCurrentFieldSize] = createSignal(
@@ -15,7 +17,8 @@ export const AddField: Component = () => {
   const [currentArchivedField, setCurrentArchivedField] = createSignal('')
   const [customWidth, setCustomWidth] = createSignal<number>()
   const [customLength, setCustomLength] = createSignal<number>()
-  const [selectedLineGroup, setSelectedLineGroup] = createSignal<string>()
+  const [loading, setLoading] = createSignal<boolean>(false)
+  const [error, setError] = createSignal<string>()
 
   const [archivedFields] = createResource(getArchivedFields)
 
@@ -41,8 +44,25 @@ export const AddField: Component = () => {
     e.preventDefault()
     e.stopPropagation()
 
+    const formData = new FormData(e.target as HTMLFormElement)
+    const data: Partial<FieldModel> = {}
+
+    for (const formElement of formData) {
+      data[formElement[0]] = formElement[1]
+    }
+
+    console.log(data)
+
     // Check validation for the form (if needed)
-    // saveFieldToDb()
+    try {
+      setLoading(true)
+      await saveFieldToDb(data)
+    } catch (err) {
+      setError((err as Error).message)
+      console.error(err)
+    }
+
+    setLoading(false)
   }
 
   return (
@@ -55,17 +75,94 @@ export const AddField: Component = () => {
           customLength={customLength}
         />
         <form onSubmit={saveField}>
-          <Settings
-            isQuickDraw={isQuickDraw}
-            setFieldSize={resetAndSaveFieldSize}
-            archivedFields={archivedFields}
-            currentArchivedField={currentArchivedField}
-            fieldSize={currentFieldSize}
-            customWidth={customWidth}
-            setCustomLength={setCustomLength}
-            customLength={customLength}
-            setCustomWidth={setCustomWidth}
-          />
+          <div class={styles.Settings}>
+            <select
+              id="field-size"
+              name="size"
+              onChange={(e) =>
+                resetAndSaveFieldSize(e.target.value as FieldSize)
+              }
+            >
+              <option
+                value={FieldSize.full}
+                selected={currentFieldSize() === FieldSize.full}
+              >
+                Full Size
+              </option>
+              <option
+                value={FieldSize.elevenThirteen}
+                selected={currentFieldSize() === FieldSize.elevenThirteen}
+              >
+                11-13
+              </option>
+              <option
+                value={FieldSize.nineTen}
+                selected={currentFieldSize() === FieldSize.nineTen}
+              >
+                9-10
+              </option>
+              <option
+                value={FieldSize.sevenEight}
+                selected={currentFieldSize() === FieldSize.sevenEight}
+              >
+                7-8
+              </option>
+              <For each={archivedFields()}>
+                {(archivedField) => (
+                  <option
+                    value={archivedField.code}
+                    selected={currentArchivedField() === archivedField.code}
+                  >
+                    {archivedField.name}
+                  </option>
+                )}
+              </For>
+            </select>
+            <div class={styles.Grid}>
+              <div>
+                <label for="width">Width</label>
+                <input
+                  type="number"
+                  id="width"
+                  name="customWidth"
+                  min={SIZES[currentFieldSize()].minWidth}
+                  max={SIZES[currentFieldSize()].maxWidth}
+                  value={
+                    customWidth?.() ??
+                    SIZES[currentFieldSize()].recommendedMaxWidth
+                  }
+                  onChange={(e) => setCustomWidth?.(Number(e.target.value))}
+                ></input>
+                <SizeSlider fieldSize={currentFieldSize} type="width" />
+              </div>
+              <div>
+                <label for="length">Length</label>
+                <input
+                  type="number"
+                  id="length"
+                  name="customLength"
+                  min={SIZES[currentFieldSize()].minLength}
+                  max={SIZES[currentFieldSize()].maxLength}
+                  value={
+                    customLength?.() ??
+                    SIZES[currentFieldSize()].recommendedMaxLength
+                  }
+                  onChange={(e) => setCustomLength?.(Number(e.target.value))}
+                ></input>
+                <SizeSlider fieldSize={currentFieldSize} type="length" />
+              </div>
+            </div>
+            <Show when={!isQuickDraw}>
+              <div>
+                <label for="name">Name</label>
+                <input type="text" required name="name" id="name" />
+              </div>
+              <div>
+                <label for="description">Description</label>
+                <input type="text" name="description" id="description" />
+              </div>
+            </Show>
+          </div>
 
           <Show when={!isQuickDraw}>
             <button type="submit">Save</button>

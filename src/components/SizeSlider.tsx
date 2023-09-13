@@ -30,7 +30,7 @@ export const SizeSlider: Component<SizeSliderProps> = ({ fieldSize, type }) => {
       <Show when={hasReccomendedSize()}>
         <div class={styles.RecommendedZone} style={{ width: '50%' }} />
       </Show>
-      <div class={styles.Spot} />
+      {/* <div class={styles.Spot} /> */}
       <div class={styles.Label} style={{ left: '-0.4rem' }}>
         {type === 'length'
           ? SIZES[fieldSize()].minLength

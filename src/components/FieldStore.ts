@@ -32,7 +32,7 @@ const mapFields = (fields: any[]): Field[] => {
   return duplicateFields
 }
 
-const unmapFields = (field: Field) => {
+const unmapFields = (field: Partial<Field>) => {
   const duplicateField: any = { ...field }
   // Convert all keys with camelCase to underscores:
   Object.keys(duplicateField).forEach((key) => {
@@ -90,7 +90,7 @@ export const getArchivedFields = async () => {
   return mapFields(data)
 }
 
-export const saveField = async (field: Field) => {
+export const saveField = async (field: Partial<Field>) => {
   const { data } = await supabase
     .from('fields')
     .upsert(unmapFields(field))
