@@ -1,5 +1,4 @@
 /* @refresh reload */
-import './ionic-defs'
 import { render } from 'solid-js/web'
 import App from './components/App'
 import './pico.css'
