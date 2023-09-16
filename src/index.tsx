@@ -1,5 +1,5 @@
 /* @refresh reload */
-import { Route, Router, Routes } from '@solidjs/router'
+import './ionic-defs'
 import { render } from 'solid-js/web'
 import App from './components/App'
 import './pico.css'
