@@ -16,7 +16,7 @@ export const FieldList: Component = () => {
   const navigate = useNavigate()
 
   return (
-    <>
+    <ion-content class="ion-padding">
       <ion-list>
         <For
           each={fields()}
@@ -35,20 +35,17 @@ export const FieldList: Component = () => {
                   {formatDate(getPredictedNextPaintDate(field))}
                 </div>
               </div>
-              <div class={styles.FieldAction}>&gt;</div>
             </ion-item>
           )}
         </For>
       </ion-list>
       <div class={styles.ActionContainer}>
-        <A class="button" href="/field/new">
+        <ion-button onClick={() => navigate('/field/new')}>
           + Add Field
-        </A>
-        <A class="button" href="/quick">
-          Quick Size
-        </A>
+        </ion-button>
+        <ion-button onClick={() => navigate('/quick')}>Quick Size</ion-button>
         <OnlineStatus />
       </div>
-    </>
+    </ion-content>
   )
 }

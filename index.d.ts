@@ -65,6 +65,7 @@ declare global {
         'ion-picker': any
         'ion-picker-column': any
         'ion-photo': any
+        'ion-badge': any
       }
     }
   }

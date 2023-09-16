@@ -13,17 +13,14 @@ export const StatusLabel: Component<{ field?: Resource<Field> | Field }> = ({
   if (!field) return null
 
   return (
-    <Show
-      when={getIsFieldPlayable(typeof field === 'function' ? field() : field)}
-      fallback={
-        <div class={classNames(styles.StatusPill, styles.StatusRed)}>
-          Unplayable
-        </div>
+    <ion-badge
+      color={
+        getIsFieldPlayable(typeof field === 'function' ? field() : field)
+          ? 'success'
+          : 'warning'
       }
     >
-      <div class={classNames(styles.StatusPill, styles.StatusGreen)}>
-        Playable
-      </div>
-    </Show>
+      Playable
+    </ion-badge>
   )
 }
