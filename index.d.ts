@@ -1,4 +1,4 @@
-// import { HTMLElementTagNameMap } from '@ionic/core/components/index'
+// import { JSX } from '@ionic/core'
 
 // type LocalIntrinsicElements = JSX.IntrinsicElements
 
