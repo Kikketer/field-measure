@@ -1,4 +1,4 @@
-import { useParams } from '@solidjs/router'
+import { useParams, useNavigate } from '@solidjs/router'
 import {
   Component,
   Show,
@@ -25,6 +25,7 @@ export const FieldDetail: Component = () => {
   const [field, { refetch, mutate }] = createResource(fieldId, getField)
   const [saveError, setSaveError] = createSignal<string>()
   const isOnline = useContext(OnlineContext)
+  const navigate = useNavigate()
 
   const paintField = async () => {
     if (!field) return
@@ -47,61 +48,75 @@ export const FieldDetail: Component = () => {
 
   return (
     <>
-      <Header />
-      <ErrorPrompt error={saveError} />
-      <Show when={!field.loading} fallback={<div>Loading...</div>}>
-        <h1>{field()?.name}</h1>
-        <ul class="none">
-          <li>
-            <div class={styles.StatusRow}>
-              <StatusLabel field={field} />
-            </div>
-          </li>
-          <li>
-            <strong>Last painted:</strong> {formatDate(field()?.lastPainted)}
-          </li>
-          <li>
-            <strong>Predicted next painting:</strong>{' '}
-            {formatDate(getPredictedNextPaintDate(field()))} (
-            {getPredictedDaysUntilPaint(field())} days)
-          </li>
-          <li>
-            <strong>Max dry days:</strong> {field()?.maxDryDays}
-          </li>
-          <li>
-            <strong>Rainfall days:</strong> {field()?.rainfallDays}
-          </li>
-          <li>
-            <strong>Rainfall factor:</strong> {field()?.rainfallFactor}
-          </li>
-          <li>
-            <strong>Size:</strong> {field()?.size} (
-            {field()?.customLength ??
-              SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxLength}
-            L x{' '}
-            {field()?.customWidth ??
-              SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxWidth}
-            W)
-          </li>
-          <li>
-            <strong>Location:</strong> {field()?.description}
-          </li>
-        </ul>
-        <div>
-          <button onClick={paintField} disabled={!isOnline?.()}>
-            Mark Painted
-          </button>
-          {/* <Show when={getIsFieldPlayable(field())}>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-back-button
+              text="List"
+              onClick={() => navigate('/fields', { replace: true })}
+            ></ion-back-button>
+          </ion-buttons>
+          <ion-title>
+            <Show when={!field.loading}>{field()?.name}</Show>
+          </ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ErrorPrompt error={saveError} />
+        <Show when={!field.loading} fallback={<div>Loading...</div>}>
+          <h1>{field()?.name}</h1>
+          <ul class="none">
+            <li>
+              <div class={styles.StatusRow}>
+                <StatusLabel field={field} />
+              </div>
+            </li>
+            <li>
+              <strong>Last painted:</strong> {formatDate(field()?.lastPainted)}
+            </li>
+            <li>
+              <strong>Predicted next painting:</strong>{' '}
+              {formatDate(getPredictedNextPaintDate(field()))} (
+              {getPredictedDaysUntilPaint(field())} days)
+            </li>
+            <li>
+              <strong>Max dry days:</strong> {field()?.maxDryDays}
+            </li>
+            <li>
+              <strong>Rainfall days:</strong> {field()?.rainfallDays}
+            </li>
+            <li>
+              <strong>Rainfall factor:</strong> {field()?.rainfallFactor}
+            </li>
+            <li>
+              <strong>Size:</strong> {field()?.size} (
+              {field()?.customLength ??
+                SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxLength}
+              L x{' '}
+              {field()?.customWidth ??
+                SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxWidth}
+              W)
+            </li>
+            <li>
+              <strong>Location:</strong> {field()?.description}
+            </li>
+          </ul>
+          <div>
+            <button onClick={paintField} disabled={!isOnline?.()}>
+              Mark Painted
+            </button>
+            {/* <Show when={getIsFieldPlayable(field())}>
               <a role="button" class="contrast">
                 Mark Unplayable
               </a>
             </Show> */}
-          {/* <a role="button" class="secondary">
+            {/* <a role="button" class="secondary">
               Archive
             </a> */}
-          <OnlineStatus />
-        </div>
-      </Show>
+            <OnlineStatus />
+          </div>
+        </Show>
+      </ion-content>
     </>
   )
 }

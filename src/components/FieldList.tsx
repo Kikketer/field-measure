@@ -1,11 +1,5 @@
-import { A } from '@solidjs/router'
-import {
-  Component,
-  For,
-  createResource,
-  createSignal,
-  useContext,
-} from 'solid-js'
+import { A, useNavigate } from '@solidjs/router'
+import { Component, For, createResource, useContext } from 'solid-js'
 import {
   formatDate,
   getPredictedNextPaintDate,
@@ -19,36 +13,33 @@ import { StatusLabel } from './StatusLabel'
 export const FieldList: Component = () => {
   const isOnline = useContext(OnlineContext)
   const [fields] = createResource(isOnline, getFields)
+  const navigate = useNavigate()
 
   return (
     <>
-      <ul class={styles.FieldList}>
+      <ion-list>
         <For
           each={fields()}
           fallback={<div class={styles.EmptyList}>There are no fields</div>}
         >
           {(field) => (
-            <A href={`/field/${field.id}`} class={styles.FieldItemTag}>
-              <li class={styles.FieldItemWrapper}>
-                <div class={styles.FieldItemDetail}>
-                  <div>{field.name}</div>
-                  <div>Painted: {formatDate(field.lastPainted)}</div>
+            <ion-item button onClick={() => navigate(`/field/${field.id}`)}>
+              <div class={styles.FieldItemDetail}>
+                <div>{field.name}</div>
+                <div>Painted: {formatDate(field.lastPainted)}</div>
+              </div>
+              <div class={styles.StatusContainer}>
+                <StatusLabel field={field} />
+                <div>
+                  {getPredictedNextPaintLabel(getPredictedNextPaintDate(field))}{' '}
+                  {formatDate(getPredictedNextPaintDate(field))}
                 </div>
-                <div class={styles.StatusContainer}>
-                  <StatusLabel field={field} />
-                  <div>
-                    {getPredictedNextPaintLabel(
-                      getPredictedNextPaintDate(field),
-                    )}{' '}
-                    {formatDate(getPredictedNextPaintDate(field))}
-                  </div>
-                </div>
-                <div class={styles.FieldAction}>&gt;</div>
-              </li>
-            </A>
+              </div>
+              <div class={styles.FieldAction}>&gt;</div>
+            </ion-item>
           )}
         </For>
-      </ul>
+      </ion-list>
       <div class={styles.ActionContainer}>
         <A class="button" href="/field/new">
           + Add Field
