@@ -28,7 +28,7 @@ export const FieldList: Component = () => {
                 <div>{field.name}</div>
                 <div>Painted: {formatDate(field.lastPainted)}</div>
               </div>
-              <div class={styles.StatusContainer}>
+              <div class={styles.StatusContainer} slot="end">
                 <StatusLabel field={field} />
                 <div>
                   {getPredictedNextPaintLabel(getPredictedNextPaintDate(field))}{' '}
@@ -40,12 +40,14 @@ export const FieldList: Component = () => {
         </For>
       </ion-list>
       <div class={styles.ActionContainer}>
-        <ion-button onClick={() => navigate('/field/new')}>
+        <ion-button expand="block" onClick={() => navigate('/field/new')}>
           + Add Field
         </ion-button>
-        <ion-button onClick={() => navigate('/quick')}>Quick Size</ion-button>
-        <OnlineStatus />
+        <ion-button expand="block" onClick={() => navigate('/quick')}>
+          Quick Size
+        </ion-button>
       </div>
+      <OnlineStatus />
     </ion-content>
   )
 }
