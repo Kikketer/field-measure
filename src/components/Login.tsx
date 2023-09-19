@@ -2,6 +2,7 @@ import { useNavigate } from '@solidjs/router'
 import logo from '../assets/fav.png'
 import styles from './Login.module.css'
 import { supabase } from './supabase'
+import classNames from 'classnames'
 
 export const Login = () => {
   const navigate = useNavigate()
@@ -22,12 +23,14 @@ export const Login = () => {
   })
 
   return (
-    <div class={styles.VerticalAlign}>
-      <div>
-        <h1>Field Manager</h1>
-        <img class={styles.Logo} src={logo} />
+    <ion-content class={classNames('ion-padding')}>
+      <div class={styles.VerticalAlign}>
+        <div>
+          <h1>Field Manager</h1>
+          <img class={styles.Logo} src={logo} />
+        </div>
+        <ion-button onClick={signIn}>Sign In</ion-button>
       </div>
-      <button onClick={signIn}>Sign In</button>
-    </div>
+    </ion-content>
   )
 }

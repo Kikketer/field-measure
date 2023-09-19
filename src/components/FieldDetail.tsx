@@ -66,30 +66,35 @@ export const FieldDetail: Component = () => {
       <ion-content class="ion-padding">
         <ErrorPrompt error={saveError} />
         <Show when={!field.loading} fallback={<div>Loading...</div>}>
-          <h1>{field()?.name}</h1>
-          <ion-list>
+          <ion-grid>
+            <ion-row class="ion-align-items-center">
+              <h1>{field()?.name}</h1>
+              <div>
+                <StatusLabel field={field} />
+              </div>
+            </ion-row>
+          </ion-grid>
+          <ion-list lines="none">
             <ion-item>
-              <StatusLabel field={field} />
+              <strong>Last painted:</strong>&nbsp;
+              {formatDate(field()?.lastPainted)}
             </ion-item>
             <ion-item>
-              <strong>Last painted:</strong> {formatDate(field()?.lastPainted)}
-            </ion-item>
-            <ion-item>
-              <strong>Predicted next painting:</strong>{' '}
+              <strong>Predicted next painting:</strong>&nbsp;
               {formatDate(getPredictedNextPaintDate(field()))} (
               {getPredictedDaysUntilPaint(field())} days)
             </ion-item>
             <ion-item>
-              <strong>Max dry days:</strong> {field()?.maxDryDays}
+              <strong>Max dry days:</strong>&nbsp;{field()?.maxDryDays}
             </ion-item>
             <ion-item>
-              <strong>Rainfall days:</strong> {field()?.rainfallDays}
+              <strong>Rainfall days:</strong>&nbsp;{field()?.rainfallDays}
             </ion-item>
             <ion-item>
-              <strong>Rainfall factor:</strong> {field()?.rainfallFactor}
+              <strong>Rainfall factor:</strong>&nbsp;{field()?.rainfallFactor}
             </ion-item>
             <ion-item>
-              <strong>Size:</strong> {field()?.size} (
+              <strong>Size:</strong>&nbsp;{field()?.size} (
               {field()?.customLength ??
                 SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxLength}
               L x{' '}
@@ -98,13 +103,13 @@ export const FieldDetail: Component = () => {
               W)
             </ion-item>
             <ion-item>
-              <strong>Location:</strong> {field()?.description}
+              <strong>Location:</strong>&nbsp;{field()?.description}
             </ion-item>
           </ion-list>
           <div>
-            <button onClick={paintField} disabled={!isOnline?.()}>
+            <ion-button onClick={paintField} disabled={!isOnline?.()}>
               Mark Painted
-            </button>
+            </ion-button>
             {/* <Show when={getIsFieldPlayable(field())}>
               <a role="button" class="contrast">
                 Mark Unplayable

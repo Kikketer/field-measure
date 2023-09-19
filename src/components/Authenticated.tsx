@@ -12,12 +12,14 @@ import { OnlineContext } from './OnlineStatusProvider'
 export const Authenticated: Component = () => {
   const [ready, setReady] = createSignal(false)
   const authContext = useContext(AuthenticationContext)
-  // const [user] = createResource(() => supabase.auth.getUser())
   const navigate = useNavigate()
   const isOnline = useContext(OnlineContext)
 
   createEffect(async () => {
-    if (!authContext?.loading && !authContext?.user?.()) {
+    if (
+      (!authContext?.loading && !authContext?.user?.()) ||
+      authContext?.user()?.error
+    ) {
       navigate('/', { replace: true })
     } else {
       setReady(true)

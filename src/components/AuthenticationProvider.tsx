@@ -1,4 +1,4 @@
-import { UserResponse } from '@supabase/supabase-js'
+import { AuthError, UserResponse } from '@supabase/supabase-js'
 import {
   Component,
   JSX,
@@ -20,7 +20,6 @@ export const AuthenticationContext = createContext<{
 export const AuthenticationProvider: Component<AuthenticationProvider> = (
   props,
 ) => {
-  // const [user, setUser] = createSignal('hi')
   const [user] = createResource(() => supabase.auth.getUser())
 
   return (
