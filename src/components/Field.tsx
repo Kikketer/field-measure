@@ -19,7 +19,6 @@ type FieldProps = {
 }
 
 const getSoccerFieldImage = (size: FieldSize) => {
-  console.log('Getting size')
   switch (size) {
     case FieldSize.full:
     case FieldSize.elevenThirteen:
