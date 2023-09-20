@@ -3,6 +3,7 @@ import logo from '../assets/fav.png'
 import styles from './Login.module.css'
 import { supabase } from './supabase'
 import classNames from 'classnames'
+import { Page } from './Page'
 
 export const Login = () => {
   const navigate = useNavigate()
@@ -23,14 +24,14 @@ export const Login = () => {
   })
 
   return (
-    <ion-content class={classNames('ion-padding')}>
+    <Page>
       <div class={styles.VerticalAlign}>
         <div>
           <h1>Field Manager</h1>
           <img class={styles.Logo} src={logo} />
         </div>
-        <ion-button onClick={signIn}>Sign In</ion-button>
+        <button onClick={signIn}>Sign In</button>
       </div>
-    </ion-content>
+    </Page>
   )
 }

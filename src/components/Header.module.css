@@ -1,12 +1,12 @@
 .HeaderWrap {
-  height: 1rem;
+  height: 3rem;
 }
 
 .Header {
   display: flex;
   flex-direction: row;
   align-items: center;
-  height: 2rem;
+  height: 3rem;
   padding: 0 0.5rem;
   border-bottom: 1px solid var(--card-border-color);
   position: fixed;
@@ -15,4 +15,16 @@
   width: 100%;
   background: var(--background-color);
   z-index: 1000;
+}
+
+.BackButton {
+  position: absolute;
+  left: 5p;
+}
+
+.H1 {
+  font-size: 1rem;
+  margin: 0;
+  flex: 1;
+  text-align: center;
 }

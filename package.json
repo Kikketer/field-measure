@@ -21,7 +21,7 @@
     "vite-plugin-solid": "^2.7.0"
   },
   "dependencies": {
-    "@ionic/core": "^7.3.3",
+    "@picocss/pico": "^1.5.10",
     "@solidjs/router": "^0.8.3",
     "@supabase/supabase-js": "^2.33.1",
     "@vercel/node": "^3.0.3",

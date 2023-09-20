@@ -13,14 +13,15 @@ export const StatusLabel: Component<{ field?: Resource<Field> | Field }> = ({
   if (!field) return null
 
   return (
-    <ion-badge
-      color={
+    <div
+      class={classNames(
+        styles.StatusPill,
         getIsFieldPlayable(typeof field === 'function' ? field() : field)
-          ? 'success'
-          : 'warning'
-      }
+          ? styles.StatusGreen
+          : styles.StatusRed,
+      )}
     >
       Playable
-    </ion-badge>
+    </div>
   )
 }

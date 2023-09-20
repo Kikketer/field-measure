@@ -19,6 +19,7 @@ import { getField, saveField } from './FieldStore'
 import { Header } from './Header'
 import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
 import { StatusLabel } from './StatusLabel'
+import { Page } from './Page'
 
 export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)
@@ -47,53 +48,38 @@ export const FieldDetail: Component = () => {
   }
 
   return (
-    <>
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-button
-              defaultHref="/fields"
-              onClick={() => navigate('/fields', { replace: true })}
-            >
-              &lt; Lists
-            </ion-button>
-          </ion-buttons>
-          <ion-title>
-            <Show when={!field.loading}>{field()?.name}</Show>
-          </ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ErrorPrompt error={saveError} />
-        <Show when={!field.loading} fallback={<div>Loading...</div>}>
-          <ion-grid>
-            <ion-row class="ion-align-items-center">
-              <h1>{field()?.name}</h1>
-              <div>
-                <StatusLabel field={field} />
-              </div>
-            </ion-row>
-          </ion-grid>
-          <ion-list lines="none">
-            <ion-item>
+    <Page>
+      {/* Header children won't update unless there's some static text... odd? */}
+      <Header>&nbsp;{field()?.name}&nbsp;</Header>
+      <ErrorPrompt error={saveError} />
+      <Show when={!field.loading} fallback={<div>Loading...</div>}>
+        <div class={styles.DetailContainer}>
+          <div class={styles.TitleRow}>
+            <h1>{field()?.name}</h1>
+            <div>
+              <StatusLabel field={field} />
+            </div>
+          </div>
+          <ul>
+            <li>
               <strong>Last painted:</strong>&nbsp;
               {formatDate(field()?.lastPainted)}
-            </ion-item>
-            <ion-item>
+            </li>
+            <li>
               <strong>Predicted next painting:</strong>&nbsp;
               {formatDate(getPredictedNextPaintDate(field()))} (
               {getPredictedDaysUntilPaint(field())} days)
-            </ion-item>
-            <ion-item>
+            </li>
+            <li>
               <strong>Max dry days:</strong>&nbsp;{field()?.maxDryDays}
-            </ion-item>
-            <ion-item>
+            </li>
+            <li>
               <strong>Rainfall days:</strong>&nbsp;{field()?.rainfallDays}
-            </ion-item>
-            <ion-item>
+            </li>
+            <li>
               <strong>Rainfall factor:</strong>&nbsp;{field()?.rainfallFactor}
-            </ion-item>
-            <ion-item>
+            </li>
+            <li>
               <strong>Size:</strong>&nbsp;{field()?.size} (
               {field()?.customLength ??
                 SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxLength}
@@ -101,15 +87,15 @@ export const FieldDetail: Component = () => {
               {field()?.customWidth ??
                 SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxWidth}
               W)
-            </ion-item>
-            <ion-item>
+            </li>
+            <li>
               <strong>Location:</strong>&nbsp;{field()?.description}
-            </ion-item>
-          </ion-list>
+            </li>
+          </ul>
           <div>
-            <ion-button onClick={paintField} disabled={!isOnline?.()}>
+            <button onClick={paintField} disabled={!isOnline?.()}>
               Mark Painted
-            </ion-button>
+            </button>
             {/* <Show when={getIsFieldPlayable(field())}>
               <a role="button" class="contrast">
                 Mark Unplayable
@@ -120,8 +106,8 @@ export const FieldDetail: Component = () => {
             </a> */}
             <OnlineStatus />
           </div>
-        </Show>
-      </ion-content>
-    </>
+        </div>
+      </Show>
+    </Page>
   )
 }

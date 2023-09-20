@@ -1,5 +1,12 @@
-import { A, useNavigate } from '@solidjs/router'
-import { Component, For, createResource, useContext } from 'solid-js'
+import { useNavigate } from '@solidjs/router'
+import {
+  Component,
+  For,
+  createEffect,
+  createResource,
+  createSignal,
+  useContext,
+} from 'solid-js'
 import {
   formatDate,
   getPredictedNextPaintDate,
@@ -8,7 +15,11 @@ import {
 import styles from './FieldList.module.css'
 import { getFields } from './FieldStore'
 import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
+import { Page } from './Page'
 import { StatusLabel } from './StatusLabel'
+import { Header } from './Header'
+import { ChevronRight } from './chevron-right'
+import { Field } from '../utilities/types'
 
 export const FieldList: Component = () => {
   const isOnline = useContext(OnlineContext)
@@ -16,38 +27,43 @@ export const FieldList: Component = () => {
   const navigate = useNavigate()
 
   return (
-    <ion-content class="ion-padding">
-      <ion-list>
+    <Page>
+      <Header hideBack={true}>Fields</Header>
+      <ul class={styles.FieldList}>
         <For
           each={fields()}
           fallback={<div class={styles.EmptyList}>There are no fields</div>}
         >
           {(field) => (
-            <ion-item button onClick={() => navigate(`/field/${field.id}`)}>
-              <div class={styles.FieldItemDetail}>
+            <li
+              class={styles.FieldItem}
+              onClick={() => navigate(`/field/${field.id}`)}
+            >
+              <div>
                 <div>{field.name}</div>
                 <div>Painted: {formatDate(field.lastPainted)}</div>
               </div>
-              <div class={styles.StatusContainer} slot="end">
-                <StatusLabel field={field} />
-                <div>
-                  {getPredictedNextPaintLabel(getPredictedNextPaintDate(field))}{' '}
-                  {formatDate(getPredictedNextPaintDate(field))}
+              <div class={styles.EndSlot}>
+                <div class={styles.StatusContainer}>
+                  <StatusLabel field={field} />
+                  <div>
+                    {getPredictedNextPaintLabel(
+                      getPredictedNextPaintDate(field),
+                    )}{' '}
+                    {formatDate(getPredictedNextPaintDate(field))}
+                  </div>
                 </div>
+                <ChevronRight />
               </div>
-            </ion-item>
+            </li>
           )}
         </For>
-      </ion-list>
+      </ul>
       <div class={styles.ActionContainer}>
-        <ion-button expand="block" onClick={() => navigate('/field/new')}>
-          + Add Field
-        </ion-button>
-        <ion-button expand="block" onClick={() => navigate('/quick')}>
-          Quick Size
-        </ion-button>
+        <button onClick={() => navigate('/field/new')}>+ Add Field</button>
+        <button onClick={() => navigate('/quick')}>Quick Size</button>
       </div>
       <OnlineStatus />
-    </ion-content>
+    </Page>
   )
 }
