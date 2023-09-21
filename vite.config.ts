@@ -24,17 +24,12 @@ export default defineConfig({
         description: 'Manage Youth Soccer FIelds',
         icons: [
           {
-            src: '/192.png',
+            src: '/pwa-192x192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/256.png',
-            sizes: '256x256',
-            type: 'image/png',
-          },
-          {
-            src: '/512.png',
+            src: '/pwa-512x512.png',
             sizes: '512x512',
             type: 'image/png',
           },
