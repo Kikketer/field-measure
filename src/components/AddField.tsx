@@ -1,5 +1,12 @@
 import { useLocation, useNavigate } from '@solidjs/router'
-import { Component, For, Show, createResource, createSignal } from 'solid-js'
+import {
+  Accessor,
+  Component,
+  For,
+  Show,
+  createResource,
+  createSignal,
+} from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { Field as FieldModel, FieldSize } from '../utilities/types'
 import styles from './AddField.module.css'
@@ -18,6 +25,8 @@ export const AddField: Component = () => {
   const [customLength, setCustomLength] = createSignal<number>()
   const [loading, setLoading] = createSignal<boolean>(false)
   const [error, setError] = createSignal<string>()
+
+  const title = 'abc'
 
   const navigate = useNavigate()
 
@@ -51,8 +60,6 @@ export const AddField: Component = () => {
       data[formElement[0]] = formElement[1]
     }
 
-    console.log(data)
-
     // Check validation for the form (if needed)
     try {
       setLoading(true)
@@ -67,7 +74,7 @@ export const AddField: Component = () => {
 
   return (
     <Page>
-      <Header>Add Field</Header>
+      <Header>{title}</Header>
       <Field
         fieldSize={currentFieldSize}
         customWidth={customWidth}

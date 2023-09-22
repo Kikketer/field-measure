@@ -4,6 +4,7 @@ import {
   For,
   createEffect,
   createResource,
+  createMemo,
   createSignal,
   useContext,
 } from 'solid-js'
@@ -28,15 +29,18 @@ export const FieldList: Component = () => {
   const [fields, setFields] = createSignal<Field[]>()
 
   const onUpdateFields = (fields: Field[]) => {
-    console.log('Updating')
     setFields(fields)
   }
 
-  createEffect(() => {
-    if (isOnline?.()) {
-      setFields(getFields(isOnline?.(), onUpdateFields))
-    }
-  })
+  setFields(
+    createMemo(() => {
+      // Just trigger based on isOnline changing...
+      if (isOnline?.()) {
+        return getFields(isOnline?.(), onUpdateFields)
+      }
+      return getFields(isOnline?.(), onUpdateFields)
+    }),
+  )
 
   return (
     <Page>

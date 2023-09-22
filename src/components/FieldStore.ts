@@ -62,7 +62,6 @@ export const getFields = (
   let fields = hydratedFieldStore?.fields
 
   // Always fetch if we are online
-  console.log('getting it? ', isOnline)
   if (isOnline) {
     supabase
       .from('fields')
@@ -118,7 +117,6 @@ export const saveField = async (
     .upsert(unmapField(field))
     .select('*')
 
-  console.log('saveField', data)
   if (!data?.length) return
 
   const updatedField = mapFields(data)[0]
