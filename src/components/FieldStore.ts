@@ -1,4 +1,3 @@
-import { differenceInHours } from 'date-fns'
 import { Field } from '../utilities/types'
 import { supabase } from './supabase'
 
@@ -8,7 +7,8 @@ const fieldStore: { lastFetch: Date | undefined; fields: Field[] | undefined } =
     fields: undefined,
   }
 
-const saveToCache = () => {}
+const saveToCache = (fields: Field[]) => {}
+
 const restoreFromCache = () => {}
 
 const mapFields = (fields: any[]): Field[] => {
@@ -50,35 +50,40 @@ const unmapFields = (fields: Field[]) => {
   return fields.map((field) => unmapField(field))
 }
 
-export const getFields = async (isOnline?: boolean): Promise<Field[]> => {
+export const getFields = (
+  isOnline?: boolean,
+  onUpdate?: (fields: Field[]) => void,
+): Field[] => {
   const localStorageFields = localStorage.getItem('fieldStore')
   let hydratedFieldStore = localStorageFields
     ? JSON.parse(localStorageFields)
     : fieldStore
 
-  // await new Promise((resolve) => setTimeout(resolve, 100))
-
   let fields = hydratedFieldStore?.fields
 
   // Always fetch if we are online
+  console.log('getting it? ', isOnline)
   if (isOnline) {
-    const result = await supabase
+    supabase
       .from('fields')
       .select('*')
       .eq('active', true)
       .order('sort_order')
+      .then((result) => {
+        fields = result.data
 
-    fields = result.data
+        fieldStore.lastFetch = new Date()
+        // Save to local storage for fetch later (if we are offline)
+        localStorage.setItem(
+          'fieldStore',
+          JSON.stringify({
+            ...fieldStore,
+            fields: fields ?? [],
+          }),
+        )
 
-    fieldStore.lastFetch = new Date()
-    // Save to local storage for fetch later (if we are offline)
-    localStorage.setItem(
-      'fieldStore',
-      JSON.stringify({
-        ...fieldStore,
-        fields: fields ?? [],
-      }),
-    )
+        onUpdate?.(mapFields(fields))
+      })
   }
 
   fieldStore.fields = fields

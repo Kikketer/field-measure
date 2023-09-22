@@ -9,6 +9,7 @@ import {
 } from 'solid-js'
 import {
   formatDate,
+  getPredictedDaysUntilPaint,
   getPredictedNextPaintDate,
   getPredictedNextPaintLabel,
 } from '../utilities/utils'
@@ -23,8 +24,19 @@ import { Field } from '../utilities/types'
 
 export const FieldList: Component = () => {
   const isOnline = useContext(OnlineContext)
-  const [fields] = createResource(isOnline, getFields)
   const navigate = useNavigate()
+  const [fields, setFields] = createSignal<Field[]>()
+
+  const onUpdateFields = (fields: Field[]) => {
+    console.log('Updating')
+    setFields(fields)
+  }
+
+  createEffect(() => {
+    if (isOnline?.()) {
+      setFields(getFields(isOnline?.(), onUpdateFields))
+    }
+  })
 
   return (
     <Page>
@@ -40,7 +52,9 @@ export const FieldList: Component = () => {
               onClick={() => navigate(`/field/${field.id}`)}
             >
               <div>
-                <div>{field.name}</div>
+                <div>
+                  <strong>{field.name}</strong>
+                </div>
                 <div>Painted: {formatDate(field.lastPainted)}</div>
               </div>
               <div class={styles.EndSlot}>
@@ -50,7 +64,8 @@ export const FieldList: Component = () => {
                     {getPredictedNextPaintLabel(
                       getPredictedNextPaintDate(field),
                     )}{' '}
-                    {formatDate(getPredictedNextPaintDate(field))}
+                    {formatDate(getPredictedNextPaintDate(field))} [
+                    {getPredictedDaysUntilPaint(field)}]
                   </div>
                 </div>
                 <ChevronRight />
