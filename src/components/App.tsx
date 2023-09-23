@@ -20,6 +20,7 @@ const App: Component = () => {
               <Route path="/" component={FieldList} />
             </Route>
             <Route path="/field" component={Authenticated}>
+              <Route path="/:id/edit" component={AddField} />
               <Route path="/:id" component={FieldDetail} />
               <Route path="/new" component={AddField} />
             </Route>

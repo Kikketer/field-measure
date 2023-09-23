@@ -42,22 +42,18 @@ const getLabelsForField = (fieldSize: FieldSize) => {
   }
 }
 
-export const Field: Component<FieldProps> = ({
-  fieldSize,
-  customWidth,
-  customLength,
-}) => {
+export const Field: Component<FieldProps> = (props) => {
   return (
     <div class={styles.FieldWrapper}>
-      {getSoccerFieldImage(fieldSize())}
-      <For each={getLabelsForField(fieldSize())}>
+      {getSoccerFieldImage(props.fieldSize())}
+      <For each={getLabelsForField(props.fieldSize())}>
         {(label) => (
           <Show
             when={
               !!label.getLength({
-                fieldSize: fieldSize(),
-                fieldWidth: customWidth?.(),
-                fieldLength: customLength?.(),
+                fieldSize: props.fieldSize(),
+                fieldWidth: props.customWidth?.(),
+                fieldLength: props.customLength?.(),
               })
             }
           >
@@ -67,9 +63,9 @@ export const Field: Component<FieldProps> = ({
             >
               {convertToFeet(
                 label.getLength({
-                  fieldSize: fieldSize(),
-                  fieldWidth: customWidth?.(),
-                  fieldLength: customLength?.(),
+                  fieldSize: props.fieldSize(),
+                  fieldWidth: props.customWidth?.(),
+                  fieldLength: props.customLength?.(),
                 }),
               )}
             </div>
@@ -80,9 +76,11 @@ export const Field: Component<FieldProps> = ({
         class={styles.Label}
         style={{ left: '20%', top: '90%', width: '60%' }}
       >
-        {fieldSize()}:{' '}
-        {customWidth?.() ?? SIZES[fieldSize()].recommendedMaxWidth} x{' '}
-        {customLength?.() ?? SIZES[fieldSize()].recommendedMaxLength}
+        {props.fieldSize()}:{' '}
+        {props.customWidth?.() ?? SIZES[props.fieldSize()].recommendedMaxWidth}{' '}
+        x{' '}
+        {props.customLength?.() ??
+          SIZES[props.fieldSize()].recommendedMaxLength}
       </div>
     </div>
   )

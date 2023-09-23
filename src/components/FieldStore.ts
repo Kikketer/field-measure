@@ -86,9 +86,9 @@ export const getFields = (
   return mapFields(fields)
 }
 
-export const getField = async (id: Field['id']): Promise<Field> => {
+export const getField = (id: Field['id']): Field | undefined => {
   // We fetch all fields if it's not there (cache is handled in the getFields call)
-  return (await getFields()).find((field) => field.id === id)!
+  return getFields().find((field) => field.id === id)!
 }
 
 export const getArchivedFields = async () => {

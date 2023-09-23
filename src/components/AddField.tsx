@@ -1,9 +1,11 @@
-import { useLocation, useNavigate } from '@solidjs/router'
+import { useLocation, useNavigate, useParams } from '@solidjs/router'
 import {
   Accessor,
   Component,
   For,
   Show,
+  createEffect,
+  createMemo,
   createResource,
   createSignal,
 } from 'solid-js'
@@ -11,7 +13,11 @@ import { SIZES } from '../utilities/constants'
 import { Field as FieldModel, FieldSize } from '../utilities/types'
 import styles from './AddField.module.css'
 import { Field } from './Field'
-import { getArchivedFields, saveField as saveFieldToDb } from './FieldStore'
+import {
+  getArchivedFields,
+  getField,
+  saveField as saveFieldToDb,
+} from './FieldStore'
 import { Header } from './Header'
 import { SizeSlider } from './SizeSlider'
 import { Page } from './Page'
@@ -26,22 +32,19 @@ export const AddField: Component = () => {
   const [loading, setLoading] = createSignal<boolean>(false)
   const [error, setError] = createSignal<string>()
   const path = useLocation().pathname
-
+  const fieldId = useParams().id
   const navigate = useNavigate()
 
-  const [archivedFields] = createResource(getArchivedFields)
+  const field = createMemo(() => {
+    return getField(fieldId)
+  })
 
   const resetAndSaveFieldSize = (fieldSize: FieldSize | string) => {
     // Check to find the value of fieldSize is within the enum of FieldSize
-
     if (Object.values(FieldSize).includes(fieldSize as FieldSize)) {
       setCurrentFieldSize(fieldSize as FieldSize)
       setCustomWidth(SIZES[fieldSize].recommendedMaxWidth)
       setCustomLength(SIZES[fieldSize].recommendedMaxLength)
-    } else {
-      // Set the currentArchivedField if it's not one of the field sizes defined in the enum
-      setCurrentArchivedField(fieldSize as string)
-      // TODO Set the width/length to the archived field's width/length
     }
   }
 
@@ -74,7 +77,7 @@ export const AddField: Component = () => {
 
   return (
     <Page>
-      <Header>{path.match(/\/new$/) ? 'New Field' : 'Edit Field'}</Header>
+      <Header>{fieldId ? `Edit ${field()?.name}` : 'Add Field'}</Header>
       <Field
         fieldSize={currentFieldSize}
         customWidth={customWidth}
@@ -111,16 +114,6 @@ export const AddField: Component = () => {
             >
               7-8
             </option>
-            <For each={archivedFields()}>
-              {(archivedField) => (
-                <option
-                  value={archivedField.code}
-                  selected={currentArchivedField() === archivedField.code}
-                >
-                  {archivedField.name}
-                </option>
-              )}
-            </For>
           </select>
           <div class={styles.Grid}>
             <div>
