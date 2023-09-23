@@ -25,8 +25,7 @@ export const AddField: Component = () => {
   const [customLength, setCustomLength] = createSignal<number>()
   const [loading, setLoading] = createSignal<boolean>(false)
   const [error, setError] = createSignal<string>()
-
-  const title = 'abc'
+  const path = useLocation().pathname
 
   const navigate = useNavigate()
 
@@ -63,7 +62,8 @@ export const AddField: Component = () => {
     // Check validation for the form (if needed)
     try {
       setLoading(true)
-      await saveFieldToDb(data)
+      const savedField = await saveFieldToDb(data)
+      navigate(`/field/${savedField?.id}`, { replace: true })
     } catch (err) {
       setError((err as Error).message)
       console.error(err)
@@ -74,7 +74,7 @@ export const AddField: Component = () => {
 
   return (
     <Page>
-      <Header>{title}</Header>
+      <Header>{path.match(/\/new$/) ? 'New Field' : 'Edit Field'}</Header>
       <Field
         fieldSize={currentFieldSize}
         customWidth={customWidth}

@@ -1,11 +1,10 @@
 import { Field } from '../utilities/types'
 import { supabase } from './supabase'
 
-const fieldStore: { lastFetch: Date | undefined; fields: Field[] | undefined } =
-  {
-    lastFetch: undefined,
-    fields: undefined,
-  }
+type FieldStore = {
+  lastFetch: Date | undefined
+  fields: Field[] | undefined
+}
 
 const saveToCache = (fields: Field[]) => {}
 
@@ -55,11 +54,9 @@ export const getFields = (
   onUpdate?: (fields: Field[]) => void,
 ): Field[] => {
   const localStorageFields = localStorage.getItem('fieldStore')
-  let hydratedFieldStore = localStorageFields
-    ? JSON.parse(localStorageFields)
-    : fieldStore
+  let hydratedFieldStore = JSON.parse(localStorageFields ?? '')
 
-  let fields = hydratedFieldStore?.fields
+  let fields = hydratedFieldStore?.fields ?? []
 
   // Always fetch if we are online
   if (isOnline) {
@@ -71,12 +68,11 @@ export const getFields = (
       .then((result) => {
         fields = result.data
 
-        fieldStore.lastFetch = new Date()
         // Save to local storage for fetch later (if we are offline)
         localStorage.setItem(
           'fieldStore',
           JSON.stringify({
-            ...fieldStore,
+            lastFetch: new Date(),
             fields: fields ?? [],
           }),
         )
@@ -84,8 +80,6 @@ export const getFields = (
         onUpdate?.(mapFields(fields))
       })
   }
-
-  fieldStore.fields = fields
 
   if (!fields?.length) return []
 
@@ -112,23 +106,32 @@ export const getArchivedFields = async () => {
 export const saveField = async (
   field: Partial<Field>,
 ): Promise<Field | undefined> => {
+  // Set the sort order to the length of the current fields
+  const existingFields = await getFields()
+
   const { data } = await supabase
     .from('fields')
-    .upsert(unmapField(field))
+    .upsert(unmapField({ ...field, sortOrder: existingFields.length }))
     .select('*')
 
   if (!data?.length) return
 
   const updatedField = mapFields(data)[0]
-  // Now either add or update the field in the cache
-  const fieldIndex = fieldStore.fields?.findIndex(
-    (field) => field.id === updatedField.id,
+
+  const fieldIndex = existingFields?.findIndex(
+    (field: Field) => field.id === updatedField.id,
   )
   if (fieldIndex === undefined || fieldIndex === -1) {
-    fieldStore.fields?.push(updatedField)
+    existingFields?.push(updatedField)
   } else {
-    fieldStore.fields?.splice(fieldIndex, 1, updatedField)
+    existingFields?.splice(fieldIndex, 1, updatedField)
   }
+
+  // And now re-save this back to the local storage
+  localStorage.setItem(
+    'fieldStore',
+    JSON.stringify({ fields: existingFields, lastFetch: new Date() }),
+  )
 
   return updatedField
 }

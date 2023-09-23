@@ -23,7 +23,7 @@ import { Page } from './Page'
 
 export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)
-  const [field, { refetch, mutate }] = createResource(fieldId, getField)
+  const [field, { mutate }] = createResource(fieldId, getField)
   const [saveError, setSaveError] = createSignal<string>()
   const isOnline = useContext(OnlineContext)
   const navigate = useNavigate()
@@ -37,6 +37,7 @@ export const FieldDetail: Component = () => {
         lastPainted: new Date(),
       })
       mutate(savedField)
+      navigate(`/fields`, { replace: true })
     } catch (err) {
       console.error(err)
       setSaveError((err as Error).message)
