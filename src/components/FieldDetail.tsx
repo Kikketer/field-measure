@@ -52,14 +52,16 @@ export const FieldDetail: Component = () => {
   return (
     <Page>
       {/* Header children won't update unless there's some static text... odd? */}
-      <Header>&nbsp;{field()?.name}&nbsp;</Header>
+      <Header backLocation="/fields" editFieldId={field()?.id}>
+        &nbsp;{field()?.name}&nbsp;
+      </Header>
       <ErrorPrompt error={saveError} />
       <Show when={!field.loading} fallback={<div>Loading...</div>}>
         <div class={styles.DetailContainer}>
           <div class={styles.TitleRow}>
             <h1>{field()?.name}</h1>
             <div>
-              <StatusLabel field={field} />
+              <StatusLabel field={field()} />
             </div>
           </div>
           <ul>

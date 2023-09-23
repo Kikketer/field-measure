@@ -48,7 +48,6 @@ export type Field = {
    * <=0 = needs to be painted
    */
   shouldPaint: number
-  archived?: boolean
   /**
    * The date the field was marked unplayable
    * This allows us to determine what the maxDryDays should be
@@ -56,6 +55,8 @@ export type Field = {
   markedUnplayable: Date
   sortOrder: number
   active?: boolean
+  modified?: Date
+  deleted?: boolean
 }
 
 export enum FieldSize {

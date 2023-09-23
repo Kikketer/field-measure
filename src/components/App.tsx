@@ -8,6 +8,7 @@ import { FieldList } from './FieldList'
 import { Login } from './Login'
 import { OnlineStatusProvider } from './OnlineStatusProvider'
 import { ServiceWorker } from './ServiceWorker'
+import { EditField } from './EditField'
 
 const App: Component = () => {
   return (
@@ -20,7 +21,7 @@ const App: Component = () => {
               <Route path="/" component={FieldList} />
             </Route>
             <Route path="/field" component={Authenticated}>
-              <Route path="/:id/edit" component={AddField} />
+              <Route path="/:id/edit" component={EditField} />
               <Route path="/:id" component={FieldDetail} />
               <Route path="/new" component={AddField} />
             </Route>

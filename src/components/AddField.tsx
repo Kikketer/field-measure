@@ -1,26 +1,13 @@
-import { useLocation, useNavigate, useParams } from '@solidjs/router'
-import {
-  Accessor,
-  Component,
-  For,
-  Show,
-  createEffect,
-  createMemo,
-  createResource,
-  createSignal,
-} from 'solid-js'
+import { useLocation, useNavigate } from '@solidjs/router'
+import { Component, Show, createSignal } from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { Field as FieldModel, FieldSize } from '../utilities/types'
 import styles from './AddField.module.css'
 import { Field } from './Field'
-import {
-  getArchivedFields,
-  getField,
-  saveField as saveFieldToDb,
-} from './FieldStore'
+import { saveField as saveFieldToDb } from './FieldStore'
 import { Header } from './Header'
-import { SizeSlider } from './SizeSlider'
 import { Page } from './Page'
+import { SizeSlider } from './SizeSlider'
 
 export const AddField: Component = () => {
   const [currentFieldSize, setCurrentFieldSize] = createSignal(
@@ -31,13 +18,7 @@ export const AddField: Component = () => {
   const [customLength, setCustomLength] = createSignal<number>()
   const [loading, setLoading] = createSignal<boolean>(false)
   const [error, setError] = createSignal<string>()
-  const path = useLocation().pathname
-  const fieldId = useParams().id
   const navigate = useNavigate()
-
-  const field = createMemo(() => {
-    return getField(fieldId)
-  })
 
   const resetAndSaveFieldSize = (fieldSize: FieldSize | string) => {
     // Check to find the value of fieldSize is within the enum of FieldSize
@@ -77,7 +58,7 @@ export const AddField: Component = () => {
 
   return (
     <Page>
-      <Header>{fieldId ? `Edit ${field()?.name}` : 'Add Field'}</Header>
+      <Header>Add Field</Header>
       <Field
         fieldSize={currentFieldSize}
         customWidth={customWidth}

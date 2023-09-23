@@ -12,3 +12,8 @@ h1 {
   margin: 0;
   font-size: 1.7rem;
 }
+
+a[role='button'].danger,
+button.danger {
+  background-color: var(--del-color);
+}
