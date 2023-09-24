@@ -18,7 +18,7 @@ export const EditField: Component = () => {
     e.stopPropagation()
 
     const formData = new FormData(e.target as HTMLFormElement)
-    const data = {}
+    const data: { [t: string]: any } = {}
 
     for (const formElement of formData) {
       data[formElement[0]] = formElement[1]
@@ -41,7 +41,7 @@ export const EditField: Component = () => {
 
   const confirmDelete = () => {
     if (confirm('Delete the field forever? Are you sure?')) {
-      saveFieldToDB({ id: fieldId, _deleted: true })
+      // saveFieldToDB({ id: fieldId, _deleted: true })
       navigate(`/fields`, { replace: true })
     }
   }

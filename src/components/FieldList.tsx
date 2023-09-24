@@ -22,6 +22,7 @@ import { StatusLabel } from './StatusLabel'
 import { Header } from './Header'
 import { ChevronRight } from './chevron-right'
 import { Field } from '../utilities/types'
+import { Loader } from './Loader'
 
 export const FieldList: Component = () => {
   const isOnline = useContext(OnlineContext)
@@ -44,7 +45,7 @@ export const FieldList: Component = () => {
 
   return (
     <Page>
-      <Header hideBack={true}>Fields</Header>
+      <Header>Fields</Header>
       <ul class={styles.FieldList}>
         <For
           each={fields()}

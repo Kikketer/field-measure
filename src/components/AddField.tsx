@@ -1,8 +1,9 @@
 import { useLocation, useNavigate } from '@solidjs/router'
-import { Component, Show, createSignal } from 'solid-js'
+import { Component, Show, createSignal, useContext } from 'solid-js'
 import { SIZES } from '../utilities/constants'
-import { Field as FieldModel, FieldSize } from '../utilities/types'
+import { FieldSize } from '../utilities/types'
 import styles from './AddField.module.css'
+import { AuthenticationContext } from './AuthenticationProvider'
 import { Field } from './Field'
 import { saveField as saveFieldToDb } from './FieldStore'
 import { Header } from './Header'
@@ -16,8 +17,8 @@ export const AddField: Component = () => {
   const [customWidth, setCustomWidth] = createSignal<number>()
   const [customLength, setCustomLength] = createSignal<number>()
   const navigate = useNavigate()
-  const path = useLocation().pathname
-  const isQuick = !!path.match(/quick$/)
+  const isQuick = useLocation().pathname === '/quick'
+  const auth = useContext(AuthenticationContext)
 
   const resetAndSaveFieldSize = (fieldSize: FieldSize | string) => {
     // Check to find the value of fieldSize is within the enum of FieldSize
@@ -28,15 +29,13 @@ export const AddField: Component = () => {
     }
   }
 
-  const isQuickDraw = useLocation().pathname === '/quick'
-
   const saveField = async (e: SubmitEvent) => {
     // TODO after validation, save the field
     e.preventDefault()
     e.stopPropagation()
 
     const formData = new FormData(e.target as HTMLFormElement)
-    const data: Partial<FieldModel> = {}
+    const data: { [t: string]: any } = {}
 
     for (const formElement of formData) {
       data[formElement[0]] = formElement[1]
@@ -53,7 +52,7 @@ export const AddField: Component = () => {
 
   return (
     <Page>
-      <Header backLocation={isQuick ? '/' : '/fields'}>
+      <Header backLocation={auth?.user() ? '/fields' : '/'}>
         {isQuick ? 'Field' : 'Add Field'}
       </Header>
       <Field
@@ -127,7 +126,7 @@ export const AddField: Component = () => {
               <SizeSlider fieldSize={currentFieldSize} type="length" />
             </div>
           </div>
-          <Show when={!isQuickDraw}>
+          <Show when={!isQuick}>
             <div>
               <label for="name">Name</label>
               <input type="text" required name="name" id="name" />
@@ -139,7 +138,7 @@ export const AddField: Component = () => {
           </Show>
         </div>
 
-        <Show when={!isQuickDraw}>
+        <Show when={!isQuick}>
           <button type="submit">Save</button>
         </Show>
       </form>

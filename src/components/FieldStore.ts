@@ -29,7 +29,7 @@ const baselineField: Field = {
 }
 
 // This local cache mirrors local storae but doesn't have the "not-so-async" issues of localstorage
-const localCache: FieldStore = { fields: [] }
+const localCache: FieldStore = { fields: [], lastFetch: new Date() }
 
 const saveToCache = (fields: Field[]) => {}
 
@@ -109,8 +109,6 @@ export const getFields = (
         onUpdate?.(mapFields(fields))
       })
   }
-
-  console.log('Returning fields ', localCache?.fields)
 
   if (!localCache?.fields?.length) return []
 

@@ -9,6 +9,7 @@ import {
 import { AuthenticationContext } from './AuthenticationProvider'
 import { OnlineContext } from './OnlineStatusProvider'
 import { Page } from './Page'
+import { Loader } from './Loader'
 
 export const Authenticated: Component = () => {
   const [ready, setReady] = createSignal(false)
@@ -24,7 +25,7 @@ export const Authenticated: Component = () => {
       location.href = '/'
       // Seems we can't navigate to login for some reason... it doesn't actually render!
       // navigate('/', { replace: true })
-    } else {
+    } else if (!!authContext.user()) {
       setReady(true)
     }
   })
@@ -34,7 +35,7 @@ export const Authenticated: Component = () => {
       when={ready()}
       fallback={
         <Page>
-          <div class="vertical-align">Setting up the shot...</div>
+          <Loader />
         </Page>
       }
     >
