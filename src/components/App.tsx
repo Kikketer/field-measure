@@ -26,7 +26,6 @@ const App: Component = () => {
               <Route path="/new" component={AddField} />
             </Route>
             <Route path="/" component={Login} />
-
             <Route path="/quick" component={AddField} />
           </Routes>
         </Router>

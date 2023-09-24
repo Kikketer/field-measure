@@ -1,9 +1,8 @@
 import { useNavigate } from '@solidjs/router'
 import logo from '../assets/fav.png'
 import styles from './Login.module.css'
-import { supabase } from './supabase'
-import classNames from 'classnames'
 import { Page } from './Page'
+import { supabase } from './supabase'
 
 export const Login = () => {
   const navigate = useNavigate()
@@ -31,6 +30,9 @@ export const Login = () => {
           <img class={styles.Logo} src={logo} />
         </div>
         <button onClick={signIn}>Sign In</button>
+        <button class="secondary" onClick={() => navigate('/quick')}>
+          Quick Size
+        </button>
       </div>
     </Page>
   )

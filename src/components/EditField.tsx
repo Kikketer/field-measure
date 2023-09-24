@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from '@solidjs/router'
+import { A, useNavigate, useParams } from '@solidjs/router'
 import { Component, createMemo } from 'solid-js'
 import { getField, saveField as saveFieldToDB } from './FieldStore'
 import { Page } from './Page'
@@ -56,7 +56,7 @@ export const EditField: Component = () => {
 
   return (
     <Page>
-      <Header>Edit {field()?.name}</Header>
+      <Header backLocation={`/field/${fieldId}`}>Edit {field()?.name}</Header>
       <form onSubmit={saveField}>
         <label>
           Name:
@@ -65,6 +65,18 @@ export const EditField: Component = () => {
         <label>
           Description:
           <input type="text" name="description" value={field()?.description} />
+        </label>
+        <label>
+          Length:
+          <input
+            type="text"
+            name="customLength"
+            value={field()?.customLength}
+          />
+        </label>
+        <label>
+          Width:
+          <input type="text" name="customWidth" value={field()?.customWidth} />
         </label>
         <details>
           <summary>Advanced</summary>
@@ -93,7 +105,10 @@ export const EditField: Component = () => {
           </div>
         </details>
         <div class={styles.ActionBox}>
-          <button type="button" class="secondary">
+          <button
+            class="secondary"
+            onClick={() => navigate(`/field/${fieldId}`, { replace: true })}
+          >
             Cancel
           </button>
           <button type="submit">Save</button>

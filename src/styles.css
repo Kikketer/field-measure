@@ -17,3 +17,13 @@ a[role='button'].danger,
 button.danger {
   background-color: var(--del-color);
 }
+
+.vertical-align {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  gap: 1rem;
+}

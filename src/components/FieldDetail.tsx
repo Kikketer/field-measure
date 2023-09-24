@@ -75,21 +75,21 @@ export const FieldDetail: Component = () => {
               {getPredictedDaysUntilPaint(field())} days)
             </li>
             <li>
+              <strong>Size:</strong>&nbsp;{field()?.size} (
+              {field()?.customLength ??
+                SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxLength}
+              L x{' '}
+              {field()?.customWidth ??
+                SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxWidth}
+              W)
+            </li>
+            <li>
               <strong>Location:</strong>&nbsp;{field()?.description}
             </li>
           </ul>
           <details>
             <summary>Details</summary>
             <ul>
-              <li>
-                <strong>Size:</strong>&nbsp;{field()?.size} (
-                {field()?.customWidth ??
-                  SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxWidth}
-                W x{' '}
-                {field()?.customLength ??
-                  SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxLength}
-                L)
-              </li>
               <li>
                 <strong>Max dry days:</strong>&nbsp;{field()?.maxDryDays}
               </li>

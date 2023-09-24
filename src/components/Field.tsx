@@ -77,10 +77,10 @@ export const Field: Component<FieldProps> = (props) => {
         style={{ left: '20%', top: '90%', width: '60%' }}
       >
         {props.fieldSize()}:{' '}
-        {props.customWidth?.() ?? SIZES[props.fieldSize()].recommendedMaxWidth}{' '}
-        x{' '}
         {props.customLength?.() ??
           SIZES[props.fieldSize()].recommendedMaxLength}
+        L x{' '}
+        {props.customWidth?.() ?? SIZES[props.fieldSize()].recommendedMaxWidth}W
       </div>
     </div>
   )

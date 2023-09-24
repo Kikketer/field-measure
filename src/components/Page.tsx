@@ -1,6 +1,4 @@
-import { Accessor, Component, JSX } from 'solid-js'
-import { Field } from '../utilities/types'
-import { Header } from './Header'
+import { Component, JSX } from 'solid-js'
 import styles from './Page.module.css'
 
 export const Page: Component<{

@@ -13,12 +13,11 @@ export const AddField: Component = () => {
   const [currentFieldSize, setCurrentFieldSize] = createSignal(
     FieldSize.nineTen,
   )
-  const [currentArchivedField, setCurrentArchivedField] = createSignal('')
   const [customWidth, setCustomWidth] = createSignal<number>()
   const [customLength, setCustomLength] = createSignal<number>()
-  const [loading, setLoading] = createSignal<boolean>(false)
-  const [error, setError] = createSignal<string>()
   const navigate = useNavigate()
+  const path = useLocation().pathname
+  const isQuick = !!path.match(/quick$/)
 
   const resetAndSaveFieldSize = (fieldSize: FieldSize | string) => {
     // Check to find the value of fieldSize is within the enum of FieldSize
@@ -45,20 +44,18 @@ export const AddField: Component = () => {
 
     // Check validation for the form (if needed)
     try {
-      setLoading(true)
       const savedField = await saveFieldToDb(data)
       navigate(`/field/${savedField?.id}`, { replace: true })
     } catch (err) {
-      setError((err as Error).message)
       console.error(err)
     }
-
-    setLoading(false)
   }
 
   return (
     <Page>
-      <Header>Add Field</Header>
+      <Header backLocation={isQuick ? '/' : '/fields'}>
+        {isQuick ? 'Field' : 'Add Field'}
+      </Header>
       <Field
         fieldSize={currentFieldSize}
         customWidth={customWidth}

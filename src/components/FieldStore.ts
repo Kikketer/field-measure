@@ -80,7 +80,9 @@ export const getFields = (
   onUpdate?: (fields: Field[]) => void,
 ): Field[] => {
   const localStorageFields = localStorage.getItem('fieldStore')
-  let hydratedFieldStore = JSON.parse(localStorageFields ?? '')
+  let hydratedFieldStore = localStorageFields
+    ? JSON.parse(localStorageFields)
+    : { fields: [] }
 
   let fields = hydratedFieldStore?.fields ?? []
   let localCache = hydratedFieldStore
