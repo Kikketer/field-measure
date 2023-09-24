@@ -1,13 +1,13 @@
 import { Route, Router, Routes } from '@solidjs/router'
 import { Component } from 'solid-js'
 import { AddField } from './AddField'
-import { Authenticated } from './Authenticated'
-import { AuthenticationProvider } from './AuthenticationProvider'
+import { Authenticated } from '../components/Authenticated'
+import { AuthenticationProvider } from '../components/AuthenticationProvider'
 import { FieldDetail } from './FieldDetail'
 import { FieldList } from './FieldList'
 import { Login } from './Login'
-import { OnlineStatusProvider } from './OnlineStatusProvider'
-import { ServiceWorker } from './ServiceWorker'
+import { OnlineStatusProvider } from '../components/OnlineStatusProvider'
+import { ServiceWorker } from '../components/ServiceWorker'
 import { EditField } from './EditField'
 
 const App: Component = () => {

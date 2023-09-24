@@ -13,14 +13,14 @@ import {
   getPredictedDaysUntilPaint,
   getPredictedNextPaintDate,
 } from '../utilities/utils'
-import { ErrorPrompt } from './ErrorPrompt'
+import { ErrorPrompt } from '../components/ErrorPrompt'
 import styles from './FieldDetail.module.css'
-import { getField, saveField } from './FieldStore'
-import { Header } from './Header'
-import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
-import { StatusLabel } from './StatusLabel'
-import { Page } from './Page'
-import { Field } from './Field'
+import { getField, saveField } from '../components/FieldStore'
+import { Header } from '../components/Header'
+import { OnlineContext, OnlineStatus } from '../components/OnlineStatusProvider'
+import { StatusLabel } from '../components/StatusLabel'
+import { Page } from '../components/Page'
+import { Field } from '../components/Field'
 
 export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)

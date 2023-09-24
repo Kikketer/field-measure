@@ -1,8 +1,8 @@
 import { A, useNavigate, useParams } from '@solidjs/router'
 import { Component, createMemo } from 'solid-js'
-import { getField, saveField as saveFieldToDB } from './FieldStore'
-import { Page } from './Page'
-import { Header } from './Header'
+import { getField, saveField as saveFieldToDB } from '../components/FieldStore'
+import { Page } from '../components/Page'
+import { Header } from '../components/Header'
 import styles from './EditField.module.css'
 
 export const EditField: Component = () => {

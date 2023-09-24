@@ -3,12 +3,12 @@ import { Component, Show, createSignal, useContext } from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
 import styles from './AddField.module.css'
-import { AuthenticationContext } from './AuthenticationProvider'
-import { Field } from './Field'
-import { saveField as saveFieldToDb } from './FieldStore'
-import { Header } from './Header'
-import { Page } from './Page'
-import { SizeSlider } from './SizeSlider'
+import { AuthenticationContext } from '../components/AuthenticationProvider'
+import { Field } from '../components/Field'
+import { saveField as saveFieldToDb } from '../components/FieldStore'
+import { Header } from '../components/Header'
+import { Page } from '../components/Page'
+import { SizeSlider } from '../components/SizeSlider'
 
 export const AddField: Component = () => {
   const [currentFieldSize, setCurrentFieldSize] = createSignal(

@@ -1,13 +1,12 @@
 import { useNavigate } from '@solidjs/router'
-import {
-  Component,
-  For,
-  createEffect,
-  createResource,
-  createMemo,
-  createSignal,
-  useContext,
-} from 'solid-js'
+import { Component, For, createMemo, createSignal, useContext } from 'solid-js'
+import { getFields } from '../components/FieldStore'
+import { Header } from '../components/Header'
+import { OnlineContext, OnlineStatus } from '../components/OnlineStatusProvider'
+import { Page } from '../components/Page'
+import { StatusLabel } from '../components/StatusLabel'
+import { ChevronRight } from '../components/chevron-right'
+import { Field } from '../utilities/types'
 import {
   formatDate,
   getPredictedDaysUntilPaint,
@@ -15,14 +14,6 @@ import {
   getPredictedNextPaintLabel,
 } from '../utilities/utils'
 import styles from './FieldList.module.css'
-import { getFields } from './FieldStore'
-import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
-import { Page } from './Page'
-import { StatusLabel } from './StatusLabel'
-import { Header } from './Header'
-import { ChevronRight } from './chevron-right'
-import { Field } from '../utilities/types'
-import { Loader } from './Loader'
 
 export const FieldList: Component = () => {
   const isOnline = useContext(OnlineContext)

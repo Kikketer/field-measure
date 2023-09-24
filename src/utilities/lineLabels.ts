@@ -284,16 +284,16 @@ export const BUILDOUT_LINE_LABELS: LineLabel[] = [
     x: 65,
     y: 6,
     getLength: ({ fieldLength, fieldWidth, fieldSize }) => {
-      // This line is exactly midway between the top of the penalty box and the midfield line
-      const penaltyBoxDepth = SIZES[fieldSize].penaltyBoxDepth ?? 0
-      const halfFieldLength =
-        (fieldLength ?? SIZES[fieldSize].recommendedMaxLength) / 2
+      const distanceBetweenPenaltyBoxAndCircle =
+        (fieldLength ?? SIZES[fieldSize].recommendedMaxLength) / 2 -
+        (SIZES[fieldSize].penaltyBoxDepth ?? 0) -
+        SIZES[fieldSize].circleRadius
+
+      const distanceFromBoxOrCircle = distanceBetweenPenaltyBoxAndCircle / 2
+      const distanceFromMidfield =
+        distanceFromBoxOrCircle + SIZES[fieldSize].circleRadius
       const halfFieldWidth =
         (fieldWidth ?? SIZES[fieldSize].recommendedMaxWidth) / 2
-      const distanceFromPenaltyBox =
-        (halfFieldLength - SIZES[fieldSize].circleRadius - penaltyBoxDepth) / 2
-      const distanceFromMidfield =
-        halfFieldLength - SIZES[fieldSize].circleRadius - distanceFromPenaltyBox
       const hypotenuse = Math.sqrt(
         halfFieldWidth ** 2 + distanceFromMidfield ** 2,
       )
@@ -307,17 +307,19 @@ export const BUILDOUT_LINE_LABELS: LineLabel[] = [
     x: 45,
     y: 6,
     getLength: ({ fieldLength, fieldWidth, fieldSize }) => {
-      // This line is exactly midway between the top of the penalty box and the midfield line
-      const penaltyBoxDepth = SIZES[fieldSize].penaltyBoxDepth ?? 0
-      const halfFieldLength =
-        (fieldLength ?? SIZES[fieldSize].recommendedMaxLength) / 2
+      const distanceBetweenPenaltyBoxAndCircle =
+        (fieldLength ?? SIZES[fieldSize].recommendedMaxLength) / 2 -
+        (SIZES[fieldSize].penaltyBoxDepth ?? 0) -
+        SIZES[fieldSize].circleRadius
+
+      const distanceFromBoxOrCircle = distanceBetweenPenaltyBoxAndCircle / 2
+      const distanceFromGoaline =
+        distanceFromBoxOrCircle + (SIZES[fieldSize].penaltyBoxDepth ?? 0)
       const halfFieldWidth =
         (fieldWidth ?? SIZES[fieldSize].recommendedMaxWidth) / 2
-      const distanceFromPenaltyBox =
-        (halfFieldLength - SIZES[fieldSize].circleRadius - penaltyBoxDepth) / 2
-      const distanceFromGoal =
-        halfFieldLength - penaltyBoxDepth - distanceFromPenaltyBox
-      const hypotenuse = Math.sqrt(halfFieldWidth ** 2 + distanceFromGoal ** 2)
+      const hypotenuse = Math.sqrt(
+        halfFieldWidth ** 2 + distanceFromGoaline ** 2,
+      )
       return hypotenuse
     },
   },

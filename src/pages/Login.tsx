@@ -1,8 +1,8 @@
 import { useNavigate } from '@solidjs/router'
 import logo from '../assets/fav.png'
 import styles from './Login.module.css'
-import { Page } from './Page'
-import { supabase } from './supabase'
+import { Page } from '../components/Page'
+import { supabase } from '../components/supabase'
 
 export const Login = () => {
   const navigate = useNavigate()
