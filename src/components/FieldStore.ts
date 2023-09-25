@@ -49,9 +49,11 @@ const mapFields = (fields: any[]): Field[] => {
     })
 
     // Convert the dates to Date objects:
-    field.createdAt = new Date(field.createdAt)
-    field.lastPainted = new Date(field.lastPainted)
-    field.modified = new Date(field.modified)
+    field.createdAt = field.createdAt ? new Date(field.createdAt) : undefined
+    field.lastPainted = field.lastPainted
+      ? new Date(field.lastPainted)
+      : undefined
+    field.modified = field.modified ? new Date(field.modified) : undefined
   })
 
   return duplicateFields
@@ -132,7 +134,10 @@ export const getArchivedFields = async () => {
   return mapFields(data)
 }
 
-export const saveField = (field: Partial<Field>): Field | undefined => {
+export const saveField = (
+  field: Partial<Field>,
+  callback?: (savedField: Field) => void,
+): Field | undefined => {
   // Set the sort order to the length of the current fields
   const existingFields = getFields()
 
@@ -142,14 +147,12 @@ export const saveField = (field: Partial<Field>): Field | undefined => {
     (existingField) => existingField.id === field.id,
   )
 
-  console.log('Found an edit? ', existingFieldToEdit)
-
   // Upldate local cache first, then save to supabase
   const fieldIndex = existingFields?.findIndex(
     (field: Field) => field.id === existingFieldToEdit?.id,
   )
   if (!existingFieldToEdit) {
-    existingFields?.push({ ...baselineField, ...field })
+    existingFields?.push({ ...baselineField, ...field, id: 'new-field-id' })
   } else {
     existingFields?.splice(fieldIndex, 1, { ...existingFieldToEdit, ...field })
   }
@@ -160,8 +163,28 @@ export const saveField = (field: Partial<Field>): Field | undefined => {
     .upsert(unmapField({ ...existingFieldToEdit, ...field }))
     .select('*')
     .then((result) => {
-      console.log('Saved!', result)
-      // mapFields(result)[0]
+      // Now update the local cache with the new or edited field:
+      if (!existingFieldToEdit) {
+        const indexOfNewField = existingFields?.findIndex(
+          (field: Field) => field.id === 'new-field-id',
+        )
+        existingFields?.splice(indexOfNewField, 1, result.data?.[0])
+      } else {
+        const indexOfExistingField = existingFields?.findIndex(
+          (field: Field) => field.id === existingFieldToEdit?.id,
+        )
+        existingFields?.splice(indexOfExistingField, 1, result.data?.[0])
+      }
+      // And now re-save this back to the local storage
+      localStorage.setItem(
+        'fieldStore',
+        JSON.stringify({ fields: existingFields, lastFetch: new Date() }),
+      )
+      // And local cache
+      localCache.fields = existingFields
+
+      // And callback with this:
+      callback?.(mapFields(result.data as any[])[0])
     })
 
   // And now re-save this back to the local storage

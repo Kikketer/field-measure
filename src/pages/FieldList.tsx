@@ -1,5 +1,12 @@
 import { useNavigate } from '@solidjs/router'
-import { Component, For, createMemo, createSignal, useContext } from 'solid-js'
+import {
+  Component,
+  For,
+  Show,
+  createMemo,
+  createSignal,
+  useContext,
+} from 'solid-js'
 import { getFields } from '../components/FieldStore'
 import { Header } from '../components/Header'
 import { OnlineContext, OnlineStatus } from '../components/OnlineStatusProvider'
@@ -51,17 +58,19 @@ export const FieldList: Component = () => {
                 <div>
                   <strong>{field.name}</strong>
                 </div>
-                <div>Painted: {formatDate(field.lastPainted)}</div>
+                <div>Painted: {formatDate(field.lastPainted) || 'Never'}</div>
               </div>
               <div class={styles.EndSlot}>
                 <div class={styles.StatusContainer}>
                   <StatusLabel field={field} />
                   <div>
-                    {getPredictedNextPaintLabel(
-                      getPredictedNextPaintDate(field),
-                    )}{' '}
-                    {formatDate(getPredictedNextPaintDate(field))} [
-                    {getPredictedDaysUntilPaint(field)}]
+                    <Show when={getPredictedNextPaintDate(field)}>
+                      {getPredictedNextPaintLabel(
+                        getPredictedNextPaintDate(field),
+                      )}{' '}
+                      {formatDate(getPredictedNextPaintDate(field))} [
+                      {getPredictedDaysUntilPaint(field)}]
+                    </Show>
                   </div>
                 </div>
                 <ChevronRight />

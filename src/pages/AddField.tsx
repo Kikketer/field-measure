@@ -17,6 +17,7 @@ export const AddField: Component = () => {
   const [customWidth, setCustomWidth] = createSignal<number>()
   const [customLength, setCustomLength] = createSignal<number>()
   const navigate = useNavigate()
+  const [saving, setSaving] = createSignal(false)
   const isQuick = useLocation().pathname === '/quick'
   const auth = useContext(AuthenticationContext)
 
@@ -42,12 +43,12 @@ export const AddField: Component = () => {
     }
 
     // Check validation for the form (if needed)
-    try {
-      const savedField = await saveFieldToDb(data)
+    setSaving(true)
+    saveFieldToDb(data, (savedField) => {
+      setSaving(false)
+      console.log('Navigating ', savedField)
       navigate(`/field/${savedField?.id}`, { replace: true })
-    } catch (err) {
-      console.error(err)
-    }
+    })
   }
 
   return (
@@ -139,7 +140,9 @@ export const AddField: Component = () => {
         </div>
 
         <Show when={!isQuick}>
-          <button type="submit">Save</button>
+          <button type="submit" disabled={saving()}>
+            Save
+          </button>
         </Show>
       </form>
     </Page>

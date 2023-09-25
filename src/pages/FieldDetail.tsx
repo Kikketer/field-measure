@@ -32,17 +32,12 @@ export const FieldDetail: Component = () => {
   const paintField = async () => {
     if (!field) return
 
-    try {
-      const savedField = await saveField({
-        ...field(),
-        lastPainted: new Date(),
-      })
-      mutate(savedField)
-      navigate(`/fields`, { replace: true })
-    } catch (err) {
-      console.error(err)
-      setSaveError((err as Error).message)
-    }
+    const savedField = saveField({
+      ...field(),
+      lastPainted: new Date(),
+    })
+    mutate(savedField)
+    navigate(`/fields`, { replace: true })
   }
 
   const setPlayable = (playable: boolean) => {
