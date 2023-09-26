@@ -1,9 +1,10 @@
-import { render } from "@solidjs/testing-library"
-import { FieldList } from "./FieldList"
+import { render, fireEvent } from '@solidjs/testing-library'
+import { FieldList } from './FieldList'
 
 describe('FieldList', () => {
   it('should render', () => {
-    render(() => <FieldList />)
+    const { getByRole, unmount } = render(() => <FieldList />)
     expect(true).toBe(true)
+    unmount()
   })
-}
+})
