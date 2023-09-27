@@ -1,6 +1,7 @@
 import { A, Outlet, useNavigate } from '@solidjs/router'
 import {
   Component,
+  JSX,
   Show,
   createEffect,
   createSignal,
@@ -11,21 +12,24 @@ import { OnlineContext } from './OnlineStatusProvider'
 import { Page } from './Page'
 import { Loader } from './Loader'
 
-export const Authenticated: Component = () => {
+export const Authenticated: Component<{ children: JSX.Element }> = ({
+  children,
+}) => {
+  console.log('Rendering authenticated')
   const [ready, setReady] = createSignal(false)
   const authContext = useContext(AuthenticationContext)
   const navigate = useNavigate()
   const isOnline = useContext(OnlineContext)
 
   createEffect(async () => {
-    if (
-      (!authContext?.loading && !authContext?.user?.()) ||
-      authContext?.user()?.error
-    ) {
-      location.href = '/'
+    console.log('Auth ', authContext?.session?.())
+    if (!authContext?.loading && !authContext?.session?.()) {
+      console.log('Go back!')
+      // location.href = '/'
       // Seems we can't navigate to login for some reason... it doesn't actually render!
+      // This isn't the first time... not sure why it works sometimes...
       // navigate('/', { replace: true })
-    } else if (!!authContext.user()) {
+    } else if (!!authContext.session) {
       setReady(true)
     }
   })
@@ -39,7 +43,7 @@ export const Authenticated: Component = () => {
         </Page>
       }
     >
-      <Outlet />
+      {children}
     </Show>
   )
 }

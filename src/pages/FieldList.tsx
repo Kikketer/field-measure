@@ -50,10 +50,7 @@ export const FieldList: Component = () => {
           fallback={<div class={styles.EmptyList}>There are no fields</div>}
         >
           {(field) => (
-            <li
-              class={styles.FieldItem}
-              onClick={() => navigate(`/field/${field.id}`)}
-            >
+            <li class={styles.FieldItem} onClick={() => navigate(field.id)}>
               <div>
                 <div>
                   <strong>{field.name}</strong>
@@ -80,7 +77,7 @@ export const FieldList: Component = () => {
         </For>
       </ul>
       <div class={styles.ActionContainer}>
-        <button onClick={() => navigate('/field/new')}>+ Add Field</button>
+        <button onClick={() => navigate('new')}>+ Add Field</button>
         <button onClick={() => navigate('/quick')}>Quick Size</button>
       </div>
       <OnlineStatus />

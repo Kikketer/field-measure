@@ -9,27 +9,24 @@ import { Login } from './Login'
 import { OnlineStatusProvider } from '../components/OnlineStatusProvider'
 import { ServiceWorker } from '../components/ServiceWorker'
 import { EditField } from './EditField'
+import { AuthRouter } from './AuthRouter'
 
 const App: Component = () => {
   return (
     <OnlineStatusProvider>
       <ServiceWorker />
-      <AuthenticationProvider>
-        <Router>
-          <Routes>
-            <Route path={'/fields'} component={Authenticated}>
-              <Route path="/" component={FieldList} />
-            </Route>
-            <Route path="/field" component={Authenticated}>
-              <Route path="/:id/edit" component={EditField} />
-              <Route path="/:id" component={FieldDetail} />
-              <Route path="/new" component={AddField} />
-            </Route>
-            <Route path="/" component={Login} />
-            <Route path="/quick" component={AddField} />
-          </Routes>
-        </Router>
-      </AuthenticationProvider>
+      <Router>
+        <Routes>
+          <Route path="/" component={Login} />
+          <Route path="/quick" component={AddField} />
+          <Route path="/fields" component={AuthRouter}>
+            <Route path="/new" component={AddField} />
+            <Route path="/:id/edit" component={EditField} />
+            <Route path="/:id" component={FieldDetail} />
+            <Route path="/" component={FieldList} />
+          </Route>
+        </Routes>
+      </Router>
     </OnlineStatusProvider>
   )
 }

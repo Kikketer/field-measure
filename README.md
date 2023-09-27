@@ -15,6 +15,7 @@ After spending a lot of time working and learning SolidJS I've decided to shift 
 - Testing! This was the final straw. I typically don't like testing very much but feel it's a needed evil given the fact that I want other people to use my app, not just me. I could not get solid-js router working or the vite environment config to work properly in the tests.
 - Attempted to use Ionic Framework failed since they don't officially support it and using their web-components directly really didn't improve the app much given the fact that I would have had to re-create the entire router and page transition logic.
 - VSCode would continuusly complain about the typings of the Ionic Framework web components and I spent hours trying to fix it. Eventually it just turned into adding them globally as "any" types, which doesn't help anything.
+- Routing seems to be haphazard. The login page directing to /fields will render a blank page also with other `navigate` calls. The url changes and refreshing the browser works but landing there doesn't work initially.
 - VSCode (not just Solid issue) really doesn't like jest and I could not figure out how to get it to stop throwing errors around the idea of global `describe`.
 - VSCode (not just Solid issue) doesn't really do the test suites nicely like WebStorm. More than once I had to somehow kill the terminal because it insisted on watching the tests. Also attempting to set a keybinding for "re-run the tests" failed as well.
 

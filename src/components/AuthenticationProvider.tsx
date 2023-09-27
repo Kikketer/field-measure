@@ -1,4 +1,3 @@
-import { AuthError, UserResponse } from '@supabase/supabase-js'
 import {
   Component,
   JSX,
@@ -13,17 +12,19 @@ type AuthenticationProvider = {
 }
 
 export const AuthenticationContext = createContext<{
-  user: Resource<UserResponse>
+  session?: Resource<{ data: any }>
   loading?: boolean
 }>()
 
 export const AuthenticationProvider: Component<AuthenticationProvider> = (
   props,
 ) => {
-  const [user] = createResource(() => supabase.auth.getUser())
+  const [session] = createResource(() => supabase.auth.getSession())
 
   return (
-    <AuthenticationContext.Provider value={{ user, loading: user.loading }}>
+    <AuthenticationContext.Provider
+      value={{ session, loading: session.loading }}
+    >
       {props.children}
     </AuthenticationContext.Provider>
   )

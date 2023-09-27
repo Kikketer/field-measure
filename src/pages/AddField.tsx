@@ -46,14 +46,13 @@ export const AddField: Component = () => {
     setSaving(true)
     saveFieldToDb(data, (savedField) => {
       setSaving(false)
-      console.log('Navigating ', savedField)
       navigate(`/field/${savedField?.id}`, { replace: true })
     })
   }
 
   return (
     <Page>
-      <Header backLocation={auth?.user() ? '/fields' : '/'}>
+      <Header backLocation={auth?.session?.() ? '/fields' : '/'}>
         {isQuick ? 'Field' : 'Add Field'}
       </Header>
       <Field

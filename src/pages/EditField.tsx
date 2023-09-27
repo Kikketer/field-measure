@@ -56,7 +56,7 @@ export const EditField: Component = () => {
 
   return (
     <Page>
-      <Header backLocation={`/field/${fieldId}`}>Edit {field()?.name}</Header>
+      <Header backLocation={`/fields/${fieldId}`}>Edit {field()?.name}</Header>
       <form onSubmit={saveField}>
         <label>
           Name:
@@ -107,7 +107,7 @@ export const EditField: Component = () => {
         <div class={styles.ActionBox}>
           <button
             class="secondary"
-            onClick={() => navigate(`/field/${fieldId}`, { replace: true })}
+            onClick={() => navigate(`/fields/${fieldId}`, { replace: true })}
           >
             Cancel
           </button>
