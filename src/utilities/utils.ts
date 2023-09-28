@@ -10,7 +10,6 @@ export const getIsFieldPlayable = (field?: Field) => {
 }
 
 export const getPredictedNextPaintLabel = (predictedPaintDate?: Date) => {
-  console.log('predictedPaintDate', predictedPaintDate)
   if (!predictedPaintDate) return ''
 
   if (differenceInCalendarDays(predictedPaintDate, new Date()) <= 0) {

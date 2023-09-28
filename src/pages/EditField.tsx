@@ -1,6 +1,6 @@
 import { A, useNavigate, useParams } from '@solidjs/router'
 import { Component, createMemo } from 'solid-js'
-import { getField, saveField as saveFieldToDB } from '../components/FieldStore'
+import { getField, saveField as saveFieldToDB } from '../utilities/FieldStore'
 import { Page } from '../components/Page'
 import { Header } from '../components/Header'
 import styles from './EditField.module.css'
@@ -25,7 +25,7 @@ export const EditField: Component = () => {
     }
 
     saveFieldToDB({ id: fieldId, ...data })
-    navigate(`/field/${fieldId}`, { replace: true })
+    navigate(`/fields/${fieldId}`, { replace: true })
   }
 
   const confirmArchive = () => {
@@ -61,6 +61,10 @@ export const EditField: Component = () => {
         <label>
           Name:
           <input type="text" name="name" value={field()?.name} />
+        </label>
+        <label>
+          Group:
+          <input type="text" name="group" value={field()?.group} />
         </label>
         <label>
           Description:
@@ -106,6 +110,7 @@ export const EditField: Component = () => {
         </details>
         <div class={styles.ActionBox}>
           <button
+            type="button"
             class="secondary"
             onClick={() => navigate(`/fields/${fieldId}`, { replace: true })}
           >

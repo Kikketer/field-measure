@@ -5,7 +5,7 @@ import { FieldSize } from '../utilities/types'
 import styles from './AddField.module.css'
 import { AuthenticationContext } from '../components/AuthenticationProvider'
 import { Field } from '../components/Field'
-import { saveField as saveFieldToDb } from '../components/FieldStore'
+import { saveField as saveFieldToDb } from '../utilities/FieldStore'
 import { Header } from '../components/Header'
 import { Page } from '../components/Page'
 import { SizeSlider } from '../components/SizeSlider'
@@ -46,7 +46,7 @@ export const AddField: Component = () => {
     setSaving(true)
     saveFieldToDb(data, (savedField) => {
       setSaving(false)
-      navigate(`/field/${savedField?.id}`, { replace: true })
+      navigate(`/fields/${savedField?.id}`, { replace: true })
     })
   }
 

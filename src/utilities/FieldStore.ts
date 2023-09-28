@@ -1,5 +1,5 @@
-import { Field } from '../utilities/types'
-import { supabase } from './supabase'
+import { Field } from './types'
+import { supabase } from '../components/supabase'
 
 type FieldStore = {
   lastFetch: Date | undefined

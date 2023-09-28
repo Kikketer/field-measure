@@ -15,7 +15,7 @@ import {
 } from '../utilities/utils'
 import { ErrorPrompt } from '../components/ErrorPrompt'
 import styles from './FieldDetail.module.css'
-import { getField, saveField } from '../components/FieldStore'
+import { getField, saveField } from '../utilities/FieldStore'
 import { Header } from '../components/Header'
 import { OnlineContext, OnlineStatus } from '../components/OnlineStatusProvider'
 import { StatusLabel } from '../components/StatusLabel'
@@ -77,6 +77,9 @@ export const FieldDetail: Component = () => {
               {field()?.customWidth ??
                 SIZES[field()?.size ?? FieldSize.full]?.recommendedMaxWidth}
               W)
+            </li>
+            <li>
+              <strong>Group:</strong>&nbsp;{field()?.group}
             </li>
             <li>
               <strong>Location:</strong>&nbsp;{field()?.description}

@@ -22,9 +22,7 @@ export const AuthenticationProvider: Component<AuthenticationProvider> = (
   const [session] = createResource(() => supabase.auth.getSession())
 
   return (
-    <AuthenticationContext.Provider
-      value={{ session, loading: session.loading }}
-    >
+    <AuthenticationContext.Provider value={{ session }}>
       {props.children}
     </AuthenticationContext.Provider>
   )

@@ -15,21 +15,14 @@ import { Loader } from './Loader'
 export const Authenticated: Component<{ children: JSX.Element }> = ({
   children,
 }) => {
-  console.log('Rendering authenticated')
   const [ready, setReady] = createSignal(false)
   const authContext = useContext(AuthenticationContext)
   const navigate = useNavigate()
-  const isOnline = useContext(OnlineContext)
 
   createEffect(async () => {
-    console.log('Auth ', authContext?.session?.())
-    if (!authContext?.loading && !authContext?.session?.()) {
-      console.log('Go back!')
-      // location.href = '/'
-      // Seems we can't navigate to login for some reason... it doesn't actually render!
-      // This isn't the first time... not sure why it works sometimes...
-      // navigate('/', { replace: true })
-    } else if (!!authContext.session) {
+    if (authContext?.session?.() && !authContext.session()?.data.session) {
+      navigate('/', { replace: true })
+    } else {
       setReady(true)
     }
   })

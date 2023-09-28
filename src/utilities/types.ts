@@ -1,23 +1,3 @@
-// create table
-//   public.fields (
-//     id uuid not null default gen_random_uuid (),
-//     created_at timestamp with time zone not null default now(),
-//     code text not null,
-//     name text not null,
-//     description text null,
-//     max_dry_days bigint null,
-//     rainfall_days real null,
-//     last_painted timestamp without time zone null,
-//     archived smallint null default '0'::smallint,
-//     should_paint double precision not null default '0'::double precision,
-//     size text not null default 'full'::text,
-//     custom_width bigint null,
-//     custom_length bigint null,
-//     sort_order bigint null default '0'::bigint,
-//     marked_unplayable timestamp without time zone null,
-//     constraint fields_pkey primary key (id)
-//   ) tablespace pg_default;
-
 export type Field = {
   id: string
   createdAt?: Date
@@ -26,6 +6,7 @@ export type Field = {
   customLength?: number
   code: string
   name: string
+  group?: string
   description?: string
   /**
    * The number of days a typical field will need to be repainted
