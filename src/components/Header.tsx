@@ -1,7 +1,8 @@
 import { A } from '@solidjs/router'
-import { Component, JSX, Show } from 'solid-js'
+import { Component, JSX, Show, useContext } from 'solid-js'
 import { Field } from '../utilities/types'
 import styles from './Header.module.css'
+import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
 import { ChevronLeft } from './chevron-left'
 
 export const Header: Component<{
@@ -9,6 +10,8 @@ export const Header: Component<{
   backLocation?: string
   editFieldId?: Field['id']
 }> = ({ children, backLocation, editFieldId }) => {
+  const isOnline = useContext(OnlineContext)
+
   return (
     <div class={styles.HeaderWrap}>
       <div class={styles.Header}>
@@ -18,7 +21,8 @@ export const Header: Component<{
           </A>
         </Show>
         <h1 class={styles.H1}>{children}</h1>
-        <Show when={editFieldId}>
+        <OnlineStatus />
+        <Show when={editFieldId && isOnline?.()}>
           <A href={`edit`}>Edit</A>
         </Show>
       </div>

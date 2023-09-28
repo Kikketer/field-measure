@@ -6,6 +6,7 @@ import {
   createSignal,
   useContext,
 } from 'solid-js'
+import { Offline } from './offline'
 
 type OnlineStatusProvider = {
   children: JSX.Element
@@ -56,7 +57,7 @@ export const OnlineStatus: Component = () => {
 
   return (
     <Show when={!isOnline?.()}>
-      <div>You are offline</div>
+      <Offline />
     </Show>
   )
 }

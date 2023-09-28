@@ -48,7 +48,7 @@ export const FieldDetail: Component = () => {
     <Page>
       {/* Header children won't update unless there's some static text... odd? */}
       <Header backLocation="/fields" editFieldId={field()?.id}>
-        &nbsp;{field()?.name}&nbsp;
+        {field()?.name}
       </Header>
       <ErrorPrompt error={saveError} />
       <Show when={!field.loading} fallback={<div>Loading...</div>}>
@@ -113,7 +113,6 @@ export const FieldDetail: Component = () => {
             {/* <a role="button" class="secondary">
               Archive
             </a> */}
-            <OnlineStatus />
           </div>
         </div>
       </Show>
