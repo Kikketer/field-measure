@@ -12,10 +12,7 @@
   },
   "license": "MIT",
   "jest": {
-    "preset": "solid-jest/preset/browser",
-    "setupFilesAfterEnv": [
-      "<rootDir>/node_modules/@testing-library/jest-dom/extend-expect"
-    ]
+    "preset": "solid-jest/preset/browser"
   },
   "devDependencies": {
     "@babel/core": "^7.22.5",
@@ -25,6 +22,7 @@
     "@testing-library/jest-dom": "^6.1.3",
     "@types/jest": "^29.5.2",
     "@types/lodash-es": "^4.17.9",
+    "@types/node": "^20.7.1",
     "@types/testing-library__jest-dom": "^6.0.0",
     "@vite-pwa/assets-generator": "^0.0.10",
     "babel-jest": "^29.5.0",
