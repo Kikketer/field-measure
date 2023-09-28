@@ -1,3 +1,9 @@
 .Page {
   margin: 0 1rem;
 }
+
+.Footer {
+  color: var(--muted-color);
+  font-size: 0.8rem;
+  text-align: center;
+}
