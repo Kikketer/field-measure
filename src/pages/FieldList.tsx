@@ -23,7 +23,6 @@ import {
 import styles from './FieldList.module.css'
 
 const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
-  console.log('grouping fields', fields)
   // Group by "group"
   const groupedFields: { [groupName: string]: Field[] } = fields.reduce(
     (acc: { [groupName: string]: Field[] }, field) => {
@@ -40,8 +39,6 @@ const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
     },
     {},
   )
-
-  console.log('Grouped fields ', groupedFields)
 
   return groupedFields
 }
