@@ -1,27 +1,23 @@
-import { render, fireEvent } from '@solidjs/testing-library'
+import { generateFields } from '../testHelpers/generateData'
+import { renderTest } from '../testHelpers/render'
+import { getFields } from '../utilities/FieldStore'
 import { FieldList } from './FieldList'
-import { Route, Router, Routes } from '@solidjs/router'
+import { waitFor } from '@solidjs/testing-library'
 
-// We need to fake the store for EVERY test:
 jest.mock('../utilities/FieldStore', () => ({
-  getFields: () => [],
-  getField: () => {},
-  saveField: () => {},
+  getFields: jest.fn(),
+  getField: jest.fn(),
+  saveField: jest.fn(),
 }))
 
-const setupTest = () => {
-  return render(() => (
-    <Router>
-      <Routes>
-        <Route path="/" component={FieldList} />
-      </Routes>
-    </Router>
-  ))
-}
-
 describe('FieldList', () => {
-  it('should be able to test components like a "real" framework', () => {
-    const { getByRole } = setupTest()
-    expect(true).toBe(true)
+  it('should list all the fields properly', async () => {
+    const generatedFields = generateFields()
+    getFields.mockReturnValue(generatedFields)
+    const { getByRole, getByText } = renderTest(FieldList)
+
+    // Wait for the list to load:
+    await waitFor(() => getByText('Nakuru 1'))
+    expect(getByText('Nakuru 1')).toBeInTheDocument()
   })
 })
