@@ -18,6 +18,5 @@ describe('FieldList', () => {
 
     // Wait for the list to load:
     await waitFor(() => getByText('Nakuru 1'))
-    expect(getByText('Nakuru 1')).toBeInTheDocument()
   })
 })
