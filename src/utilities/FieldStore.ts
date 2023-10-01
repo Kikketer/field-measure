@@ -195,8 +195,6 @@ export const saveField = (
   // And local cache
   localCache.fields = existingFields
 
-  console.log('saved existing field', existingFields)
-
   // Return the existing field OR the new one we created:
   return existingFieldToEdit ?? { ...baselineField, ...field }
 }
