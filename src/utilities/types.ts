@@ -18,6 +18,11 @@ export type Field = {
    */
   rainfallDays: number
   /**
+   * Number of days that had significant rain before the last painting
+   * This is used to adjust maxDryDays if the field was marked unplayable and no rain has fallen
+   */
+  previousRainfallDays: number
+  /**
    * The effect that a day of rain has on the field
    * 1 = 1 day of rainfall = 1 less day of playable field
    * This number is adjusted when we click the "Unplayable" button UNLESS there hasn't been any rainfall
