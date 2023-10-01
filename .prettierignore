@@ -1,0 +1,5 @@
+# prettier ignore
+build
+dist
+coverage
+node_modules
