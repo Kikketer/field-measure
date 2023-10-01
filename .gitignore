@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-/.wasp/
-/.env.server
-/.env.client
-=======
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -23,9 +18,11 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.wasp/
+.env.server
+.env.client
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .vercel
->>>>>>> 5d624135e17b76175785c066983e24ddcef4621d
