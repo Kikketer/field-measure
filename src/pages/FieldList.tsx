@@ -24,23 +24,18 @@ import styles from './FieldList.module.css'
 
 const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
   // Group by "group"
-  const groupedFields: { [groupName: string]: Field[] } = fields.reduce(
-    (acc: { [groupName: string]: Field[] }, field) => {
-      if (!field.group) {
-        acc.Other ? acc.Other.push(field) : (acc.Other = [field])
-        return acc
-      }
-
-      if (!acc[field.group]) {
-        acc[field.group] = []
-      }
-      acc[field.group].push(field)
+  return fields.reduce((acc: { [groupName: string]: Field[] }, field) => {
+    if (!field.group) {
+      acc.Other ? acc.Other.push(field) : (acc.Other = [field])
       return acc
-    },
-    {},
-  )
+    }
 
-  return groupedFields
+    if (!acc[field.group]) {
+      acc[field.group] = []
+    }
+    acc[field.group].push(field)
+    return acc
+  }, {})
 }
 
 export const FieldList: Component = () => {
@@ -82,11 +77,11 @@ export const FieldList: Component = () => {
                   >
                     <div>
                       <div>
-                        <strong>{field.name}</strong>
+                        <strong>
+                          {field.name} ({field.size})
+                        </strong>
                       </div>
-                      <div>
-                        Painted: {formatDate(field.lastPainted) || 'Never'}
-                      </div>
+                      <div class={styles.Description}>{field.description}</div>
                     </div>
                     <div class={styles.EndSlot}>
                       <div class={styles.StatusContainer}>

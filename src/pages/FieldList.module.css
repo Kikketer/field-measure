@@ -7,12 +7,22 @@
   flex-direction: column;
 }
 
-.FieldItem {
+.StatusContainer {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.FieldItem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   justify-content: space-between;
   border-bottom: 1px solid var(--card-border-color);
   padding: 0.5rem 0;
+
+  & > div {
+    overflow: hidden;
+  }
 }
 
 .EndSlot {
@@ -28,4 +38,10 @@
   background: #e9e9e9;
   /* Negate the page padding (I never like doing this) */
   margin: 0 -1rem;
+}
+
+.Description {
+  overflow: hidden;
+  text-wrap: nowrap;
+  text-overflow: ellipsis;
 }
