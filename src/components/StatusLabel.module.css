@@ -7,9 +7,10 @@
 
 .StatusPill {
   text-align: center;
-  width: 100%;
   border-radius: 1rem;
   padding: 0 0.875rem;
+  display: inline-block;
+  width: auto;
 }
 
 .StatusGreen {

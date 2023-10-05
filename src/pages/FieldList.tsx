@@ -77,11 +77,11 @@ export const FieldList: Component = () => {
                   >
                     <div>
                       <div>
-                        <strong>{field.name}</strong>
+                        <strong>
+                          {field.name} ({field.size})
+                        </strong>
                       </div>
-                      <div>
-                        Painted: {formatDate(field.lastPainted) || 'Never'}
-                      </div>
+                      <div class={styles.Description}>{field.description}</div>
                     </div>
                     <div class={styles.EndSlot}>
                       <div class={styles.StatusContainer}>
