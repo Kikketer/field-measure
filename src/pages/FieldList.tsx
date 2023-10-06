@@ -24,18 +24,34 @@ import styles from './FieldList.module.css'
 
 const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
   // Group by "group"
-  return fields.reduce((acc: { [groupName: string]: Field[] }, field) => {
-    if (!field.group) {
-      acc.Other ? acc.Other.push(field) : (acc.Other = [field])
-      return acc
-    }
+  const groupedFields = fields.reduce(
+    (acc: { [groupName: string]: Field[] }, field) => {
+      if (!field.group) {
+        acc.Other ? acc.Other.push(field) : (acc.Other = [field])
+        return acc
+      }
 
-    if (!acc[field.group]) {
-      acc[field.group] = []
-    }
-    acc[field.group].push(field)
-    return acc
-  }, {})
+      if (!acc[field.group]) {
+        acc[field.group] = []
+      }
+      acc[field.group].push(field)
+      return acc
+    },
+    {},
+  )
+
+  // Sort the fields in each group by the number of days until the next predicted painting
+  return Object.keys(groupedFields).reduce(
+    (acc: { [groupName: string]: Field[] }, groupName) => {
+      acc[groupName] = groupedFields[groupName].sort(
+        (a, b) =>
+          (getPredictedDaysUntilPaint(a) ?? 0) -
+          (getPredictedDaysUntilPaint(b) ?? 0),
+      )
+      return acc
+    },
+    {},
+  )
 }
 
 export const FieldList: Component = () => {
