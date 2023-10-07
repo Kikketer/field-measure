@@ -198,3 +198,16 @@ export const saveField = (
   // Return the existing field OR the new one we created:
   return existingFieldToEdit ?? { ...baselineField, ...field }
 }
+
+export const checkWeather = async () => {
+  try {
+    const { data, error } = await supabase.functions.invoke('weather-check', {
+      body: { name: 'Functions' },
+    })
+    if (error) throw error
+
+    console.log('Data', data!)
+  } catch (err) {
+    console.error(err)
+  }
+}
