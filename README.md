@@ -8,7 +8,7 @@ The app itself will allow me to dynamically get the measurements needed for Socc
 
 ## Learnings
 
-After spending a lot of time working and learning SolidJS I've decided to shift this project to React again. There were several gotchas and hiccups that I simply don't have time to resolve during my free time.
+Some of the things that I learned while building this app. There are times where I want to ditch SolidJS and VSCode but eventually I got to a point where the app is "good enough".  I may explore other technologies in the future but this project will remain SolidJS. I did however switch back to WebStorm for the git client and testing functionality.
 
 - There's an odd issue with resuable components, you will see me having to check for "typeof function" in a couple components because the results of a resource are different than a signal. This means when you access a sub-attribute of a resource (say from a network call) it doesn't react and re-draw properly when sent to a component.
 - ~~There was a very strange bug around having to add `&nbsp` around the title (related to the first bullet point) where I had to surround an accessor with useless static text for it to simply appear.~~

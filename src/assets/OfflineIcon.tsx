@@ -1,4 +1,4 @@
-export const Offline = () => (
+export const OfflineIcon = () => (
   <svg
     stroke="currentColor"
     fill="currentColor"

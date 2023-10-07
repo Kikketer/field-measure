@@ -7,35 +7,55 @@ import {
   createSignal,
   useContext,
 } from 'solid-js'
-import { getFields } from '../utilities/FieldStore'
+import { checkWeather, getFields } from '../utilities/FieldStore'
 import { Header } from '../components/Header'
 import { OnlineContext, OnlineStatus } from '../components/OnlineStatusProvider'
 import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
-import { ChevronRight } from '../components/chevron-right'
+import { ChevronRightIcon } from '../assets/ChevronRightIcon.tsx'
 import { Field } from '../utilities/types'
 import {
   formatDate,
-  getPredictedDaysUntilPaint,
   getPredictedNextPaintDate,
   getPredictedNextPaintLabel,
 } from '../utilities/utils'
+import { getPredictedDaysUntilPaint } from '../utilities/calculateConditions.ts'
 import styles from './FieldList.module.css'
 
 const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
   // Group by "group"
-  return fields.reduce((acc: { [groupName: string]: Field[] }, field) => {
-    if (!field.group) {
-      acc.Other ? acc.Other.push(field) : (acc.Other = [field])
-      return acc
-    }
+  const groupedFields = fields.reduce(
+    (acc: { [groupName: string]: Field[] }, field) => {
+      if (!field.group) {
+        acc.Other ? acc.Other.push(field) : (acc.Other = [field])
+        return acc
+      }
 
-    if (!acc[field.group]) {
-      acc[field.group] = []
-    }
-    acc[field.group].push(field)
-    return acc
-  }, {})
+      if (!acc[field.group]) {
+        acc[field.group] = []
+      }
+      acc[field.group].push(field)
+      return acc
+    },
+    {},
+  )
+
+  // Sort the fields in each group by the number of days until the next predicted painting
+  return Object.keys(groupedFields).reduce(
+    (acc: { [groupName: string]: Field[] }, groupName) => {
+      acc[groupName] = groupedFields[groupName].sort(
+        (a, b) =>
+          (getPredictedDaysUntilPaint(a) ?? 0) -
+          (getPredictedDaysUntilPaint(b) ?? 0),
+      )
+      return acc
+    },
+    {},
+  )
+}
+
+const hitApi = async () => {
+  await checkWeather()
 }
 
 export const FieldList: Component = () => {
@@ -96,7 +116,7 @@ export const FieldList: Component = () => {
                           </Show>
                         </div>
                       </div>
-                      <ChevronRight />
+                      <ChevronRightIcon />
                     </div>
                   </li>
                 )}
@@ -108,6 +128,7 @@ export const FieldList: Component = () => {
       <div class={styles.ActionContainer}>
         <button onClick={() => navigate('new')}>+ Add Field</button>
         <button onClick={() => navigate('/quick')}>Quick Size</button>
+        <button onClick={() => hitApi()}>API Test</button>
       </div>
       <OnlineStatus />
     </Page>

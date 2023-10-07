@@ -1,4 +1,4 @@
-export const ChevronLeft = () => {
+export const ChevronLeftIcon = () => {
   return (
     <svg
       stroke="currentColor"
