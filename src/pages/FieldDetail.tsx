@@ -8,11 +8,8 @@ import {
 } from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
-import {
-  formatDate,
-  getPredictedDaysUntilPaint,
-  getPredictedNextPaintDate,
-} from '../utilities/utils'
+import { formatDate, getPredictedNextPaintDate } from '../utilities/utils'
+import { getPredictedDaysUntilPaint } from '../utilities/calculateConditions'
 import { ErrorPrompt } from '../components/ErrorPrompt'
 import styles from './FieldDetail.module.css'
 import { getField, saveField } from '../utilities/FieldStore'

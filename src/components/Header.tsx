@@ -3,7 +3,7 @@ import { Component, JSX, Show, useContext } from 'solid-js'
 import { Field } from '../utilities/types'
 import styles from './Header.module.css'
 import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
-import { ChevronLeft } from './chevron-left'
+import { ChevronLeftIcon } from '../assets/ChevronLeftIcon.tsx'
 
 export const Header: Component<{
   children?: JSX.Element
@@ -17,7 +17,7 @@ export const Header: Component<{
       <div class={styles.Header}>
         <Show when={backLocation}>
           <A class={styles.BackButton} href={backLocation!} replace={true}>
-            <ChevronLeft /> Back
+            <ChevronLeftIcon /> Back
           </A>
         </Show>
         <h1 class={styles.H1}>{children}</h1>

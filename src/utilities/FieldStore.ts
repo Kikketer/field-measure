@@ -31,10 +31,6 @@ const baselineField: Field = {
 // This local cache mirrors local storae but doesn't have the "not-so-async" issues of localstorage
 const localCache: FieldStore = { fields: [], lastFetch: new Date() }
 
-const saveToCache = (fields: Field[]) => {}
-
-const restoreFromCache = () => {}
-
 const mapFields = (fields: any[]): Field[] => {
   // Convert all keys with underscores to camelCase:
   const duplicateFields = fields.slice()
@@ -71,10 +67,6 @@ const unmapField = (field: Partial<Field>) => {
   })
 
   return duplicateField
-}
-
-const unmapFields = (fields: Field[]) => {
-  return fields.map((field) => unmapField(field))
 }
 
 export const getFields = (
@@ -147,7 +139,7 @@ export const saveField = (
     (existingField) => existingField.id === field.id,
   )
 
-  // Upldate local cache first, then save to supabase
+  // Update local cache first, then save to supabase
   const fieldIndex = existingFields?.findIndex(
     (field: Field) => field.id === existingFieldToEdit?.id,
   )

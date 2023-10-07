@@ -1,5 +1,6 @@
 import { addDays, differenceInCalendarDays } from 'date-fns'
 import { Field } from './types'
+import { getPredictedDaysUntilPaint } from './calculateConditions.ts'
 
 export const getIsFieldPlayable = (field?: Field) => {
   if (!field) return false
@@ -16,16 +17,6 @@ export const getPredictedNextPaintLabel = (predictedPaintDate?: Date) => {
     return 'Since '
   }
   return 'Until '
-}
-
-export const getPredictedDaysUntilPaint = (field?: Field) => {
-  if (!field?.lastPainted) return
-
-  return (
-    field.maxDryDays -
-    differenceInCalendarDays(new Date(), field.lastPainted) -
-    field.rainfallDays * field.rainfallFactor
-  )
 }
 
 export const getPredictedNextPaintDate = (field?: Field): Date | undefined => {

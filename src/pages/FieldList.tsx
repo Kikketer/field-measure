@@ -7,19 +7,19 @@ import {
   createSignal,
   useContext,
 } from 'solid-js'
-import { getFields } from '../utilities/FieldStore'
+import { checkWeather, getFields } from '../utilities/FieldStore'
 import { Header } from '../components/Header'
 import { OnlineContext, OnlineStatus } from '../components/OnlineStatusProvider'
 import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
-import { ChevronRight } from '../components/chevron-right'
+import { ChevronRightIcon } from '../assets/ChevronRightIcon.tsx'
 import { Field } from '../utilities/types'
 import {
   formatDate,
-  getPredictedDaysUntilPaint,
   getPredictedNextPaintDate,
   getPredictedNextPaintLabel,
 } from '../utilities/utils'
+import { getPredictedDaysUntilPaint } from '../utilities/calculateConditions.ts'
 import styles from './FieldList.module.css'
 
 const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
@@ -52,6 +52,10 @@ const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
     },
     {},
   )
+}
+
+const hitApi = async () => {
+  await checkWeather()
 }
 
 export const FieldList: Component = () => {
@@ -112,7 +116,7 @@ export const FieldList: Component = () => {
                           </Show>
                         </div>
                       </div>
-                      <ChevronRight />
+                      <ChevronRightIcon />
                     </div>
                   </li>
                 )}
@@ -124,6 +128,7 @@ export const FieldList: Component = () => {
       <div class={styles.ActionContainer}>
         <button onClick={() => navigate('new')}>+ Add Field</button>
         <button onClick={() => navigate('/quick')}>Quick Size</button>
+        <button onClick={() => hitApi()}>API Test</button>
       </div>
       <OnlineStatus />
     </Page>

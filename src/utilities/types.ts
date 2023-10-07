@@ -14,6 +14,10 @@ export type Field = {
    */
   maxDryDays: number
   /**
+   * The number of rainfall days for the previous period
+   */
+  previousRainfallDays: number
+  /**
    * Number of days that had significant rain since the last painting
    */
   rainfallDays: number

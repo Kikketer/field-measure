@@ -6,7 +6,7 @@ import {
   createSignal,
   useContext,
 } from 'solid-js'
-import { Offline } from './offline'
+import { OfflineIcon } from '../assets/OfflineIcon.tsx'
 
 type OnlineStatusProvider = {
   children: JSX.Element
@@ -57,7 +57,7 @@ export const OnlineStatus: Component = () => {
 
   return (
     <Show when={!isOnline?.()}>
-      <Offline />
+      <OfflineIcon />
     </Show>
   )
 }
