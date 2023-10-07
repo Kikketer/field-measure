@@ -4,8 +4,11 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 console.log(`${new Date().toISOString()}: version: ${Deno.version.deno}`)
 
 Deno.serve(async (req: Request) => {
-  const weatherApiKey = Deno.env.get(WEATHER_API_KEY)
   try {
+    const weatherApiKey = Deno.env.get(WEATHER_API_KEY)
+    // TODO Call the weather API to get this users location data
+    console.log(`Call weather: ${weatherApiKey.substring(0, 5)}`)
+
     // Create a Supabase client with the Auth context of the logged in user.
     const supabaseClient = createClient(
       // Supabase API URL - env var exported by default.
@@ -30,9 +33,6 @@ Deno.serve(async (req: Request) => {
       .from('fields')
       .select('*')
     if (error) throw error
-
-    // TODO Call the weather API to get this users location data
-    console.log(`Call weather: ${weatherApiKey.substring(0, 5)}`)
 
     return new Response(JSON.stringify({ user, fields }), {
       headers: { 'Content-Type': 'application/json' },
