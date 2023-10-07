@@ -32,6 +32,7 @@ Deno.serve(async (req: Request) => {
     if (error) throw error
 
     // TODO Call the weather API to get this users location data
+    console.log('Call weather!')
 
     return new Response(JSON.stringify({ user, fields }), {
       headers: { 'Content-Type': 'application/json' },
