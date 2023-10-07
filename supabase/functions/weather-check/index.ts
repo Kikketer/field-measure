@@ -4,7 +4,7 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 console.log(`${new Date().toISOString()}: version: ${Deno.version.deno}`)
 
 Deno.serve(async (req: Request) => {
-  const weatherApiKey = Deno.env.get(WEATHER_API_KEY)
+  // const weatherApiKey = Deno.env.get(WEATHER_API_KEY)
   try {
     // Create a Supabase client with the Auth context of the logged in user.
     const supabaseClient = createClient(
