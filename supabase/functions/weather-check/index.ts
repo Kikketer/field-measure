@@ -58,6 +58,10 @@ Deno.serve(async (req: Request) => {
     const lat = 42.9295
     const long = -89.387
 
+    console.log(
+      `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${lat}5&lon=${long}&date=${yesterdayString}`,
+    )
+
     const weather = await fetch(
       `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${lat}5&lon=${long}&date=${yesterdayString}&appid=${weatherApiKey}`,
       {
@@ -78,7 +82,12 @@ Deno.serve(async (req: Request) => {
     // })
 
     return new Response(
-      JSON.stringify({ user, fields, weather: weather.body }),
+      JSON.stringify({
+        user,
+        fields,
+        weather: weather.body,
+        weatherCode: weather.status,
+      }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
