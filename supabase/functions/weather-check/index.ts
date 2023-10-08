@@ -1,10 +1,16 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { corsHeaders } from './_cors.ts'
 
 // Just signal that we were called
 console.log(`${new Date().toISOString()}: version: ${Deno.version.deno}`)
 
 Deno.serve(async (req: Request) => {
   try {
+    // This is needed if you're planning to invoke your function from a browser.
+    if (req.method === 'OPTIONS') {
+      return new Response('ok', { headers: corsHeaders })
+    }
+
     // 12.7 mm = .5 inches = 1 rain day
     // So at least 12.7mm adds 1 to the rainfallDays
     const weatherApiKey = Deno.env.get('WEATHER_API_KEY')
@@ -35,6 +41,22 @@ Deno.serve(async (req: Request) => {
       .from('fields')
       .select('*')
     if (error) throw error
+
+    // const resp = await fetch("https://api.github.com/users/denoland", {
+    //   // The init object here has an headers object containing a
+    //   // header that indicates what type of response we accept.
+    //   // We're not specifying the method field since by default
+    //   // fetch makes a GET request.
+    //   headers: {
+    //     accept: "application/json",
+    //   },
+    // });
+    // return new Response(resp.body, {
+    //   status: resp.status,
+    //   headers: {
+    //     "content-type": "application/json",
+    //   },
+    // });
 
     return new Response(JSON.stringify({ user, fields }), {
       headers: { 'Content-Type': 'application/json' },
