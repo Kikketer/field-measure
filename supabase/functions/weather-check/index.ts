@@ -46,13 +46,13 @@ Deno.serve(async (req: Request) => {
     // Calling the weather api to get the rainfall for yesterday
     // Fun thing is that with day 0 it uses the previous month, nice!
     const yesterday = new Date(
-      new Date().getYear(),
+      new Date().getFullYear(),
       new Date().getMonth(),
       new Date().getDate() - 1,
     )
     const yesterdayString = `${yesterday.getFullYear()}-${
       yesterday.getMonth() + 1
-    }-${yesterday.getDate()}`
+    }-${String(yesterday.getDate()).padStart(2, '0')}`
 
     // These will be pulled from the paintteam table eventually:
     const lat = 42.9295
