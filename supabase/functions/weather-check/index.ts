@@ -12,12 +12,6 @@ Deno.serve(async (req: Request) => {
       return new Response('ok', { headers: corsHeaders })
     }
 
-    // 12.7 mm = .5 inches = 1 rain day
-    // So at least 12.7mm adds 1 to the rainfallDays
-    const weatherApiKey = Deno.env.get('WEATHER_API_KEY')
-    // TODO Call the weather API to get this users location data
-    console.log(`Call weather: ${weatherApiKey.substring(0, 5)}`)
-
     // Create a Supabase client with the Auth context of the logged in user.
     const supabaseClient = createClient(
       // Supabase API URL - env var exported by default.
@@ -43,26 +37,53 @@ Deno.serve(async (req: Request) => {
       .select('*')
     if (error) throw error
 
-    // const resp = await fetch("https://api.github.com/users/denoland", {
-    //   // The init object here has an headers object containing a
-    //   // header that indicates what type of response we accept.
-    //   // We're not specifying the method field since by default
-    //   // fetch makes a GET request.
-    //   headers: {
-    //     accept: "application/json",
-    //   },
-    // });
+    // 12.7 mm = .5 inches = 1 rain day
+    // So at least 12.7mm adds 1 to the rainfallDays
+    const weatherApiKey = Deno.env.get('WEATHER_API_KEY')
+    // TODO Call the weather API to get this users location data
+    console.log(`Call weather: ${weatherApiKey.substring(0, 5)}`)
+
+    // Calling the weather api to get the rainfall for yesterday
+    // Fun thing is that with day 0 it uses the previous month, nice!
+    const yesterday = new Date(
+      new Date().getYear(),
+      new Date().getMonth(),
+      new Date().getDate() - 1,
+    )
+    const yesterdayString = `${yesterday.getFullYear()}-${
+      yesterday.getMonth() + 1
+    }-${yesterday.getDate()}`
+
+    // These will be pulled from the paintteam table eventually:
+    const lat = 42.9295
+    const long = -89.387
+
+    const weather = await fetch(
+      `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${lat}5&lon=${long}&date=${yesterdayString}&appid=${weatherApiKey}`,
+      {
+        // The init object here has an headers object containing a
+        // header that indicates what type of response we accept.
+        // We're not specifying the method field since by default
+        // fetch makes a GET request.
+        headers: {
+          accept: 'application/json',
+        },
+      },
+    )
     // return new Response(resp.body, {
     //   status: resp.status,
     //   headers: {
-    //     "content-type": "application/json",
+    //     'content-type': 'application/json',
     //   },
-    // });
+    // })
 
-    return new Response(JSON.stringify({ user, fields }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 200,
-    })
+    return new Response(
+      JSON.stringify({ user, fields, weather: weather.body }),
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
+      },
+    )
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
