@@ -5,7 +5,9 @@ console.log(`${new Date().toISOString()}: version: ${Deno.version.deno}`)
 
 Deno.serve(async (req: Request) => {
   try {
-    const weatherApiKey = Deno.env.get(WEATHER_API_KEY)
+    // 12.7 mm = .5 inches = 1 rain day
+    // So at least 12.7mm adds 1 to the rainfallDays
+    const weatherApiKey = Deno.env.get('WEATHER_API_KEY')
     // TODO Call the weather API to get this users location data
     console.log(`Call weather: ${weatherApiKey.substring(0, 5)}`)
 
