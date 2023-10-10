@@ -65,10 +65,6 @@ Deno.serve(async (req: Request) => {
     const weather = await fetch(
       `https://api.openweathermap.org/data/3.0/onecall/day_summary?lat=${lat}5&lon=${long}&date=${yesterdayString}&appid=${weatherApiKey}`,
       {
-        // The init object here has an headers object containing a
-        // header that indicates what type of response we accept.
-        // We're not specifying the method field since by default
-        // fetch makes a GET request.
         headers: {
           accept: 'application/json',
         },

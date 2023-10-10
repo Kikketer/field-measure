@@ -24,7 +24,7 @@ export const EditField: Component = () => {
       data[formElement[0]] = formElement[1]
     }
 
-    saveFieldToDB({ id: fieldId, ...data })
+    saveFieldToDB({ field: { id: fieldId, ...data } })
     navigate(`/fields/${fieldId}`, { replace: true })
   }
 
@@ -34,7 +34,7 @@ export const EditField: Component = () => {
         'Archive will simply hide the field, you can restore it later. Are you sure?',
       )
     ) {
-      saveFieldToDB({ id: fieldId, active: false })
+      saveFieldToDB({ field: { id: fieldId, active: false } })
       navigate(`/fields`, { replace: true })
     }
   }
@@ -49,7 +49,7 @@ export const EditField: Component = () => {
   const confirmReset = () => {
     if (confirm('This will reset any rainfall/wear data. Are you sure?')) {
       // TODO more reset when I finally get this figured out:
-      saveFieldToDB({ id: fieldId, rainfallFactor: 1 })
+      saveFieldToDB({ field: { id: fieldId, rainfallFactor: 1 } })
       navigate(`/fields`, { replace: true })
     }
   }

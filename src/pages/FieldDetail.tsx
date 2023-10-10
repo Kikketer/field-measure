@@ -30,8 +30,10 @@ export const FieldDetail: Component = () => {
     if (!field) return
 
     const savedField = saveField({
-      ...field(),
-      lastPainted: new Date(),
+      field: {
+        ...field(),
+        lastPainted: new Date(),
+      },
     })
     mutate(savedField)
     navigate(`/fields`, { replace: true })

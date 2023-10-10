@@ -130,7 +130,6 @@ export const FieldList: Component = () => {
         <button onClick={() => navigate('/quick')}>Quick Size</button>
         <button onClick={() => hitApi()}>API Test</button>
       </div>
-      <OnlineStatus />
     </Page>
   )
 }

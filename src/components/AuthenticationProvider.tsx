@@ -5,6 +5,7 @@ import {
   createContext,
   createResource,
 } from 'solid-js'
+import { getUser } from '../utilities/userStore'
 import { supabase } from './supabase'
 
 type AuthenticationProvider = {
@@ -13,6 +14,7 @@ type AuthenticationProvider = {
 
 export const AuthenticationContext = createContext<{
   session?: Resource<{ data: any }>
+  user?: Resource<{ data: any }>
   loading?: boolean
 }>()
 
@@ -20,9 +22,10 @@ export const AuthenticationProvider: Component<AuthenticationProvider> = (
   props,
 ) => {
   const [session] = createResource(() => supabase.auth.getSession())
+  const [user] = createResource(() => getUser())
 
   return (
-    <AuthenticationContext.Provider value={{ session }}>
+    <AuthenticationContext.Provider value={{ session, user }}>
       {props.children}
     </AuthenticationContext.Provider>
   )

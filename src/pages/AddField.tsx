@@ -44,10 +44,13 @@ export const AddField: Component = () => {
 
     // Check validation for the form (if needed)
     setSaving(true)
-    saveFieldToDb(data, (savedField) => {
-      setSaving(false)
-      navigate(`/fields/${savedField?.id}`, { replace: true })
-    })
+    saveFieldToDb(
+      { field: data, paintTeamId: auth?.user?.()?.paintTeam?.id },
+      (savedField) => {
+        setSaving(false)
+        navigate(`/fields/${savedField?.id}`, { replace: true })
+      },
+    )
   }
 
   return (

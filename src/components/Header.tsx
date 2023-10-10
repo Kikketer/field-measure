@@ -9,20 +9,24 @@ export const Header: Component<{
   children?: JSX.Element
   backLocation?: string
   editFieldId?: Field['id']
-}> = ({ children, backLocation, editFieldId }) => {
+}> = (props) => {
   const isOnline = useContext(OnlineContext)
 
   return (
     <div class={styles.HeaderWrap}>
       <div class={styles.Header}>
-        <Show when={backLocation}>
-          <A class={styles.BackButton} href={backLocation!} replace={true}>
+        <Show when={props.backLocation}>
+          <A
+            class={styles.BackButton}
+            href={props.backLocation!}
+            replace={true}
+          >
             <ChevronLeftIcon /> Back
           </A>
         </Show>
-        <h1 class={styles.H1}>{children}</h1>
+        <h1 class={styles.H1}>{props.children}</h1>
         <OnlineStatus />
-        <Show when={editFieldId && isOnline?.()}>
+        <Show when={props.editFieldId && isOnline?.()}>
           <A href={`edit`}>Edit</A>
         </Show>
       </div>

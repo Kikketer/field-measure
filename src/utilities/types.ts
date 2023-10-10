@@ -39,6 +39,7 @@ export type Field = {
    */
   markedUnplayable: Date
   sortOrder: number
+  paintTeamId: number
   active?: boolean
   modified?: Date
   deleted?: boolean

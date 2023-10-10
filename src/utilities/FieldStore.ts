@@ -25,6 +25,7 @@ const baselineField: Field = {
   sortOrder: 0,
   active: true,
   modified: new Date(),
+  paintTeamId: 0,
   deleted: false,
 }
 
@@ -87,7 +88,6 @@ export const getFields = (
       .from('fields')
       .select('*')
       .eq('active', true)
-      .order('sort_order')
       .then((result) => {
         fields = result.data
 
@@ -115,11 +115,7 @@ export const getField = (id: Field['id']): Field | undefined => {
 }
 
 export const getArchivedFields = async () => {
-  const { data } = await supabase
-    .from('fields')
-    .select('*')
-    .eq('active', false)
-    .order('sort_order')
+  const { data } = await supabase.from('fields').select('*').eq('active', false)
 
   if (!data?.length) return []
 
@@ -127,7 +123,7 @@ export const getArchivedFields = async () => {
 }
 
 export const saveField = (
-  field: Partial<Field>,
+  { field, paintTeamId }: { field: Partial<Field>; paintTeamId: number },
   callback?: (savedField: Field) => void,
 ): Field | undefined => {
   // Set the sort order to the length of the current fields
@@ -144,15 +140,24 @@ export const saveField = (
     (field: Field) => field.id === existingFieldToEdit?.id,
   )
   if (!existingFieldToEdit) {
-    existingFields?.push({ ...baselineField, ...field, id: 'new-field-id' })
+    existingFields?.push({
+      ...baselineField,
+      ...field,
+      paintTeamId,
+      id: 'new-field-id',
+    })
   } else {
-    existingFields?.splice(fieldIndex, 1, { ...existingFieldToEdit, ...field })
+    existingFields?.splice(fieldIndex, 1, {
+      ...existingFieldToEdit,
+      ...field,
+      paintTeamId,
+    })
   }
 
   // Now just update supabase in the background:
   supabase
     .from('fields')
-    .upsert(unmapField({ ...existingFieldToEdit, ...field }))
+    .upsert(unmapField({ ...existingFieldToEdit, ...field, paintTeamId }))
     .select('*')
     .then((result) => {
       // Now update the local cache with the new or edited field:
