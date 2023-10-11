@@ -70,8 +70,10 @@ export const FieldList: Component = () => {
     setGroupedFields(groupFields(fields))
   }
 
+  // Get fields but because our wrapper handles this while we are focused,
+  // we send false to the getFields to pull the cache instead
   setGroupedFields(
-    createMemo(() => groupFields(getFields(isOnline?.(), onUpdateFields))),
+    createMemo(() => groupFields(getFields(false, onUpdateFields))),
   )
 
   return (

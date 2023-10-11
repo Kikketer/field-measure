@@ -10,6 +10,7 @@ import { OnlineStatusProvider } from '../components/OnlineStatusProvider'
 import { ServiceWorker } from '../components/ServiceWorker'
 import { EditField } from './EditField'
 import { AuthRouter } from './AuthRouter'
+import { RefetchData } from '../components/RefetchData.tsx'
 
 const App: Component = () => {
   return (
