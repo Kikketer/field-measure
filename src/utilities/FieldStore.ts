@@ -13,7 +13,6 @@ const baselineField: Field = {
   size: 'full',
   customWidth: undefined,
   customLength: undefined,
-  code: '',
   name: '',
   description: '',
   maxDryDays: 0,
@@ -135,29 +134,28 @@ export const saveField = (
     (existingField) => existingField.id === field.id,
   )
 
+  // Create the proposed field
+  const proposedUpdatedField = { ...baselineField, ...field, paintTeamId }
+
   // Update local cache first, then save to supabase
   const fieldIndex = existingFields?.findIndex(
     (field: Field) => field.id === existingFieldToEdit?.id,
   )
   if (!existingFieldToEdit) {
     existingFields?.push({
-      ...baselineField,
-      ...field,
-      paintTeamId,
+      ...proposedUpdatedField,
       id: 'new-field-id',
     })
   } else {
     existingFields?.splice(fieldIndex, 1, {
-      ...existingFieldToEdit,
-      ...field,
-      paintTeamId,
+      ...proposedUpdatedField,
     })
   }
 
   // Now just update supabase in the background:
   supabase
     .from('fields')
-    .upsert(unmapField({ ...existingFieldToEdit, ...field, paintTeamId }))
+    .upsert(unmapField({ ...proposedUpdatedField }))
     .select('*')
     .then((result) => {
       // Now update the local cache with the new or edited field:
@@ -193,7 +191,7 @@ export const saveField = (
   localCache.fields = existingFields
 
   // Return the existing field OR the new one we created:
-  return existingFieldToEdit ?? { ...baselineField, ...field }
+  return proposedUpdatedField ?? { ...baselineField, ...field }
 }
 
 export const checkWeather = async () => {

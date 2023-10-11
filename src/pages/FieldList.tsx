@@ -108,9 +108,6 @@ export const FieldList: Component = () => {
                         <StatusLabel field={field} />
                         <div>
                           <Show when={getPredictedNextPaintDate(field)}>
-                            {getPredictedNextPaintLabel(
-                              getPredictedNextPaintDate(field),
-                            )}{' '}
                             {formatDate(getPredictedNextPaintDate(field))} [
                             {getPredictedDaysUntilPaint(field)}]
                           </Show>

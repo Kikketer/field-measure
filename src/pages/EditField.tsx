@@ -1,13 +1,16 @@
 import { A, useNavigate, useParams } from '@solidjs/router'
-import { Component, createMemo } from 'solid-js'
+import { Component, createMemo, useContext } from 'solid-js'
 import { getField, saveField as saveFieldToDB } from '../utilities/FieldStore'
 import { Page } from '../components/Page'
 import { Header } from '../components/Header'
 import styles from './EditField.module.css'
+import { AuthenticationContext } from '../components/AuthenticationProvider.tsx'
+import { getStartOfDate } from '../utilities/utils.ts'
 
 export const EditField: Component = () => {
   const fieldId = useParams().id
   const navigate = useNavigate()
+  const auth = useContext(AuthenticationContext)
 
   const field = createMemo(() => {
     return getField(fieldId)
@@ -24,7 +27,13 @@ export const EditField: Component = () => {
       data[formElement[0]] = formElement[1]
     }
 
-    saveFieldToDB({ field: { id: fieldId, ...data } })
+    // Set the lastPainted as a real date
+    data.lastPainted = getStartOfDate(data.lastPainted)
+
+    saveFieldToDB({
+      field: { id: fieldId, ...data },
+      paintTeamId: auth.user?.().paintTeam.id,
+    })
     navigate(`/fields/${fieldId}`, { replace: true })
   }
 
@@ -34,7 +43,10 @@ export const EditField: Component = () => {
         'Archive will simply hide the field, you can restore it later. Are you sure?',
       )
     ) {
-      saveFieldToDB({ field: { id: fieldId, active: false } })
+      saveFieldToDB({
+        field: { id: fieldId, active: false },
+        paintTeamId: auth.user?.().paintTeam.id,
+      })
       navigate(`/fields`, { replace: true })
     }
   }
@@ -49,7 +61,10 @@ export const EditField: Component = () => {
   const confirmReset = () => {
     if (confirm('This will reset any rainfall/wear data. Are you sure?')) {
       // TODO more reset when I finally get this figured out:
-      saveFieldToDB({ field: { id: fieldId, rainfallFactor: 1 } })
+      saveFieldToDB({
+        field: { id: fieldId, rainfallFactor: 1 },
+        paintTeamId: auth.user?.().paintTeam.id,
+      })
       navigate(`/fields`, { replace: true })
     }
   }
@@ -85,8 +100,14 @@ export const EditField: Component = () => {
         <details>
           <summary>Advanced</summary>
           <label>
-            Sort Order:
-            <input type="number" name="sortOrder" value={field()?.sortOrder} />
+            Mark Last Painted:
+            <input
+              type="date"
+              name="lastPainted"
+              value={`${field()?.lastPainted?.getFullYear()}-${
+                field()?.lastPainted?.getMonth() + 1
+              }-${String(field()?.lastPainted?.getDate()).padStart(2, '0')}`}
+            />
           </label>
           <label>
             Max Dry Days:

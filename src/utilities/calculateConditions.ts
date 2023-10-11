@@ -63,7 +63,6 @@ export const adjustRainFactorAndDryDays = ({
       differenceBetweenLastPaintAndMarkedUnplayable > previousPredictionOfDays
     ) {
       // Find the rainfall factor that makes the predicted days = previousPredicted
-      // Complete 🧠 fart... this is about the time the kids need me, or the cats start fighting
       // Adjust maxDry to 12 and figure the rainfall factor from the previous rainfall to make it equal 12
       // newFoundDryDays - (previousRainfallDays * UNKNOWNrainfalFactor) = previousPredictionDays
       // 12 - (5 * n) = 9

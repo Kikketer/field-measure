@@ -35,6 +35,16 @@ export const formatDate = (date?: Date) => {
 
   return date.toLocaleDateString('en-US', {
     day: 'numeric',
-    month: 'numeric',
+    month: 'short',
   })
+}
+
+export const getStartOfDate = (day?: string): Date => {
+  const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000
+  let dt = new Date()
+  if (day) {
+    dt = new Date(day)
+  }
+
+  return new Date(dt.getTime() + timezoneOffset)
 }

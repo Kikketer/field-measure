@@ -8,16 +8,21 @@ import {
 } from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
-import { formatDate, getPredictedNextPaintDate } from '../utilities/utils'
+import {
+  formatDate,
+  getPredictedNextPaintDate,
+  getStartOfDate,
+} from '../utilities/utils'
 import { getPredictedDaysUntilPaint } from '../utilities/calculateConditions'
 import { ErrorPrompt } from '../components/ErrorPrompt'
 import styles from './FieldDetail.module.css'
-import { getField, saveField } from '../utilities/FieldStore'
+import { getField, saveField as saveFieldToDb } from '../utilities/FieldStore'
 import { Header } from '../components/Header'
 import { OnlineContext, OnlineStatus } from '../components/OnlineStatusProvider'
 import { StatusLabel } from '../components/StatusLabel'
 import { Page } from '../components/Page'
 import { Field } from '../components/Field'
+import { AuthenticationContext } from '../components/AuthenticationProvider.tsx'
 
 export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)
@@ -25,22 +30,19 @@ export const FieldDetail: Component = () => {
   const [saveError, setSaveError] = createSignal<string>()
   const isOnline = useContext(OnlineContext)
   const navigate = useNavigate()
+  const { user } = useContext(AuthenticationContext)
 
   const paintField = async () => {
     if (!field) return
 
-    const savedField = saveField({
+    const savedField = saveFieldToDb({
       field: {
         ...field(),
-        lastPainted: new Date(),
+        lastPainted: getStartOfDate(),
       },
+      paintTeamId: user?.().paintTeam.id,
     })
     mutate(savedField)
-    navigate(`/fields`, { replace: true })
-  }
-
-  const setPlayable = (playable: boolean) => {
-    // TODO playable will just extend the "base days" or "rain factor" by 1
   }
 
   return (
