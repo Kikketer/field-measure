@@ -1,14 +1,15 @@
 import { Outlet } from '@solidjs/router'
 import { Authenticated } from '../components/Authenticated'
 import { AuthenticationProvider } from '../components/AuthenticationProvider'
-import { RefetchData } from '../components/RefetchData.tsx'
+import { VisibleProvider } from '../components/VisibleProvider.tsx'
 
 export const AuthRouter = () => {
   return (
     <AuthenticationProvider>
       <Authenticated>
-        <RefetchData />
-        <Outlet />
+        <VisibleProvider>
+          <Outlet />
+        </VisibleProvider>
       </Authenticated>
     </AuthenticationProvider>
   )

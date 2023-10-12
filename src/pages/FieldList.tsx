@@ -3,24 +3,20 @@ import {
   Component,
   For,
   Show,
-  createMemo,
   createSignal,
   useContext,
+  createEffect,
 } from 'solid-js'
 import { checkWeather, getFields } from '../utilities/FieldStore'
 import { Header } from '../components/Header'
-import { OnlineContext, OnlineStatus } from '../components/OnlineStatusProvider'
 import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
 import { ChevronRightIcon } from '../assets/ChevronRightIcon.tsx'
 import { Field } from '../utilities/types'
-import {
-  formatDate,
-  getPredictedNextPaintDate,
-  getPredictedNextPaintLabel,
-} from '../utilities/utils'
+import { formatDate, getPredictedNextPaintDate } from '../utilities/utils'
 import { getPredictedDaysUntilPaint } from '../utilities/calculateConditions.ts'
 import styles from './FieldList.module.css'
+import { VisibleContext } from '../components/VisibleProvider.tsx'
 
 const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
   // Group by "group"
@@ -59,22 +55,23 @@ const hitApi = async () => {
 }
 
 export const FieldList: Component = () => {
-  const isOnline = useContext(OnlineContext)
   const navigate = useNavigate()
   const [groupedFields, setGroupedFields] = createSignal<{
     [groupName: string]: Field[]
   }>({ other: [] })
+
+  const visible = useContext(VisibleContext)
 
   const onUpdateFields = (fields: Field[]) => {
     // Called when the actual network call returns
     setGroupedFields(groupFields(fields))
   }
 
-  // Get fields but because our wrapper handles this while we are focused,
-  // we send false to the getFields to pull the cache instead
-  setGroupedFields(
-    createMemo(() => groupFields(getFields(false, onUpdateFields))),
-  )
+  createEffect(() => {
+    if (visible()) {
+      setGroupedFields(groupFields(getFields(true, onUpdateFields)))
+    }
+  })
 
   return (
     <Page>

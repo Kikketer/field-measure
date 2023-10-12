@@ -15,7 +15,7 @@ type OnlineStatusProvider = {
 export const OnlineContext = createContext<() => boolean>()
 
 export const OnlineStatusProvider = (props: OnlineStatusProvider) => {
-  const [isOnline, setIsOnline] = createSignal(false)
+  const [isOnline, setIsOnline] = createSignal(true)
 
   const pingEndpoint = async () => {
     // Fetch the page from our domain to check if we can reach it
@@ -24,25 +24,25 @@ export const OnlineStatusProvider = (props: OnlineStatusProvider) => {
       if (response.ok) {
         setIsOnline(true)
       } else {
-        setIsOnline(false)
+        // setIsOnline(false)
       }
     } catch (err) {
-      setIsOnline(false)
+      // setIsOnline(false)
     }
     // TODO repeat pinging until we actually reach the endpoint
   }
   // Ping when we load up for the first time
-  pingEndpoint()
+  // pingEndpoint()
 
   window.addEventListener('offline', (event) => {
     console.log('The network connection has been lost.')
-    setIsOnline(false)
+    // setIsOnline(false)
   })
 
   window.addEventListener('online', (event) => {
     console.log('The network connection has been restored.')
     // When we get back online, verify we actually are by pinging the endpoint
-    pingEndpoint()
+    // pingEndpoint()
   })
 
   return (
@@ -56,7 +56,7 @@ export const OnlineStatus: Component = () => {
   const isOnline = useContext(OnlineContext)
 
   return (
-    <Show when={!isOnline?.()}>
+    <Show when={!isOnline()}>
       <OfflineIcon />
     </Show>
   )

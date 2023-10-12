@@ -6,6 +6,7 @@ import { Header } from '../components/Header'
 import styles from './EditField.module.css'
 import { AuthenticationContext } from '../components/AuthenticationProvider.tsx'
 import { getStartOfDate } from '../utilities/utils.ts'
+import { FieldSize } from '../utilities/types.ts'
 
 export const EditField: Component = () => {
   const fieldId = useParams().id
@@ -53,7 +54,10 @@ export const EditField: Component = () => {
 
   const confirmDelete = () => {
     if (confirm('Delete the field forever? Are you sure?')) {
-      // saveFieldToDB({ id: fieldId, _deleted: true })
+      saveFieldToDB({
+        field: { id: fieldId, deleted: true },
+        paintTeamId: auth.user?.().paintTeam.id,
+      })
       navigate(`/fields`, { replace: true })
     }
   }
@@ -107,14 +111,6 @@ export const EditField: Component = () => {
               value={`${field()?.lastPainted?.getFullYear()}-${
                 field()?.lastPainted?.getMonth() + 1
               }-${String(field()?.lastPainted?.getDate()).padStart(2, '0')}`}
-            />
-          </label>
-          <label>
-            Max Dry Days:
-            <input
-              type="number"
-              name="maxDryDays"
-              value={field()?.maxDryDays}
             />
           </label>
           <div class={styles.ActionBox}>
