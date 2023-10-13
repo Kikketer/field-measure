@@ -24,25 +24,23 @@ export const OnlineStatusProvider = (props: OnlineStatusProvider) => {
       if (response.ok) {
         setIsOnline(true)
       } else {
-        // setIsOnline(false)
+        setIsOnline(false)
       }
     } catch (err) {
-      // setIsOnline(false)
+      setIsOnline(false)
     }
     // TODO repeat pinging until we actually reach the endpoint
   }
   // Ping when we load up for the first time
-  // pingEndpoint()
+  pingEndpoint()
 
   window.addEventListener('offline', (event) => {
-    console.log('The network connection has been lost.')
-    // setIsOnline(false)
+    setIsOnline(false)
   })
 
   window.addEventListener('online', (event) => {
-    console.log('The network connection has been restored.')
     // When we get back online, verify we actually are by pinging the endpoint
-    // pingEndpoint()
+    pingEndpoint()
   })
 
   return (

@@ -83,25 +83,38 @@ export const getFields = (
 
   // Always fetch if we are online
   if (isOnline) {
-    supabase
-      .from('fields')
-      .select('*')
-      .eq('active', true)
-      .eq('deleted', false)
-      .then((result) => {
-        fields = result.data
+    const callFields = () =>
+      supabase
+        .from('fields')
+        .select('*')
+        .eq('active', true)
+        .eq('deleted', false)
+        .then((result) => {
+          fields = result.data
 
-        // Save to local storage for fetch later (if we are offline)
-        localStorage.setItem(
-          'fieldStore',
-          JSON.stringify({
-            lastFetch: new Date(),
-            fields: fields ?? [],
-          }),
-        )
+          // Save to local storage for fetch later (if we are offline)
+          localStorage.setItem(
+            'fieldStore',
+            JSON.stringify({
+              lastFetch: new Date(),
+              fields: fields ?? [],
+            }),
+          )
 
-        onUpdate?.(mapFields(fields))
-      })
+          onUpdate?.(mapFields(fields))
+        })
+
+    // Delay the call slightly to allow any others to flush out
+    // I'd like to make this use a sort of "pending completion queue"
+    // But again, I'm not getting paid for this so going MVP for now
+    if (hydratedFieldStore.fields.length) {
+      // If we have fields already cached, we can afford to wait a second to call for the refresh
+      setTimeout(() => {
+        callFields()
+      }, 2000)
+    } else {
+      callFields()
+    }
   }
 
   if (!localCache?.fields?.length) return []
@@ -148,11 +161,9 @@ export const saveField = (
     (field: Field) => field.id === existingFieldToEdit?.id,
   )
 
-  if (field.deleted && existingFieldToEdit) {
-    console.log('Deleting!')
+  if ((field.deleted || !field.active) && existingFieldToEdit) {
     // If we marked it as deleted, simply splice it out and then call the network
     existingFields?.splice(fieldIndex, 1)
-    console.log('Existing ', fieldIndex)
   } else if (!existingFieldToEdit) {
     existingFields?.push({
       ...proposedUpdatedField,
@@ -206,7 +217,6 @@ export const saveField = (
   localCache.fields = existingFields
 
   // Return the existing field OR the new one we created:
-  console.log('Propsed returned ', proposedUpdatedField)
   return proposedUpdatedField ?? { ...baselineField, ...field }
 }
 
