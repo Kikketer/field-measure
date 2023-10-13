@@ -70,18 +70,14 @@ Deno.serve(async (req: Request) => {
         },
       },
     )
-    // return new Response(resp.body, {
-    //   status: resp.status,
-    //   headers: {
-    //     'content-type': 'application/json',
-    //   },
-    // })
+
+    const weatherResponse = await weather.json()
 
     return new Response(
       JSON.stringify({
         user,
         fields,
-        weather: weather.body,
+        weather: weatherResponse,
         weatherCode: weather.status,
       }),
       {
