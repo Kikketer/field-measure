@@ -6,7 +6,6 @@ import { Header } from '../components/Header'
 import styles from './EditField.module.css'
 import { AuthenticationContext } from '../components/AuthenticationProvider.tsx'
 import { getStartOfDate } from '../utilities/utils.ts'
-import { FieldSize } from '../utilities/types.ts'
 
 export const EditField: Component = () => {
   const fieldId = useParams().id

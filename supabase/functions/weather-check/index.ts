@@ -27,15 +27,6 @@ Deno.serve(async (req: Request) => {
         },
       },
     )
-    // Now we can get the session or user object
-    const {
-      data: { user },
-    } = await supabaseClient.auth.getUser()
-
-    console.log('Getting weather for user ', {
-      email: user?.email,
-      id: user?.id,
-    })
 
     const weather = await getWeather({ locationZip: '53575' })
 
@@ -44,9 +35,12 @@ Deno.serve(async (req: Request) => {
       weather,
     })
 
-    // If rainfall for the day is above 3, mark it as a rainfall day
-    if (weather.precipitation.total > 3) {
-      const { error } = await supabaseClient.rpc('increment_rainfall_days', {
+    console.log(`Rainfall for ${'53575'} is ${weather.precipitation.total}mm`)
+
+    // If rainfall for the day is above 4mm (0.16in), mark it as a rainfall day
+    if (weather.precipitation.total > 4) {
+      console.log('Rainfall will be incremented!')
+      const { error } = await supabaseClient.rpc('increment_rainfall', {
         paint_team_id: 1,
       })
 
