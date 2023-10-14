@@ -15,7 +15,7 @@ const baselineField: Field = {
   customLength: undefined,
   name: '',
   description: '',
-  maxDryDays: 0,
+  maxDryDays: 14,
   rainfallDays: 0,
   rainfallFactor: 0,
   lastPainted: new Date(),
