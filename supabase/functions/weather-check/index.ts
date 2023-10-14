@@ -2,6 +2,12 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import { getWeather } from './getWeather.ts'
 import { corsHeaders } from './_cors.ts'
 
+type PaintTeam = {
+  id: string
+  name: string
+  zipcode: string
+}
+
 // Just signal that we were called
 console.log(`${new Date().toISOString()}: version: ${Deno.version.deno}`)
 
@@ -11,6 +17,21 @@ Deno.serve(async (req: Request) => {
     console.log('Method ', req.method)
     if (req.method === 'OPTIONS') {
       return new Response('ok', { headers: corsHeaders })
+    }
+
+    // hmm, doesn't feel right... But the JWT validation happens before this is invoked
+    const payload = req.headers
+      .get('Authorization')
+      .replace(/^Bearer /, '')
+      .split('.')[1]
+    const decodedPayload = JSON.parse(window.atob(payload))
+
+    // Only allow the service role to call this edge function:
+    if (decodedPayload.role !== 'service_role') {
+      return new Response(JSON.stringify({}), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 401,
+      })
     }
 
     // Create a Supabase client with the Auth context of the logged in user.
@@ -28,23 +49,52 @@ Deno.serve(async (req: Request) => {
       },
     )
 
-    const weather = await getWeather({ locationZip: '53575' })
+    // TODO: call to get all "groups" and for each group use the ZIP on that group
+    // For each of the ZIP codes on the groups call the weather and update
+    // the fields in that group
+    // Right now ZIP is at a paint team level, so we use that for now
+    const paintteams: { data: PaintTeam[] } = await supabaseClient
+      .from('paintteam')
+      .select('*')
 
-    console.log('Total weather for', {
-      locationZip: '53575',
-      weather,
-    })
+    const twentyHoursAgo = new Date().getTime() - 20 * 60 * 60 * 1000
+    const history = await supabaseClient
+      .from('rainfall_history')
+      .select('*')
+      .gte('created_at', new Date(twentyHoursAgo).toISOString())
 
-    console.log(`Rainfall for ${'53575'} is ${weather.precipitation.total}mm`)
+    if (history.data?.length) {
+      // We've already run this, don't do it again!
+      return new Response(JSON.stringify({}), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 429,
+      })
+    }
 
-    // If rainfall for the day is above 4mm (0.16in), mark it as a rainfall day
-    if (weather.precipitation.total > 4) {
-      console.log('Rainfall will be incremented!')
-      const { error } = await supabaseClient.rpc('increment_rainfall', {
-        paint_team_id: 1,
+    // Now for each team, call out the weather!
+    for (const paintTeam of paintteams.data) {
+      const weather = await getWeather({ locationZip: paintTeam.zipcode })
+
+      console.log('Total weather for', {
+        locationZip: paintTeam.zipcode,
+        weather,
       })
 
-      if (error) throw error
+      console.log(
+        `Rainfall for ${paintTeam.zipcode} is ${weather.precipitation.total}mm`,
+      )
+
+      // If rainfall for the day is above 4mm (0.16in), mark it as a rainfall day
+      if (weather.precipitation.total > 4) {
+        console.log('Rainfall will be incremented!')
+        const { error } = await supabaseClient.rpc('increment_rainfall', {
+          paint_team_id: paintTeam.id,
+          zipcode: paintTeam.zipcode,
+        })
+
+        // Downside is one fails they all fail, todo for this later
+        if (error) throw error
+      }
     }
 
     return new Response(JSON.stringify({}), {
