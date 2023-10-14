@@ -1,4 +1,14 @@
-export const getWeather = async ({ locationZip }: { locationZip: string }) => {
+export type Weather = {
+  precipitation: {
+    total: number
+  }
+}
+
+export const getWeather = async ({
+  locationZip,
+}: {
+  locationZip: string
+}): Weather => {
   // 12.7 mm = .5 inches = 1 rain day
   // So at least 12.7mm adds 1 to the rainfallDays
   const weatherApiKey = Deno.env.get('WEATHER_API_KEY')

@@ -39,24 +39,24 @@ Deno.serve(async (req: Request) => {
 
     const weather = await getWeather({ locationZip: '53575' })
 
-    // If rainfall for the day is above 3, mark it as a rainfall day
-    const { data: fields, error } = await supabaseClient
-      .update('')
-      .from('fields')
-      .select('*')
-    if (error) throw error
+    console.log('Total weather for', {
+      locationZip: '53575',
+      weather,
+    })
 
-    return new Response(
-      JSON.stringify({
-        user,
-        fields,
-        weather,
-      }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      },
-    )
+    // If rainfall for the day is above 3, mark it as a rainfall day
+    if (weather.precipitation.total > 3) {
+      const { error } = await supabaseClient.rpc('increment_rainfall_days', {
+        paint_team_id: 1,
+      })
+
+      if (error) throw error
+    }
+
+    return new Response(JSON.stringify({}), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 200,
+    })
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
