@@ -57,7 +57,7 @@ export const FieldDetail: Component = () => {
           <div class={styles.TitleRow}>
             <h1>{field()?.name}</h1>
             <div>
-              <StatusLabel field={field()} />
+              <StatusLabel field={field} />
             </div>
           </div>
           <ul>

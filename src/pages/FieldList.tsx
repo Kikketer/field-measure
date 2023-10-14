@@ -104,7 +104,8 @@ export const FieldList: Component = () => {
                     </div>
                     <div class={styles.EndSlot}>
                       <div class={styles.StatusContainer}>
-                        <StatusLabel field={field} />
+                        {/* Kind of a flaw of SolidJS: */}
+                        <StatusLabel field={() => field} />
                         <div>
                           <Show when={getPredictedNextPaintDate(field)}>
                             {formatDate(getPredictedNextPaintDate(field))} [
