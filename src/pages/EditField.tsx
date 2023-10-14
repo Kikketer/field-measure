@@ -31,8 +31,10 @@ export const EditField: Component = () => {
     // Set the lastPainted as a real date
     data.lastPainted = getStartOfDate(data.lastPainted)
 
+    // Set the rainfallDays to 0 since we are restarting this paint:
+    // Eventually we may want to ask if a field is unplayable vs painted
     saveFieldToDB({
-      field: { id: fieldId, ...data },
+      field: { id: fieldId, rainfallDays: 0, ...data },
       paintTeamId: auth.user?.().paintTeam.id,
     })
     navigate(`/fields/${fieldId}`, { replace: true })
