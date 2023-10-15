@@ -1,8 +1,7 @@
 import {
-  adjustRainFactorAndDryDays,
+  getFieldWithAdjustedRainFactorAndDryDays,
   getPredictedDaysUntilPaint,
-} from './calculateConditions'
-import { Field } from './types'
+} from './predictNextPainting'
 
 describe('Calculate Conditions', () => {
   beforeEach(() => {
@@ -56,14 +55,14 @@ describe('Calculate Conditions', () => {
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
 
-      const resultingField = adjustRainFactorAndDryDays({
+      const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
           maxDryDays,
           previousRainfallDays,
           rainfallDays,
           rainfallFactor,
           lastPainted,
-        } as Field,
+        },
         markUnplayableOn: new Date('2023-10-13'),
       })
 
@@ -83,14 +82,14 @@ describe('Calculate Conditions', () => {
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
 
-      const resultingField = adjustRainFactorAndDryDays({
+      const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
           maxDryDays,
           previousRainfallDays,
           rainfallDays,
           rainfallFactor,
           lastPainted,
-        } as Field,
+        },
         // Marking it unplayable at 8 days (previous prediction was 9)
         markUnplayableOn: new Date('2023-10-09'),
       })
@@ -104,13 +103,13 @@ describe('Calculate Conditions', () => {
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
 
-      const resultingField = adjustRainFactorAndDryDays({
+      const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
           maxDryDays,
           rainfallDays,
           rainfallFactor,
           lastPainted,
-        } as Field,
+        },
         // Marking it unplayable at 10 days
         markUnplayableOn: new Date('2023-10-11'),
       })
@@ -129,14 +128,14 @@ describe('Calculate Conditions', () => {
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
 
-      const resultingField = adjustRainFactorAndDryDays({
+      const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
           maxDryDays,
           previousRainfallDays,
           rainfallDays,
           rainfallFactor,
           lastPainted,
-        } as Field,
+        },
         // Marking it unplayable at 10 days
         markUnplayableOn: new Date('2023-10-11'),
       })
@@ -158,14 +157,14 @@ describe('Calculate Conditions', () => {
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
 
-      const resultingField = adjustRainFactorAndDryDays({
+      const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
           maxDryDays,
           previousRainfallDays,
           rainfallDays,
           rainfallFactor,
           lastPainted,
-        } as Field,
+        },
         // 9 days and the previous factor would have been 12
         // So adjust the factor to make it work for 9
         markUnplayableOn: new Date('2023-10-10'),

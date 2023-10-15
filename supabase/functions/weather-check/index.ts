@@ -1,12 +1,9 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+import { addDays } from 'https://esm.sh/date-fns'
 import { getWeather } from './getWeather.ts'
-import { corsHeaders } from './_cors.ts'
-
-type PaintTeam = {
-  id: string
-  name: string
-  zipcode: string
-}
+import { corsHeaders } from '../shared/_cors.ts'
+import { DBField, PaintTeam } from './types.ts'
+import { getPredictedDaysUntilPaint } from './predictNextPainting.ts'
 
 // Just signal that we were called
 console.log(`${new Date().toISOString()}: version: ${Deno.version.deno}`)
@@ -57,19 +54,19 @@ Deno.serve(async (req: Request) => {
       .from('paintteam')
       .select('*')
 
-    const twentyHoursAgo = new Date().getTime() - 20 * 60 * 60 * 1000
-    const history = await supabaseClient
-      .from('rainfall_history')
-      .select('*')
-      .gte('created_at', new Date(twentyHoursAgo).toISOString())
-
-    if (history.data?.length) {
-      // We've already run this, don't do it again!
-      return new Response(JSON.stringify({}), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 429,
-      })
-    }
+    // const twentyHoursAgo = new Date().getTime() - 20 * 60 * 60 * 1000
+    // const history = await supabaseClient
+    //   .from('rainfall_history')
+    //   .select('*')
+    //   .gte('created_at', new Date(twentyHoursAgo).toISOString())
+    //
+    // if (history.data?.length) {
+    //   // We've already run this, don't do it again!
+    //   return new Response(JSON.stringify({}), {
+    //     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    //     status: 429,
+    //   })
+    // }
 
     // Now for each team, call out the weather!
     for (const paintTeam of paintteams.data) {
@@ -96,6 +93,23 @@ Deno.serve(async (req: Request) => {
         if (error) throw error
       }
     }
+
+    // Now that we have all the fields rainfall numbers calculated, we need to
+    // set their predicted_next_paint dates!
+    // There may be a way to "bulk" do this, but for now pull each, loop and save each!
+    const { data: fields }: { data: DBField[] } = await supabaseClient
+      .from('fields')
+      .select('*')
+    const predictedFields = fields.map((field) => {
+      // Eventually this will factor in average rainfall for the zipcode
+      const numberOfDays = getPredictedDaysUntilPaint(field)
+      return {
+        ...field,
+        predicted_next_paint: addDays(new Date(), numberOfDays),
+      }
+    })
+    // Now save all of these updates
+    await supabaseClient.from('fields').upsert(predictedFields)
 
     return new Response(JSON.stringify({}), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

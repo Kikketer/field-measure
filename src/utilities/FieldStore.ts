@@ -17,9 +17,8 @@ const baselineField: Field = {
   description: '',
   maxDryDays: 14,
   rainfallDays: 0,
-  rainfallFactor: 0,
+  rainfallFactor: 1,
   lastPainted: new Date(),
-  shouldPaint: 0,
   markedUnplayable: new Date(),
   sortOrder: 0,
   active: true,
@@ -50,6 +49,9 @@ const mapFields = (fields: any[]): Field[] => {
       ? new Date(field.lastPainted)
       : undefined
     field.modified = field.modified ? new Date(field.modified) : undefined
+    field.predictedNextPaint = field.predictedNextPaint
+      ? new Date(field.predictedNextPaint)
+      : undefined
   })
 
   return duplicateFields

@@ -8,12 +8,7 @@ import {
 } from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
-import {
-  formatDate,
-  getPredictedNextPaintDate,
-  getStartOfDate,
-} from '../utilities/utils'
-import { getPredictedDaysUntilPaint } from '../utilities/calculateConditions'
+import { formatDate, getStartOfDate } from '../utilities/utils'
 import { ErrorPrompt } from '../components/ErrorPrompt'
 import styles from './FieldDetail.module.css'
 import { getField, saveField as saveFieldToDb } from '../utilities/FieldStore'
@@ -23,6 +18,8 @@ import { StatusLabel } from '../components/StatusLabel'
 import { Page } from '../components/Page'
 import { Field } from '../components/Field'
 import { AuthenticationContext } from '../components/AuthenticationProvider.tsx'
+import { differenceInCalendarDays } from 'date-fns'
+import { DaysLeftChip } from '../components/DaysLeftChip.tsx'
 
 export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)
@@ -67,8 +64,8 @@ export const FieldDetail: Component = () => {
             </li>
             <li>
               <strong>Predicted next painting:</strong>&nbsp;
-              {formatDate(getPredictedNextPaintDate(field()))} (
-              {getPredictedDaysUntilPaint(field())} days)
+              {formatDate(field()?.predictedNextPaint)}
+              <DaysLeftChip predictedNextPaint={field()?.predictedNextPaint} />
             </li>
             <li>
               <strong>Size:</strong>&nbsp;{field()?.size} (

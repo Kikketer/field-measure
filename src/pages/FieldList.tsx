@@ -13,10 +13,11 @@ import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
 import { ChevronRightIcon } from '../assets/ChevronRightIcon.tsx'
 import { Field } from '../utilities/types'
-import { formatDate, getPredictedNextPaintDate } from '../utilities/utils'
-import { getPredictedDaysUntilPaint } from '../utilities/calculateConditions.ts'
+import { formatDate } from '../utilities/utils'
 import styles from './FieldList.module.css'
 import { VisibleContext } from '../components/VisibleProvider.tsx'
+import { differenceInCalendarDays } from 'date-fns'
+import { DaysLeftChip } from '../components/DaysLeftChip.tsx'
 
 const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
   // Group by "group"
@@ -39,10 +40,11 @@ const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
   // Sort the fields in each group by the number of days until the next predicted painting
   return Object.keys(groupedFields).reduce(
     (acc: { [groupName: string]: Field[] }, groupName) => {
-      acc[groupName] = groupedFields[groupName].sort(
-        (a, b) =>
-          (getPredictedDaysUntilPaint(a) ?? 0) -
-          (getPredictedDaysUntilPaint(b) ?? 0),
+      acc[groupName] = groupedFields[groupName].sort((a, b) =>
+        differenceInCalendarDays(
+          a.predictedNextPaint ?? new Date(),
+          b.predictedNextPaint ?? new Date(),
+        ),
       )
       return acc
     },
@@ -89,7 +91,7 @@ export const FieldList: Component = () => {
                   <div class={styles.EmptyList}>There are no fields</div>
                 }
               >
-                {(field) => (
+                {(field: Field) => (
                   <li
                     class={styles.FieldItem}
                     onClick={() => navigate(field.id)}
@@ -107,9 +109,11 @@ export const FieldList: Component = () => {
                         {/* Kind of a flaw of SolidJS: */}
                         <StatusLabel field={() => field} />
                         <div>
-                          <Show when={getPredictedNextPaintDate(field)}>
-                            {formatDate(getPredictedNextPaintDate(field))} [
-                            {getPredictedDaysUntilPaint(field)}]
+                          <Show when={field.predictedNextPaint}>
+                            {formatDate(field.predictedNextPaint)}
+                            <DaysLeftChip
+                              predictedNextPaint={field.predictedNextPaint}
+                            />
                           </Show>
                         </div>
                       </div>

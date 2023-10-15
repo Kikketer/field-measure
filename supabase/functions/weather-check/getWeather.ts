@@ -1,8 +1,4 @@
-export type Weather = {
-  precipitation: {
-    total: number
-  }
-}
+import { Weather } from './types.ts'
 
 export const getWeather = async ({
   locationZip,

@@ -65,7 +65,6 @@ export const EditField: Component = () => {
 
   const confirmReset = () => {
     if (confirm('This will reset any rainfall/wear data. Are you sure?')) {
-      // TODO more reset when I finally get this figured out:
       saveFieldToDB({
         field: { id: fieldId, rainfallFactor: 1 },
         paintTeamId: auth.user?.().paintTeam.id,
