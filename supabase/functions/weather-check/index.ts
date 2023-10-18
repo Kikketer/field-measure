@@ -94,9 +94,14 @@ Deno.serve(async (req: Request) => {
       }
     }
 
+    // TODO
+    // Collect the average rainfall for the last 3 years for the next
+    // 14 days at this location (max_dry_days typically)
+    // Then using that we can more accurately calculate the predicted date
+    // Not just by current rainfall and factor, but by potential rain that's yet to fall
+
     // Now that we have all the fields rainfall numbers calculated, we need to
     // set their predicted_next_paint dates!
-    // There may be a way to "bulk" do this, but for now pull each, loop and save each!
     const { data: fields }: { data: DBField[] } = await supabaseClient
       .from('fields')
       .select('*')
@@ -110,6 +115,10 @@ Deno.serve(async (req: Request) => {
     })
     // Now save all of these updates
     await supabaseClient.from('fields').upsert(predictedFields)
+
+    // Lastly run the predictedDate stored function to update all of the predictions
+    const { error } = await supabaseClient.rpc('set_predicted_paint')
+    if (error) throw error
 
     return new Response(JSON.stringify({}), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
