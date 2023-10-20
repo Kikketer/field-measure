@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Component, Show, createEffect, createSignal } from 'solid-js'
+import { Component, createEffect, createSignal, Show } from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
 import styles from './SizeSlider.module.css'

@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from '@solidjs/router'
-import { Component, Show, createSignal, useContext } from 'solid-js'
+import { Component, createSignal, Show, useContext } from 'solid-js'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
 import styles from './AddField.module.css'

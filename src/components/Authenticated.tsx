@@ -1,14 +1,13 @@
-import { A, Outlet, useNavigate } from '@solidjs/router'
+import { useNavigate } from '@solidjs/router'
 import {
   Component,
-  JSX,
-  Show,
   createEffect,
   createSignal,
+  JSX,
+  Show,
   useContext,
 } from 'solid-js'
 import { AuthenticationContext } from './AuthenticationProvider'
-import { OnlineContext } from './OnlineStatusProvider'
 import { Page } from './Page'
 import { Loader } from './Loader'
 

@@ -1,4 +1,4 @@
-import { addDays, differenceInCalendarDays } from 'date-fns'
+import { differenceInCalendarDays, startOfDay } from 'date-fns'
 import { Field } from './types'
 
 export const getIsFieldPlayable = (field?: Field) => {
@@ -19,11 +19,7 @@ export const formatDate = (date?: Date) => {
 }
 
 export const getStartOfDate = (day?: string): Date => {
-  const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000
-  let dt = new Date()
-  if (day) {
-    dt = new Date(day)
-  }
+  if (!day) return startOfDay(new Date())
 
-  return new Date(dt.getTime() + timezoneOffset)
+  return startOfDay(new Date(day))
 }

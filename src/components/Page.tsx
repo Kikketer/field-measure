@@ -1,6 +1,6 @@
 import { Component, JSX } from 'solid-js'
 import styles from './Page.module.css'
-import { Footer } from './Footer.tsx'
+import { Footer } from './Footer'
 
 export const Page: Component<{
   children: JSX.Element

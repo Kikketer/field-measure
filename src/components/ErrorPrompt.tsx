@@ -1,4 +1,4 @@
-import { Component, Show, createEffect, createSignal } from 'solid-js'
+import { Component, createEffect, createSignal, Show } from 'solid-js'
 import styles from './ErrorPrompt.module.css'
 
 type ErrorPrompt = {

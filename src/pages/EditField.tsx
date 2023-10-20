@@ -1,11 +1,11 @@
-import { A, useNavigate, useParams } from '@solidjs/router'
+import { useNavigate, useParams } from '@solidjs/router'
 import { Component, createMemo, useContext } from 'solid-js'
+import { startOfDay } from 'date-fns'
 import { getField, saveField as saveFieldToDB } from '../utilities/FieldStore'
 import { Page } from '../components/Page'
 import { Header } from '../components/Header'
 import styles from './EditField.module.css'
-import { AuthenticationContext } from '../components/AuthenticationProvider.tsx'
-import { getStartOfDate } from '../utilities/utils.ts'
+import { AuthenticationContext } from '../components/AuthenticationProvider'
 
 export const EditField: Component = () => {
   const fieldId = useParams().id
@@ -28,7 +28,12 @@ export const EditField: Component = () => {
     }
 
     // Set the lastPainted as a real date
-    data.lastPainted = getStartOfDate(data.lastPainted)
+    console.log(
+      'Setting last painted',
+      data.lastPainted,
+      startOfDay(new Date(data.lastPainted)),
+    )
+    data.lastPainted = startOfDay(new Date(data.lastPainted))
 
     // Set the rainfallDays to 0 since we are restarting this paint:
     // Eventually we may want to ask if a field is unplayable vs painted

@@ -1,9 +1,9 @@
 import {
   Component,
-  JSX,
-  Resource,
   createContext,
   createResource,
+  JSX,
+  Resource,
 } from 'solid-js'
 import { getUser } from '../utilities/userStore'
 import { supabase } from './supabase'

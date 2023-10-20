@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router'
-import { Show, createEffect, createSignal } from 'solid-js'
+import { createEffect, createSignal, Show } from 'solid-js'
 import logo from '../assets/fav.png'
 import { Loader } from '../components/Loader'
 import { Page } from '../components/Page'

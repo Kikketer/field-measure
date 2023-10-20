@@ -5,8 +5,8 @@ import { BuildoutField } from '../assets/BuildoutField'
 import { BabyField } from '../assets/BabyField'
 import { convertToFeet } from '../utilities/convertToFeet'
 import {
-  FULL_LINE_LABELS,
   BUILDOUT_LINE_LABELS,
+  FULL_LINE_LABELS,
   TINY_LINE_LABELS,
 } from '../utilities/lineLabels'
 import { FieldSize } from '../utilities/types'

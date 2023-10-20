@@ -138,7 +138,13 @@ export const getArchivedFields = async () => {
 }
 
 export const saveField = (
-  { field, paintTeamId }: { field: Partial<Field>; paintTeamId: number },
+  {
+    field,
+    paintTeamId,
+  }: {
+    field: Partial<Field>
+    paintTeamId: number
+  },
   callback?: (savedField: Field) => void,
 ): Field => {
   // Set the sort order to the length of the current fields

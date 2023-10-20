@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import { Component, Resource, Show, Switch, createEffect } from 'solid-js'
+import { Component, Resource } from 'solid-js'
 import { Field } from '../utilities/types'
 import { getIsFieldPlayable } from '../utilities/utils'
 import styles from './StatusLabel.module.css'

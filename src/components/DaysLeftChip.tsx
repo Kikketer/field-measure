@@ -1,6 +1,6 @@
-import { Component, Resource } from 'solid-js'
+import { Component } from 'solid-js'
 import { differenceInCalendarDays } from 'date-fns'
-import { Field } from '../utilities/types.ts'
+import { Field } from '../utilities/types'
 
 export const DaysLeftChip: Component<{
   predictedNextPaint?: Field['predictedNextPaint']

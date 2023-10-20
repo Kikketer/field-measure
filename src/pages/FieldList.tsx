@@ -1,23 +1,23 @@
 import { useNavigate } from '@solidjs/router'
 import {
   Component,
+  createEffect,
+  createSignal,
   For,
   Show,
-  createSignal,
   useContext,
-  createEffect,
 } from 'solid-js'
 import { checkWeather, getFields } from '../utilities/FieldStore'
 import { Header } from '../components/Header'
 import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
-import { ChevronRightIcon } from '../assets/ChevronRightIcon.tsx'
+import { ChevronRightIcon } from '../assets/ChevronRightIcon'
 import { Field } from '../utilities/types'
 import { formatDate } from '../utilities/utils'
 import styles from './FieldList.module.css'
-import { VisibleContext } from '../components/VisibleProvider.tsx'
+import { VisibleContext } from '../components/VisibleProvider'
 import { differenceInCalendarDays } from 'date-fns'
-import { DaysLeftChip } from '../components/DaysLeftChip.tsx'
+import { DaysLeftChip } from '../components/DaysLeftChip'
 
 const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
   // Group by "group"

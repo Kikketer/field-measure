@@ -1,7 +1,7 @@
 import { Component, useContext } from 'solid-js'
 import styles from './Footer.module.css'
 import { version } from '../../package.json'
-import { AuthenticationContext } from './AuthenticationProvider.tsx'
+import { AuthenticationContext } from './AuthenticationProvider'
 
 export const Footer: Component = () => {
   const auth = useContext(AuthenticationContext)

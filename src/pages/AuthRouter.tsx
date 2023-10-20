@@ -1,7 +1,7 @@
 import { Outlet } from '@solidjs/router'
 import { Authenticated } from '../components/Authenticated'
 import { AuthenticationProvider } from '../components/AuthenticationProvider'
-import { VisibleProvider } from '../components/VisibleProvider.tsx'
+import { VisibleProvider } from '../components/VisibleProvider'
 
 export const AuthRouter = () => {
   return (

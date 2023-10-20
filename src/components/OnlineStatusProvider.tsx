@@ -1,12 +1,12 @@
 import {
   Component,
-  JSX,
-  Show,
   createContext,
   createSignal,
+  JSX,
+  Show,
   useContext,
 } from 'solid-js'
-import { OfflineIcon } from '../assets/OfflineIcon.tsx'
+import { OfflineIcon } from '../assets/OfflineIcon'
 
 type OnlineStatusProvider = {
   children: JSX.Element
