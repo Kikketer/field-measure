@@ -92,6 +92,12 @@ Deno.serve(async (req: Request) => {
         // Downside is one fails they all fail, todo for this later
         if (error) throw error
       }
+
+      // Log that we did this for each zipcode
+      await supabaseCLient.rpc('weather_fetch_log', {
+        zipcode: paintTeam.zipcode,
+        quantity: weather.precipitation.total > 4 ? 1 : 0,
+      })
     }
 
     // TODO
