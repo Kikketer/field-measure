@@ -1,9 +1,7 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import { addDays } from 'https://esm.sh/date-fns'
 import { getWeather } from './getWeather.ts'
 import { corsHeaders } from '../shared/_cors.ts'
-import { DBField, PaintTeam } from './types.ts'
-import { getPredictedDaysUntilPaint } from './predictNextPainting.ts'
+import { PaintTeam } from './types.ts'
 
 // Just signal that we were called
 console.log(`${new Date().toISOString()}: version: ${Deno.version.deno}`)
@@ -72,11 +70,6 @@ Deno.serve(async (req: Request) => {
     for (const paintTeam of paintteams.data) {
       const weather = await getWeather({ locationZip: paintTeam.zipcode })
 
-      console.log('Total weather for', {
-        locationZip: paintTeam.zipcode,
-        weather,
-      })
-
       console.log(
         `Rainfall for ${paintTeam.zipcode} is ${weather.precipitation.total}mm`,
       )
@@ -106,21 +99,22 @@ Deno.serve(async (req: Request) => {
     // Then using that we can more accurately calculate the predicted date
     // Not just by current rainfall and factor, but by potential rain that's yet to fall
 
+    // We don't need to do this since it's a database function now:
     // Now that we have all the fields rainfall numbers calculated, we need to
     // set their predicted_next_paint dates!
-    const { data: fields }: { data: DBField[] } = await supabaseClient
-      .from('fields')
-      .select('*')
-    const predictedFields = fields.map((field) => {
-      // Eventually this will factor in average rainfall for the zipcode
-      const numberOfDays = getPredictedDaysUntilPaint(field)
-      return {
-        ...field,
-        predicted_next_paint: addDays(new Date(), numberOfDays),
-      }
-    })
-    // Now save all of these updates
-    await supabaseClient.from('fields').upsert(predictedFields)
+    // const { data: fields }: { data: DBField[] } = await supabaseClient
+    //   .from('fields')
+    //   .select('*')
+    // const predictedFields = fields.map((field) => {
+    //   // Eventually this will factor in average rainfall for the zipcode
+    //   const numberOfDays = getPredictedDaysUntilPaint(field)
+    //   return {
+    //     ...field,
+    //     predicted_next_paint: addDays(new Date(), numberOfDays),
+    //   }
+    // })
+    // // Now save all of these updates
+    // await supabaseClient.from('fields').upsert(predictedFields)
 
     // Lastly run the predictedDate stored function to update all of the predictions
     const { error } = await supabaseClient.rpc('set_predicted_paint')
