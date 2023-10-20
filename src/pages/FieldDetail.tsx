@@ -29,18 +29,21 @@ export const FieldDetail: Component = () => {
   const isOnline = useContext(OnlineContext)
   const { user } = useContext(AuthenticationContext)
 
-  const paintField = async () => {
+  const paintField = async ({ skipFactor }: { skipFactor?: boolean } = {}) => {
     if (!field) return
 
-    const fieldWithNewFactor = getFieldWithAdjustedRainFactorAndDryDays({
-      currentField: field()!,
-      // Right now we assume it's unplayable on the date you painted:
-      markUnplayableOn: startOfDay(new Date()),
-    })
-    fieldWithNewFactor.lastPainted = startOfDay(new Date())
+    let fieldToSave = field()!
+    if (!skipFactor) {
+      fieldToSave = getFieldWithAdjustedRainFactorAndDryDays({
+        currentField: fieldToSave,
+        // Right now we assume it's unplayable on the date you painted:
+        markUnplayableOn: startOfDay(new Date()),
+      })
+    }
+    fieldToSave.lastPainted = startOfDay(new Date())
 
     const savedField = saveFieldToDb({
-      field: fieldWithNewFactor,
+      field: fieldToSave,
       paintTeamId: user?.().paintTeam.id,
     })
     mutate(savedField)
@@ -110,7 +113,7 @@ export const FieldDetail: Component = () => {
               <div>
                 <button
                   class="secondary"
-                  onClick={paintField}
+                  onClick={() => paintField({ skipFactor: true })}
                   disabled={!isOnline?.()}
                 >
                   Mark Painted but Playable
@@ -119,7 +122,7 @@ export const FieldDetail: Component = () => {
             </div>
           </details>
           <div>
-            <button onClick={paintField} disabled={!isOnline?.()}>
+            <button onClick={() => paintField()} disabled={!isOnline?.()}>
               Mark Painted
             </button>
 
