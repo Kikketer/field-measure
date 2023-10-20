@@ -96,7 +96,7 @@ Deno.serve(async (req: Request) => {
       // Log that we did this for each zipcode
       await supabaseCLient.rpc('weather_fetch_log', {
         zipcode: paintTeam.zipcode,
-        quantity: weather.precipitation.total > 4 ? 1 : 0,
+        quantity: weather.precipitation.total,
       })
     }
 
