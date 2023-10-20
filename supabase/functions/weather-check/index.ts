@@ -87,10 +87,14 @@ Deno.serve(async (req: Request) => {
       }
 
       // Log that we did this for each zipcode
-      await supabaseCLient.rpc('weather_fetch_log', {
-        zipcode: paintTeam.zipcode,
-        quantity: weather.precipitation.total,
-      })
+      const { error: logError } = await supabaseClient.rpc(
+        'weather_fetch_log',
+        {
+          zipcode: paintTeam.zipcode,
+          quantity: weather.precipitation.total,
+        },
+      )
+      if (logError) throw logError
     }
 
     // TODO
@@ -117,14 +121,15 @@ Deno.serve(async (req: Request) => {
     // await supabaseClient.from('fields').upsert(predictedFields)
 
     // Lastly run the predictedDate stored function to update all of the predictions
-    const { error } = await supabaseClient.rpc('set_predicted_paint')
-    if (error) throw error
+    // const { error } = await supabaseClient.rpc('set_predicted_paint')
+    // if (error) throw error
 
     return new Response(JSON.stringify({}), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     })
   } catch (error) {
+    console.error(error)
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       error,
