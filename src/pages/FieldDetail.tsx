@@ -26,13 +26,13 @@ import { FieldsContext } from '../components/FieldsProvider'
 export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)
   const [thisField, setThisField] = createSignal<FieldType>()
-  // const [field, { mutate }] = createResource(fieldId, getField)
   const [saveError, setSaveError] = createSignal<string>()
   const isOnline = useContext(OnlineContext)
   const { user } = useContext(AuthenticationContext)
   const { fields } = useContext(FieldsContext)
 
   createEffect(() => {
+    console.log('Fields have changed, setting field', fields())
     setThisField(fields()?.find((field: FieldType) => field.id === fieldId()))
   }, [fields])
 
@@ -49,12 +49,10 @@ export const FieldDetail: Component = () => {
     }
     fieldToSave.lastPainted = startOfDay(new Date())
 
-    const savedField = saveFieldToDb({
+    await saveFieldToDb({
       field: fieldToSave,
       paintTeamId: user?.().paintTeam.id,
     })
-    console.log('Saving field!', savedField)
-    // mutate(savedField)
   }
 
   return (
@@ -64,89 +62,91 @@ export const FieldDetail: Component = () => {
         {thisField()?.name}
       </Header>
       <ErrorPrompt error={saveError} />
-      {/*<Show when={!thisField} fallback={<div>Loading...</div>}>*/}
-      <div class={styles.DetailContainer}>
-        <div class={styles.TitleRow}>
-          <h1>{thisField()?.name}</h1>
-          <div>
-            <StatusLabel field={thisField} />
-          </div>
-        </div>
-        <ul>
-          <li>
-            <strong>Last painted:</strong>&nbsp;
-            {formatDate(thisField()?.lastPainted)}
-          </li>
-          <li>
-            <strong>Predicted next painting:</strong>&nbsp;
-            {formatDate(thisField()?.predictedNextPaint)}
-            <DaysLeftChip
-              predictedNextPaint={thisField()?.predictedNextPaint}
-            />
-          </li>
-          {/*<li>*/}
-          {/*  <strong>Size:</strong>&nbsp;{thisField()?.size} (*/}
-          {/*  {thisField()?.customLength ??*/}
-          {/*    SIZES[thisField()?.size ?? FieldSize.full]?.recommendedMaxLength}*/}
-          {/*  L x{' '}*/}
-          {/*  {thisField()?.customWidth ??*/}
-          {/*    SIZES[thisField()?.size ?? FieldSize.full]?.recommendedMaxWidth}*/}
-          {/*  W)*/}
-          {/*</li>*/}
-          <li>
-            <strong>Group:</strong>&nbsp;{thisField()?.group}
-          </li>
-          <li>
-            <strong>Location:</strong>&nbsp;{thisField()?.description}
-          </li>
-        </ul>
-        <details>
-          <summary>Details</summary>
-          <div class={styles.DetailContainer}>
-            <ul>
-              <li>
-                <strong>Max dry days:</strong>&nbsp;{thisField()?.maxDryDays}
-              </li>
-              <li>
-                <strong>Rainfall days:</strong>&nbsp;{thisField()?.rainfallDays}
-              </li>
-              <li>
-                <strong>Rainfall factor:</strong>&nbsp;
-                {thisField()?.rainfallFactor}
-              </li>
-            </ul>
-            {/*<Field*/}
-            {/*  fieldSize={() => thisField()?.size as FieldSize}*/}
-            {/*  customLength={() => thisField()?.customLength}*/}
-            {/*  customWidth={() => thisField()?.customWidth}*/}
-            {/*/>*/}
+      <Show when={thisField()} fallback={<div>Loading...</div>}>
+        <div class={styles.DetailContainer}>
+          <div class={styles.TitleRow}>
+            <h1>{thisField()?.name}</h1>
             <div>
-              <button
-                class="secondary"
-                onClick={() => paintField({ skipFactor: true })}
-                disabled={!isOnline?.()}
-              >
-                Mark Painted but Playable
-              </button>
+              <StatusLabel field={thisField} />
             </div>
           </div>
-        </details>
-        <div>
-          <button onClick={() => paintField()} disabled={!isOnline?.()}>
-            Mark Painted
-          </button>
+          <ul>
+            <li>
+              <strong>Last painted:</strong>&nbsp;
+              {formatDate(thisField()?.lastPainted)}
+            </li>
+            <li>
+              <strong>Predicted next painting:</strong>&nbsp;
+              {formatDate(thisField()?.predictedNextPaint)}
+              <DaysLeftChip
+                predictedNextPaint={thisField()?.predictedNextPaint}
+              />
+            </li>
+            <li>
+              <strong>Size:</strong>&nbsp;{thisField()?.size} (
+              {thisField()?.customLength ??
+                SIZES[thisField()?.size ?? FieldSize.full]
+                  ?.recommendedMaxLength}
+              L x{' '}
+              {thisField()?.customWidth ??
+                SIZES[thisField()?.size ?? FieldSize.full]?.recommendedMaxWidth}
+              W)
+            </li>
+            <li>
+              <strong>Group:</strong>&nbsp;{thisField()?.group}
+            </li>
+            <li>
+              <strong>Location:</strong>&nbsp;{thisField()?.description}
+            </li>
+          </ul>
+          <details>
+            <summary>Details</summary>
+            <div class={styles.DetailContainer}>
+              <ul>
+                <li>
+                  <strong>Max dry days:</strong>&nbsp;{thisField()?.maxDryDays}
+                </li>
+                <li>
+                  <strong>Rainfall days:</strong>&nbsp;
+                  {thisField()?.rainfallDays}
+                </li>
+                <li>
+                  <strong>Rainfall factor:</strong>&nbsp;
+                  {thisField()?.rainfallFactor}
+                </li>
+              </ul>
+              <Field
+                fieldSize={() => thisField()?.size as FieldSize}
+                customLength={() => thisField()?.customLength}
+                customWidth={() => thisField()?.customWidth}
+              />
+              <div>
+                <button
+                  class="secondary"
+                  onClick={() => paintField({ skipFactor: true })}
+                  disabled={!isOnline?.()}
+                >
+                  Mark Painted but Playable
+                </button>
+              </div>
+            </div>
+          </details>
+          <div>
+            <button onClick={() => paintField()} disabled={!isOnline?.()}>
+              Mark Painted
+            </button>
 
-          {/* <Show when={getIsFieldPlayable(field())}>
+            {/* <Show when={getIsFieldPlayable(field())}>
               <a role="button" class="contrast">
                 Mark Unplayable
               </a>
             </Show> */}
-          {/* <a role="button" class="secondary">
+            {/* <a role="button" class="secondary">
               Archive
             </a> */}
+          </div>
         </div>
-      </div>
-      {/*</Show>*/}
+      </Show>
     </Page>
   )
 }

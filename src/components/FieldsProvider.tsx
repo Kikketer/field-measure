@@ -8,8 +8,13 @@ import {
   useContext,
 } from 'solid-js'
 import { Field } from '../utilities/types'
-import { getFields, startListening } from '../utilities/FieldStore'
+import {
+  getFields,
+  onUpdate as updateFieldsInStore,
+} from '../utilities/FieldStore'
 import { VisibleContext } from './VisibleProvider'
+import { OnlineContext } from './OnlineStatusProvider'
+import { supabase } from './supabase'
 
 type FieldsProvider = {
   children: JSX.Element
@@ -20,34 +25,45 @@ export const FieldsContext = createContext<{
   loading?: boolean
 }>()
 
+const startListening = ({
+  onUpdate,
+  onInsert,
+  onDelete,
+}: {
+  onUpdate: (field: Field) => void
+  onInsert: (field: Field) => void
+  onDelete: (field: Field) => void
+}) => {
+  console.log('Starting to listen')
+  supabase
+    .channel('fields')
+    .on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'fields' },
+      (payload) => {
+        console.log('Field is updated! ', payload)
+        onUpdate(payload.new as Field)
+      },
+    )
+    .subscribe()
+}
+
 export const FieldsProvider: Component<FieldsProvider> = (props) => {
   const visible = useContext(VisibleContext)
+  const online = useContext(OnlineContext)
   const [fields, setFields] = createSignal<Field[]>([])
 
   // Fetch the fields if we are visible
   createEffect(async () => {
     if (visible?.()) {
-      const mappedFields = await getFields()
+      const mappedFields = await getFields(online?.())
       setFields(mappedFields)
     }
   })
 
-  const onUpdate = (updatedField: Field) => {
-    const newFields = fields()?.slice() || []
-    const indexOfExistingField = newFields.findIndex(
-      (field: Field) => field.id === updatedField?.id,
-    )
-    newFields.splice(indexOfExistingField, 1, updatedField)
-
-    // And now re-save this back to the local storage
-    localStorage.setItem(
-      'fieldStore',
-      JSON.stringify({ fields: newFields, lastFetch: new Date() }),
-    )
-    // And local cache
-    // localCache.fields = existingFields
-    console.log('saved!', newFields)
-    setFields(newFields)
+  const onUpdate = async (updatedField: Field) => {
+    const updatedFields = await updateFieldsInStore(updatedField)
+    setFields(updatedFields)
   }
 
   const onDelete = (deletedField: Field) => {}
