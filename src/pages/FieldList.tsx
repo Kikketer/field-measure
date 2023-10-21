@@ -71,7 +71,7 @@ export const FieldList: Component = () => {
 
   createEffect(() => {
     if (visible()) {
-      setGroupedFields(groupFields(getFields(true, onUpdateFields)))
+      // setGroupedFields(groupFields(getFields(true, onUpdateFields)))
     }
   })
 

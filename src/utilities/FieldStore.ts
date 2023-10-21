@@ -71,57 +71,83 @@ const unmapField = (field: Partial<Field>) => {
   return duplicateField
 }
 
-export const getFields = (
+export const startListening = ({
+  onUpdate,
+  onInsert,
+  onDelete,
+}: {
+  onUpdate: (field: Field) => void
+  onInsert: (field: Field) => void
+  onDelete: (field: Field) => void
+}) => {
+  console.log('Starting to listen')
+  supabase
+    .channel('fields')
+    .on(
+      'postgres_changes',
+      { event: 'UPDATE', schema: 'public', table: 'fields' },
+      (payload) => {
+        console.log('Field is updated! ', payload)
+        onUpdate(payload.new as Field)
+      },
+    )
+    .subscribe()
+}
+
+export const getFields = async (
   isOnline?: boolean,
   onUpdate?: (fields: Field[]) => void,
-): Field[] => {
-  const localStorageFields = localStorage.getItem('fieldStore')
-  let hydratedFieldStore = localStorageFields
-    ? JSON.parse(localStorageFields)
-    : { fields: [] }
-
-  let fields = hydratedFieldStore?.fields ?? []
-  let localCache = hydratedFieldStore
+): Promise<Field[]> => {
+  // const localStorageFields = localStorage.getItem('fieldStore')
+  // let hydratedFieldStore = localStorageFields
+  //   ? JSON.parse(localStorageFields)
+  //   : { fields: [] }
+  //
+  // let fields = hydratedFieldStore?.fields ?? []
+  // let localCache = hydratedFieldStore
 
   // Always fetch if we are online
-  if (isOnline) {
-    const callFields = () =>
-      supabase
-        .from('fields')
-        .select('*')
-        .eq('active', true)
-        .eq('deleted', false)
-        .then((result) => {
-          fields = result.data
+  // if (isOnline) {
+  const result = await supabase
+    .from('fields')
+    .select('*')
+    .eq('active', true)
+    .eq('deleted', false)
 
-          // Save to local storage for fetch later (if we are offline)
-          localStorage.setItem(
-            'fieldStore',
-            JSON.stringify({
-              lastFetch: new Date(),
-              fields: fields ?? [],
-            }),
-          )
+  const fields = result.data ?? []
 
-          onUpdate?.(mapFields(fields))
-        })
+  return mapFields(fields)
+  // .then((result) => {
+  //   fields = result.data
+  //
+  //   // Save to local storage for fetch later (if we are offline)
+  //   localStorage.setItem(
+  //     'fieldStore',
+  //     JSON.stringify({
+  //       lastFetch: new Date(),
+  //       fields: fields ?? [],
+  //     }),
+  //   )
+  //
+  //   onUpdate?.(mapFields(fields))
+  // })
 
-    // Delay the call slightly to allow any others to flush out
-    // I'd like to make this use a sort of "pending completion queue"
-    // But again, I'm not getting paid for this so going MVP for now
-    if (hydratedFieldStore.fields.length) {
-      // If we have fields already cached, we can afford to wait a second to call for the refresh
-      setTimeout(() => {
-        callFields()
-      }, 2000)
-    } else {
-      callFields()
-    }
-  }
+  // Delay the call slightly to allow any others to flush out
+  // I'd like to make this use a sort of "pending completion queue"
+  // But again, I'm not getting paid for this so going MVP for now
+  // if (hydratedFieldStore.fields.length) {
+  //   // If we have fields already cached, we can afford to wait a second to call for the refresh
+  //   setTimeout(() => {
+  //     callFields()
+  //   }, 2000)
+  // } else {
+  // callFields()
+  // }
+  // }
 
-  if (!localCache?.fields?.length) return []
-
-  return mapFields(localCache.fields)
+  // if (!localCache?.fields?.length) return []
+  //
+  // return mapFields(localCache.fields)
 }
 
 export const getField = (id: Field['id']): Field | undefined => {
@@ -193,36 +219,40 @@ export const saveField = (
     .eq('deleted', false)
     .then((result) => {
       // Now update the local cache with the new or edited field:
-      if (!existingFieldToEdit) {
-        const indexOfNewField = existingFields?.findIndex(
-          (field: Field) => field.id === undefined,
-        )
-        existingFields?.splice(indexOfNewField, 1, result.data?.[0])
-      } else {
-        const indexOfExistingField = existingFields?.findIndex(
-          (field: Field) => field.id === existingFieldToEdit?.id,
-        )
-        existingFields?.splice(indexOfExistingField, 1, result.data?.[0])
-      }
+      // if (!existingFieldToEdit) {
+      //   const indexOfNewField = existingFields?.findIndex(
+      //     (field: Field) => field.id === undefined,
+      //   )
+      //   existingFields?.splice(indexOfNewField, 1, result.data?.[0])
+      // } else {
+      //   const indexOfExistingField = existingFields?.findIndex(
+      //     (field: Field) => field.id === existingFieldToEdit?.id,
+      //   )
+      //   existingFields?.splice(indexOfExistingField, 1, result.data?.[0])
+      // }
       // And now re-save this back to the local storage
-      localStorage.setItem(
-        'fieldStore',
-        JSON.stringify({ fields: existingFields, lastFetch: new Date() }),
-      )
-      // And local cache
-      localCache.fields = existingFields
+      // localStorage.setItem(
+      //   'fieldStore',
+      //   JSON.stringify({ fields: existingFields, lastFetch: new Date() }),
+      // )
+      // // And local cache
+      // localCache.fields = existingFields
+
+      console.log('Actual save returned ', result)
 
       // And callback with this:
-      callback?.(mapFields(result.data as any[])[0])
+      // callback?.(mapFields(result.data as any[])[0])
     })
 
+  console.log('Quick save returned ', proposedUpdatedField.predictedNextPaint)
+
   // And now re-save this back to the local storage
-  localStorage.setItem(
-    'fieldStore',
-    JSON.stringify({ fields: existingFields, lastFetch: new Date() }),
-  )
-  // And local cache
-  localCache.fields = existingFields
+  // localStorage.setItem(
+  //   'fieldStore',
+  //   JSON.stringify({ fields: existingFields, lastFetch: new Date() }),
+  // )
+  // // And local cache
+  // localCache.fields = existingFields
 
   // Return the existing field OR the new one we created:
   return proposedUpdatedField ?? { ...baselineField, ...field }
