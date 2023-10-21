@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from '@solidjs/router'
 import { Component, createEffect, createSignal, useContext } from 'solid-js'
-import { startOfDay } from 'date-fns'
+import { parse, set, startOfDay } from 'date-fns'
 import { saveField as saveFieldToDB } from '../utilities/FieldStore'
 import { Page } from '../components/Page'
 import { Header } from '../components/Header'
@@ -10,14 +10,13 @@ import { Field as FieldType } from '../utilities/types'
 import { FieldsContext } from '../components/FieldsProvider'
 
 export const EditField: Component = () => {
-  const fieldId = useParams().id
+  const [fieldId, setFieldId] = createSignal(useParams().id)
   const navigate = useNavigate()
   const [thisField, setThisField] = createSignal<FieldType>()
   const auth = useContext(AuthenticationContext)
   const { fields } = useContext(FieldsContext)
 
   createEffect(() => {
-    console.log('Fields have changed, setting field', fields())
     setThisField(fields()?.find((field: FieldType) => field.id === fieldId()))
   }, [fields])
 
@@ -33,20 +32,21 @@ export const EditField: Component = () => {
     }
 
     // Set the lastPainted as a real date
-    console.log(
-      'Setting last painted',
-      data.lastPainted,
-      startOfDay(new Date(data.lastPainted)),
+    // Start of the day local to the user (so we keep the time then go start of day)
+    data.lastPainted = startOfDay(
+      set(parse(data.lastPainted, 'yyyy-MM-dd', new Date()), {
+        hours: new Date().getHours(),
+        minutes: new Date().getMinutes(),
+      }),
     )
-    data.lastPainted = startOfDay(new Date(data.lastPainted))
 
     // Set the rainfallDays to 0 since we are restarting this paint:
     // Eventually we may want to ask if a field is unplayable vs painted
     saveFieldToDB({
-      field: { id: fieldId, rainfallDays: 0, ...data },
+      field: { id: fieldId(), rainfallDays: 0, ...data },
       paintTeamId: auth.user?.().paintTeam.id,
     })
-    navigate(`/fields/${fieldId}`, { replace: true })
+    navigate(`/fields/${fieldId()}`, { replace: true })
   }
 
   const confirmArchive = () => {
@@ -56,7 +56,7 @@ export const EditField: Component = () => {
       )
     ) {
       saveFieldToDB({
-        field: { id: fieldId, active: false },
+        field: { id: fieldId(), active: false },
         paintTeamId: auth.user?.().paintTeam.id,
       })
       navigate(`/fields`, { replace: true })
@@ -66,7 +66,7 @@ export const EditField: Component = () => {
   const confirmDelete = () => {
     if (confirm('Delete the field forever? Are you sure?')) {
       saveFieldToDB({
-        field: { id: fieldId, deleted: true },
+        field: { id: fieldId(), deleted: true },
         paintTeamId: auth.user?.().paintTeam.id,
       })
       navigate(`/fields`, { replace: true })
@@ -76,7 +76,7 @@ export const EditField: Component = () => {
   const confirmReset = () => {
     if (confirm('This will reset any rainfall/wear data. Are you sure?')) {
       saveFieldToDB({
-        field: { id: fieldId, rainfallFactor: 1 },
+        field: { id: fieldId(), rainfallFactor: 1 },
         paintTeamId: auth.user?.().paintTeam.id,
       })
       navigate(`/fields`, { replace: true })
@@ -85,7 +85,7 @@ export const EditField: Component = () => {
 
   return (
     <Page>
-      <Header backLocation={`/fields/${fieldId}`}>
+      <Header backLocation={`/fields/${fieldId()}`}>
         Edit {thisField()?.name}
       </Header>
       <form onSubmit={saveField}>
@@ -125,6 +125,7 @@ export const EditField: Component = () => {
           <summary>Advanced</summary>
           <label>
             Mark Last Painted:
+            <pre>{JSON.stringify(thisField()?.lastPainted)}</pre>
             <input
               type="date"
               name="lastPainted"
@@ -152,7 +153,7 @@ export const EditField: Component = () => {
           <button
             type="button"
             class="secondary"
-            onClick={() => navigate(`/fields/${fieldId}`, { replace: true })}
+            onClick={() => navigate(`/fields/${fieldId()}`, { replace: true })}
           >
             Cancel
           </button>
