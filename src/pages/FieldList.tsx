@@ -7,7 +7,6 @@ import {
   Show,
   useContext,
 } from 'solid-js'
-import { checkWeather } from '../utilities/FieldStore'
 import { Header } from '../components/Header'
 import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
@@ -50,10 +49,6 @@ const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
     },
     {},
   )
-}
-
-const hitApi = async () => {
-  await checkWeather()
 }
 
 export const FieldList: Component = () => {
@@ -121,7 +116,6 @@ export const FieldList: Component = () => {
       <div class={styles.ActionContainer}>
         <button onClick={() => navigate('new')}>+ Add Field</button>
         <button onClick={() => navigate('/quick')}>Quick Size</button>
-        <button onClick={() => hitApi()}>API Test</button>
       </div>
     </Page>
   )
