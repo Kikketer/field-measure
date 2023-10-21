@@ -7,7 +7,7 @@ import {
   Show,
   useContext,
 } from 'solid-js'
-import { checkWeather, getFields } from '../utilities/FieldStore'
+import { checkWeather } from '../utilities/FieldStore'
 import { Header } from '../components/Header'
 import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
@@ -15,9 +15,9 @@ import { ChevronRightIcon } from '../assets/ChevronRightIcon'
 import { Field } from '../utilities/types'
 import { formatDate } from '../utilities/utils'
 import styles from './FieldList.module.css'
-import { VisibleContext } from '../components/VisibleProvider'
 import { differenceInCalendarDays } from 'date-fns'
 import { DaysLeftChip } from '../components/DaysLeftChip'
+import { FieldsContext } from '../components/FieldsProvider'
 
 const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
   // Group by "group"
@@ -61,18 +61,10 @@ export const FieldList: Component = () => {
   const [groupedFields, setGroupedFields] = createSignal<{
     [groupName: string]: Field[]
   }>({ other: [] })
-
-  const visible = useContext(VisibleContext)
-
-  const onUpdateFields = (fields: Field[]) => {
-    // Called when the actual network call returns
-    setGroupedFields(groupFields(fields))
-  }
+  const { fields } = useContext(FieldsContext)
 
   createEffect(() => {
-    if (visible()) {
-      setGroupedFields(groupFields(getFields(true, onUpdateFields)))
-    }
+    setGroupedFields(groupFields(fields?.()))
   })
 
   return (
