@@ -34,14 +34,12 @@ const startListening = ({
   onInsert: (field: Field) => void
   onDelete: (field: Field) => void
 }) => {
-  console.log('Starting to listen')
   supabase
     .channel('fields')
     .on(
       'postgres_changes',
       { event: 'UPDATE', schema: 'public', table: 'fields' },
       (payload) => {
-        console.log('Field is updated! ', payload)
         onUpdate(payload.new as Field)
       },
     )

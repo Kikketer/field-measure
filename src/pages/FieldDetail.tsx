@@ -32,7 +32,6 @@ export const FieldDetail: Component = () => {
   const { fields } = useContext(FieldsContext)
 
   createEffect(() => {
-    console.log('Fields have changed, setting field', fields())
     setThisField(fields()?.find((field: FieldType) => field.id === fieldId()))
   }, [fields])
 
