@@ -102,38 +102,6 @@ export const getFields = async (isOnline?: boolean): Promise<Field[]> => {
   let fields = hydratedFieldStore?.fields ?? []
 
   return mapFields(fields)
-  // let localCache = hydratedFieldStore
-  // .then((result) => {
-  //   fields = result.data
-  //
-  //   // Save to local storage for fetch later (if we are offline)
-  //   localStorage.setItem(
-  //     'fieldStore',
-  //     JSON.stringify({
-  //       lastFetch: new Date(),
-  //       fields: fields ?? [],
-  //     }),
-  //   )
-  //
-  //   onUpdate?.(mapFields(fields))
-  // })
-
-  // Delay the call slightly to allow any others to flush out
-  // I'd like to make this use a sort of "pending completion queue"
-  // But again, I'm not getting paid for this so going MVP for now
-  // if (hydratedFieldStore.fields.length) {
-  //   // If we have fields already cached, we can afford to wait a second to call for the refresh
-  //   setTimeout(() => {
-  //     callFields()
-  //   }, 2000)
-  // } else {
-  // callFields()
-  // }
-  // }
-
-  // if (!localCache?.fields?.length) return []
-  //
-  // return mapFields(localCache.fields)
 }
 
 export const getArchivedFields = async () => {

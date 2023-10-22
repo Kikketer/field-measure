@@ -3,6 +3,7 @@ import {
   Component,
   createContext,
   createEffect,
+  createMemo,
   createSignal,
   JSX,
   useContext,
@@ -22,7 +23,7 @@ type FieldsProvider = {
 
 export const FieldsContext = createContext<{
   fields?: Accessor<Field[]>
-  loading?: boolean
+  isConnected?: Accessor<boolean>
 }>()
 
 const startListening = ({
@@ -43,7 +44,13 @@ const startListening = ({
         onUpdate(payload.new as Field)
       },
     )
-    .subscribe()
+    .subscribe((p) => {
+      if (p === 'SUBSCRIBED') {
+        console.log('🔌 Listening', p)
+      } else {
+        console.log('🚫 Broken', p)
+      }
+    })
 }
 
 export const FieldsProvider: Component<FieldsProvider> = (props) => {
@@ -56,6 +63,8 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
     if (visible?.()) {
       const mappedFields = await getFields(online?.())
       setFields(mappedFields)
+
+      startListening({ onUpdate, onDelete, onInsert })
     }
   })
 
@@ -68,11 +77,18 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
 
   const onInsert = (insertedField: Field) => {}
 
-  // Startup the realtime connection to the database
-  startListening({ onUpdate, onDelete, onInsert })
+  // const conn = createMemo(() => {
+  //   console.log('CHange? ', supabase.realtime.connectionState())
+  //   console.log('connected? ', supabase.realtime.isConnected())
+  //   return supabase.realtime.isConnected()
+  // })
+
+  // supabase.realtime.on('connectionStateChanged', () => {
+  //   console.log('Changed?')
+  // })
 
   return (
-    <FieldsContext.Provider value={{ fields, loading: false }}>
+    <FieldsContext.Provider value={{ fields, isConnected: () => true }}>
       {props.children}
     </FieldsContext.Provider>
   )

@@ -1,9 +1,9 @@
 import { A } from '@solidjs/router'
 import { Component, JSX, Show, useContext } from 'solid-js'
+import { ChevronLeftIcon } from '../assets/ChevronLeftIcon'
 import { Field } from '../utilities/types'
 import styles from './Header.module.css'
 import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
-import { ChevronLeftIcon } from '../assets/ChevronLeftIcon'
 
 export const Header: Component<{
   children?: JSX.Element
