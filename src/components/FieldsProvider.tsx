@@ -62,7 +62,7 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
   const [log, setLog] = createSignal('')
 
   const onConnectionStatusChange = (status: REALTIME_SUBSCRIBE_STATES) => {
-    setLog(log + 'Connection stat: ' + status + '\n')
+    setLog(log() + 'Connection stat: ' + status + '\n')
     if (status === 'SUBSCRIBED') {
       setConnected(true)
     } else {
@@ -92,12 +92,12 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
   // Fetch the fields if we are visible
   createEffect(async () => {
     if (visible?.()) {
-      setLog(log + 'Is visible, fetching...\n')
+      setLog(log() + 'Is visible, fetching...\n')
       const mappedFields = await getFields(online?.())
       setFields(mappedFields)
 
       if (online?.()) {
-        setLog(log + 'Is online, connecting...\n')
+        setLog(log() + 'Is online, connecting...\n')
         // Just delay this slightly to allow things to slightly settle (hardware wise)
         setTimeout(() => {
           startListening({
