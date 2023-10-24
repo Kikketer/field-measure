@@ -6,6 +6,22 @@ Apple has improved push notifications on home screen apps as well, so I'd like t
 
 The app itself will allow me to dynamically get the measurements needed for Soccer fields (in feet since we are calling it Soccer). There are often issues where we as the field painting crew need to make a field fit in a space. There's a lot of trig needed to calculate the distances that can be incredibly difficult when you are standing in an open field with your hands full of ropes, paint and measuring tape.
 
+## Features
+
+- Get measurements for any field size to fit in any space
+- Know when you need to paint a field next given rainfall and time factors
+- Each field degradation is independently tracked and learns based on your painting routine
+
+## TODOs
+
+- Push notifications using Web Push
+- Connect to the game schedule sheets and use that in repaint factors
+
+## Stretch Goals
+
+1. Make it a SPA so we can "install" it on your phone (offline as well)
+2. Printable? Maybe? 😃
+
 ## Learnings
 
 Some of the things that I learned while building this app. There are times where I want to ditch SolidJS and VSCode but eventually I got to a point where the app is "good enough".  I may explore other technologies in the future but this project will remain SolidJS. I did however switch back to WebStorm for the git client and testing functionality.
@@ -23,25 +39,3 @@ Some of the things that I learned while building this app. There are times where
 - VSCode: (not just Solid issue) doesn't really do the test suites nicely like WebStorm. ~~More than once I had to somehow kill the terminal because it insisted on watching the tests.~~ Also attempting to set a keybinding for "re-run the tests" failed as well.
   - I was able to stop the "auto watch" which is a bit of an assumption (created by a plugin with many assumptions on your working environment). But I still can't get the simple "re-run the last test" to work, even using the UI button that exists let alone a keyboard binding. This issue is really driving me away from VSCode.
 - VSCode: testing setup was a horrible experience combining several blog/stack-overflow posts to just get them to work. See `babel.config.js` and `jest.config.js` for notes on the complications.
-
-With all of these findings, I now know why React will not be replaced by Solid. The ergonomics were great originally but when the application grew to any reasonable size things just started to get out of hand. I'm also not going to spend hours refining and expertly crafting the code since this is my free-time project and I simply want to get an idea working, not debug build operations and false-positive errors.
-
-The React branch will be my go forward branch.
-
-------- Original Goals --------
-
-## Features
-
-- Get measurements for any field size to fit in any space
-- Know when you need to paint a field next given rainfall and time factors
-- Each field degradation is independently tracked and learns based on your painting routine
-
-## TODOs
-
-- Push notifications using Web Push
-- Connect to the game schedule sheets and use that in repaint factors
-
-## Stretch Goals
-
-1. Make it a SPA so we can "install" it on your phone (offline as well)
-2. Printable? Maybe? 😃

@@ -67,6 +67,17 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
       setConnected(true)
     } else {
       setConnected(false)
+      if (status === 'TIMED_OUT') {
+        setTimeout(() => {
+          setLog((prev) => prev + 'Timed out, reconnecting...\n')
+          startListening({
+            onUpdate,
+            onDelete,
+            onInsert,
+            onConnectionStatusChange,
+          })
+        }, 1000)
+      }
     }
   }
 
@@ -98,15 +109,16 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
 
       if (online?.()) {
         setLog((prev) => prev + 'Is online, connecting...\n')
-        // Just delay this slightly to allow things to slightly settle (hardware wise)
-        setTimeout(() => {
-          startListening({
-            onUpdate,
-            onDelete,
-            onInsert,
-            onConnectionStatusChange,
-          })
-        }, 500)
+        // Fetch this as well when we are now online
+        const mappedFields = await getFields(online?.())
+        setFields(mappedFields)
+        // And now start listening to the socket
+        startListening({
+          onUpdate,
+          onDelete,
+          onInsert,
+          onConnectionStatusChange,
+        })
       }
     }
   })
