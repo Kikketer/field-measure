@@ -1,0 +1,14 @@
+[data-theme='light'],
+:root:not([data-theme='dark']) {
+  --block-bg: hsl(230, 7%, 84%);
+}
+
+@media only screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --block-bg: hsl(230deg 3.53% 19.1%);
+  }
+}
+
+[data-theme='dark'] {
+  --block-bg: hsl(230deg 3.53% 19.1%);
+}
