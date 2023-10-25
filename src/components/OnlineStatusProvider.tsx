@@ -6,6 +6,7 @@ import {
   Show,
   useContext,
 } from 'solid-js'
+import { DisconnectedIcon } from '../assets/DisconnectedIcon'
 import { OfflineIcon } from '../assets/OfflineIcon'
 import { FieldsContext } from './FieldsProvider'
 
@@ -56,8 +57,13 @@ export const OnlineStatus: Component = () => {
   const fieldsContext = useContext(FieldsContext)
 
   return (
-    <Show when={!isOnline?.() || !fieldsContext?.isConnected?.()}>
-      <OfflineIcon />
-    </Show>
+    <>
+      <Show when={!isOnline?.()}>
+        <OfflineIcon />
+      </Show>
+      <Show when={!fieldsContext?.isConnected?.()}>
+        <DisconnectedIcon />
+      </Show>
+    </>
   )
 }

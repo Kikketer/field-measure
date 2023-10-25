@@ -26,7 +26,7 @@ export const FieldsContext = createContext<{
   isConnected?: Accessor<boolean>
 }>()
 
-const startListening = ({
+const startListening = async ({
   onUpdate,
   onConnectionStatusChange,
 }: {
@@ -35,7 +35,9 @@ const startListening = ({
   onDelete?: (field: Field) => void
   onConnectionStatusChange?: (status: REALTIME_SUBSCRIBE_STATES) => void
 }) => {
-  supabase
+  // First unsubscribe from the fields channel
+  await supabase.channel('fields').unsubscribe()
+  return supabase
     .channel('fields')
     .on(
       'postgres_changes',
@@ -61,22 +63,29 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
   const [fields, setFields] = createSignal<Field[]>([])
   const [log, setLog] = createSignal('')
 
+  let connectRetries = 0
+
   const onConnectionStatusChange = (status: REALTIME_SUBSCRIBE_STATES) => {
     setLog((prev) => prev + 'Connection stat: ' + status + '\n')
     if (status === 'SUBSCRIBED') {
       setConnected(true)
+      connectRetries = 0
     } else {
       setConnected(false)
       if (status === 'TIMED_OUT') {
-        setTimeout(() => {
-          setLog((prev) => prev + 'Timed out, reconnecting...\n')
-          startListening({
-            onUpdate,
-            onDelete,
-            onInsert,
-            onConnectionStatusChange,
-          })
-        }, 1000)
+        connectRetries++
+        setTimeout(
+          async () => {
+            setLog((prev) => prev + 'Timed out, reconnecting...\n')
+            await startListening({
+              onUpdate,
+              onDelete,
+              onInsert,
+              onConnectionStatusChange,
+            })
+          },
+          Math.pow(2, connectRetries) * 1000,
+        )
       }
     }
   }
@@ -113,7 +122,7 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
         const mappedFields = await getFields(online?.())
         setFields(mappedFields)
         // And now start listening to the socket
-        startListening({
+        await startListening({
           onUpdate,
           onDelete,
           onInsert,
