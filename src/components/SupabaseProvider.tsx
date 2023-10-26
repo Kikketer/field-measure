@@ -14,7 +14,7 @@ type SupabaseProvider = {
 
 export const SupabaseContext = createContext<{
   supabase: SupabaseClient<any, 'public', any>
-  resetSupabase: () => void
+  resetSupabase: () => SupabaseClient<any, 'public', any>
 }>()
 export const SupabaseProvider = (props: SupabaseProvider) => {
   // When this is first added to the stack, just set the supabase variable

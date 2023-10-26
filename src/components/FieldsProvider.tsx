@@ -68,34 +68,33 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
   let connectRetries = 0
 
   const onConnectionStatusChange = (status: REALTIME_SUBSCRIBE_STATES) => {
-    setLog((prev) => prev + 'Connection stat: ' + status + '\n')
+    setLog(
+      (prev) => prev + 'Connection stat: ' + status + ` [${connectRetries}]\n`,
+    )
     if (status === 'SUBSCRIBED') {
       setConnected(true)
       connectRetries = 0
     } else {
       setConnected(false)
-      // setLog((l) => l + 'Resetting supabase')
-      if (status === 'TIMED_OUT') {
-        //   if (connectRetries > 3) {
-        //     setLog((prev) => prev + 'Too many retries, giving up...\n')
-        //     location.reload()
-        //     return
-        //   }
-        //
-        //   connectRetries++
-        //   setTimeout(
-        //     async () => {
-        //       setLog((prev) => prev + 'Timed out, reconnecting...\n')
-        //       await startListening({
-        //         onUpdate,
-        //         onDelete,
-        //         onInsert,
-        //         onConnectionStatusChange,
-        //       })
-        //     },
-        //     Math.pow(2, connectRetries) * 1000,
-        //   )
-        // }
+      connectRetries++
+      if (connectRetries > 2) {
+        setLog((prev) => prev + 'Retried, resetting now!\n')
+        const supa = supabaseContext?.resetSupabase()
+        // location.reload()
+        // return
+
+        setTimeout(
+          async () => {
+            await startListening({
+              supabase: supa,
+              onUpdate,
+              onDelete,
+              onInsert,
+              onConnectionStatusChange,
+            })
+          },
+          Math.pow(2, connectRetries) * 1000,
+        )
       }
     }
   }
