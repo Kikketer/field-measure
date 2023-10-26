@@ -71,6 +71,12 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
     } else {
       setConnected(false)
       if (status === 'TIMED_OUT') {
+        if (connectRetries > 3) {
+          setLog((prev) => prev + 'Too many retries, giving up...\n')
+          location.reload()
+          return
+        }
+
         connectRetries++
         setTimeout(
           async () => {
