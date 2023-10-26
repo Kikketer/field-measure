@@ -35,8 +35,6 @@ const startListening = async ({
   onDelete?: (field: Field) => void
   onConnectionStatusChange?: (status: REALTIME_SUBSCRIBE_STATES) => void
 }) => {
-  // First unsubscribe from the fields channel
-  await supabase.channel('fields').unsubscribe()
   return supabase
     .channel('fields')
     .on(
