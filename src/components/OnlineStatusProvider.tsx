@@ -53,12 +53,12 @@ export const OnlineStatusProvider = (props: OnlineStatusProvider) => {
 }
 
 export const OnlineStatus: Component = () => {
-  const isOnline = useContext(OnlineContext)
+  const online = useContext(OnlineContext)
   const fieldsContext = useContext(FieldsContext)
 
   return (
     <>
-      <Show when={!isOnline?.()}>
+      <Show when={!online?.()}>
         <OfflineIcon />
       </Show>
       <Show when={!fieldsContext?.isConnected?.()}>

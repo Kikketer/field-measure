@@ -74,6 +74,7 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
       connectRetries = 0
     } else {
       setConnected(false)
+      // setLog((l) => l + 'Resetting supabase')
       if (status === 'TIMED_OUT') {
         //   if (connectRetries > 3) {
         //     setLog((prev) => prev + 'Too many retries, giving up...\n')
@@ -110,16 +111,6 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
   const onDelete = (deletedField: Field) => {}
 
   const onInsert = (insertedField: Field) => {}
-
-  // const conn = createMemo(() => {
-  //   console.log('CHange? ', supabase.realtime.connectionState())
-  //   console.log('connected? ', supabase.realtime.isConnected())
-  //   return supabase.realtime.isConnected()
-  // })
-
-  // supabase.realtime.on('connectionStateChanged', () => {
-  //   console.log('Changed?')
-  // })
 
   // Fetch the fields if we are visible
   createEffect(async () => {
