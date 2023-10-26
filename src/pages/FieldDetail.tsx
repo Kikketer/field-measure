@@ -6,6 +6,7 @@ import {
   Show,
   useContext,
 } from 'solid-js'
+import { SupabaseContext } from '../components/SupabaseProvider'
 import { SIZES } from '../utilities/constants'
 import { Field as FieldType, FieldSize } from '../utilities/types'
 import { formatDate } from '../utilities/utils'
@@ -24,6 +25,7 @@ import { getFieldWithAdjustedRainFactorAndDryDays } from '../utilities/predictNe
 import { FieldsContext } from '../components/FieldsProvider'
 
 export const FieldDetail: Component = () => {
+  const supabaseContext = useContext(SupabaseContext)
   const [fieldId, setFieldId] = createSignal(useParams().id)
   const [thisField, setThisField] = createSignal<FieldType>()
   const [saveError, setSaveError] = createSignal<string>()
@@ -49,6 +51,7 @@ export const FieldDetail: Component = () => {
     fieldToSave.lastPainted = startOfDay(new Date())
 
     await saveFieldToDb({
+      supabase: supabaseContext.supabase,
       field: fieldToSave,
       paintTeamId: user?.().paintTeam.id,
     })

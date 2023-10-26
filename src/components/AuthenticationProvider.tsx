@@ -4,9 +4,10 @@ import {
   createResource,
   JSX,
   Resource,
+  useContext,
 } from 'solid-js'
 import { getUser } from '../utilities/userStore'
-import { supabase } from './supabase'
+import { SupabaseContext } from './SupabaseProvider'
 
 type AuthenticationProvider = {
   children: JSX.Element
@@ -21,7 +22,11 @@ export const AuthenticationContext = createContext<{
 export const AuthenticationProvider: Component<AuthenticationProvider> = (
   props,
 ) => {
-  const [session] = createResource(() => supabase.auth.getSession())
+  const supabaseContext = useContext(SupabaseContext)
+
+  const [session] = createResource(
+    () => supabaseContext?.supabase.auth.getSession(),
+  )
   const [user] = createResource(() => getUser())
 
   return (

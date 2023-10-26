@@ -9,7 +9,6 @@ import {
 import { DisconnectedIcon } from '../assets/DisconnectedIcon'
 import { OfflineIcon } from '../assets/OfflineIcon'
 import { FieldsContext } from './FieldsProvider'
-import { supabase } from './supabase'
 
 type OnlineStatusProvider = {
   children: JSX.Element
@@ -53,10 +52,6 @@ export const OnlineStatusProvider = (props: OnlineStatusProvider) => {
   )
 }
 
-const disconnect = () => {
-  supabase.channel('fields').unsubscribe()
-}
-
 export const OnlineStatus: Component = () => {
   const isOnline = useContext(OnlineContext)
   const fieldsContext = useContext(FieldsContext)
@@ -67,9 +62,7 @@ export const OnlineStatus: Component = () => {
         <OfflineIcon />
       </Show>
       <Show when={!fieldsContext?.isConnected?.()}>
-        <a role="button" onClick={() => disconnect()}>
-          <DisconnectedIcon />
-        </a>
+        <DisconnectedIcon />
       </Show>
     </>
   )

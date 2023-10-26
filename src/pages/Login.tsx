@@ -1,17 +1,18 @@
 import { useNavigate } from '@solidjs/router'
-import { createEffect, createSignal, Show } from 'solid-js'
+import { createEffect, createSignal, Show, useContext } from 'solid-js'
 import logo from '../assets/fav.png'
 import { Loader } from '../components/Loader'
 import { Page } from '../components/Page'
-import { supabase } from '../components/supabase'
+import { SupabaseContext } from '../components/SupabaseProvider'
 import styles from './Login.module.css'
 
 export const Login = () => {
+  const supabaseContext = useContext(SupabaseContext)
   const navigate = useNavigate()
   const [loading, setLoading] = createSignal(true)
 
   createEffect(async () => {
-    const session = await supabase.auth.getSession()
+    const session = await supabaseContext?.supabase.auth.getSession()
     if (session?.data.session) {
       const expiresAt = new Date(
         Number(`${session.data.session.expires_at}000`),
@@ -25,7 +26,7 @@ export const Login = () => {
   })
 
   const signIn = () => {
-    supabase.auth.signInWithOAuth({
+    supabaseContext.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: import.meta.env.VITE_REDIRECT_URL,

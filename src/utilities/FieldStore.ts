@@ -1,5 +1,5 @@
+import { SupabaseClient } from '@supabase/supabase-js'
 import { Field } from './types'
-import { supabase } from '../components/supabase'
 
 type FieldStore = {
   lastFetch: Date | undefined
@@ -71,7 +71,13 @@ const unmapField = (field: Partial<Field>) => {
   return duplicateField
 }
 
-export const getFields = async (isOnline?: boolean): Promise<Field[]> => {
+export const getFields = async ({
+  supabase,
+  isOnline,
+}: {
+  supabase: SupabaseClient
+  isOnline?: boolean
+}): Promise<Field[]> => {
   const localStorageFields = localStorage.getItem('fieldStore')
 
   // Always fetch if we are online
@@ -104,23 +110,17 @@ export const getFields = async (isOnline?: boolean): Promise<Field[]> => {
   return mapFields(fields)
 }
 
-export const getArchivedFields = async () => {
-  const { data } = await supabase.from('fields').select('*').eq('active', false)
-
-  if (!data?.length) return []
-
-  return mapFields(data)
-}
-
 export const saveField = async ({
+  supabase,
   field,
   paintTeamId,
 }: {
+  supabase: SupabaseClient
   field: Partial<Field>
   paintTeamId: number
 }): Promise<Field> => {
   // Set the sort order to the length of the current fields
-  const existingFields = await getFields()
+  const existingFields = await getFields({ supabase })
 
   // Get the field as-is for any potential update
   // Oddly it looks like it updates fine except it still throws an error if you don't have required fields!
@@ -163,7 +163,7 @@ export const saveField = async ({
     .select('*')
     .eq('active', true)
     .eq('deleted', false)
-    .then((result) => {
+    .then((result: { data: never[] }) => {
       // We have to have a .then or await, otherwise this command doesn't even fire
       // The actual response from the server is handled by sockets
       const fields = result.data ?? []
@@ -187,8 +187,14 @@ export const saveField = async ({
  * Run this when you get an updated field event from the database
  * this will save it to local storage
  */
-export const onUpdate = async (updatedField: Field) => {
-  const newFields = (await getFields())?.slice() || []
+export const onUpdate = async ({
+  supabase,
+  updatedField,
+}: {
+  supabase: SupabaseClient
+  updatedField: Field
+}) => {
+  const newFields = (await getFields({ supabase }))?.slice() || []
   const indexOfExistingField = newFields.findIndex(
     (field: Field) => field.id === updatedField?.id,
   )

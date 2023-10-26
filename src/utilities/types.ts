@@ -1,10 +1,9 @@
 export type Field = {
-  id: string
+  id?: string
   createdAt?: Date
   size: string
   customWidth?: number
   customLength?: number
-  code: string
   name: string
   group?: string
   description?: string
@@ -13,10 +12,6 @@ export type Field = {
    * regardless of rainfall
    */
   maxDryDays: number
-  /**
-   * The number of rainfall days for the previous period
-   */
-  previousRainfallDays: number
   /**
    * Number of days that had significant rain since the last painting
    */
@@ -29,11 +24,6 @@ export type Field = {
   rainfallFactor: number
   lastPainted: Date
   predictedNextPaint?: Date
-  /**
-   * Predicted amount of days until it needs to be painted again
-   * <=0 = needs to be painted
-   */
-  shouldPaint: number
   /**
    * The date the field was marked unplayable
    * This allows us to determine what the maxDryDays should be

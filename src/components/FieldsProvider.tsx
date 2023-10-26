@@ -1,4 +1,5 @@
 import { REALTIME_SUBSCRIBE_STATES } from '@supabase/realtime-js/src/RealtimeChannel'
+import { SupabaseClient } from '@supabase/supabase-js'
 import {
   Accessor,
   Component,
@@ -14,7 +15,7 @@ import {
 } from '../utilities/FieldStore'
 import { Field } from '../utilities/types'
 import { OnlineContext } from './OnlineStatusProvider'
-import { supabase } from './supabase'
+import { SupabaseContext } from './SupabaseProvider'
 import { VisibleContext } from './VisibleProvider'
 
 type FieldsProvider = {
@@ -27,9 +28,11 @@ export const FieldsContext = createContext<{
 }>()
 
 const startListening = async ({
+  supabase,
   onUpdate,
   onConnectionStatusChange,
 }: {
+  supabase: SupabaseClient
   onUpdate: (field: Field) => void
   onInsert?: (field: Field) => void
   onDelete?: (field: Field) => void
@@ -57,6 +60,7 @@ const startListening = async ({
 export const FieldsProvider: Component<FieldsProvider> = (props) => {
   const visible = useContext(VisibleContext)
   const online = useContext(OnlineContext)
+  const supabaseContext = useContext(SupabaseContext)
   const [connected, setConnected] = createSignal<boolean>(false)
   const [fields, setFields] = createSignal<Field[]>([])
   const [log, setLog] = createSignal('')
@@ -71,31 +75,35 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
     } else {
       setConnected(false)
       if (status === 'TIMED_OUT') {
-        if (connectRetries > 3) {
-          setLog((prev) => prev + 'Too many retries, giving up...\n')
-          location.reload()
-          return
-        }
-
-        connectRetries++
-        setTimeout(
-          async () => {
-            setLog((prev) => prev + 'Timed out, reconnecting...\n')
-            await startListening({
-              onUpdate,
-              onDelete,
-              onInsert,
-              onConnectionStatusChange,
-            })
-          },
-          Math.pow(2, connectRetries) * 1000,
-        )
+        //   if (connectRetries > 3) {
+        //     setLog((prev) => prev + 'Too many retries, giving up...\n')
+        //     location.reload()
+        //     return
+        //   }
+        //
+        //   connectRetries++
+        //   setTimeout(
+        //     async () => {
+        //       setLog((prev) => prev + 'Timed out, reconnecting...\n')
+        //       await startListening({
+        //         onUpdate,
+        //         onDelete,
+        //         onInsert,
+        //         onConnectionStatusChange,
+        //       })
+        //     },
+        //     Math.pow(2, connectRetries) * 1000,
+        //   )
+        // }
       }
     }
   }
 
   const onUpdate = async (updatedField: Field) => {
-    const updatedFields = await updateFieldsInStore(updatedField)
+    const updatedFields = await updateFieldsInStore({
+      supabase: supabaseContext?.supabase,
+      updatedField,
+    })
     setFields(updatedFields)
   }
 
@@ -117,16 +125,23 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
   createEffect(async () => {
     if (visible?.()) {
       setLog((prev) => prev + 'Is visible, fetching...\n')
-      const mappedFields = await getFields(online?.())
+      const mappedFields = await getFields({
+        supabase: supabaseContext.supabase,
+        isOnline: online?.(),
+      })
       setFields(mappedFields)
 
       if (online?.()) {
         setLog((prev) => prev + 'Is online, connecting...\n')
         // Fetch this as well when we are now online
-        const mappedFields = await getFields(online?.())
+        const mappedFields = await getFields({
+          supabase: supabaseContext.supabase,
+          isOnline: online?.(),
+        })
         setFields(mappedFields)
         // And now start listening to the socket
         await startListening({
+          supabase: supabaseContext.supabase,
           onUpdate,
           onDelete,
           onInsert,
