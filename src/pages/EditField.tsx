@@ -2,7 +2,6 @@ import { useNavigate, useParams } from '@solidjs/router'
 import { Component, createEffect, createSignal, useContext } from 'solid-js'
 import { parse, set, startOfDay } from 'date-fns'
 import { SupabaseContext } from '../components/SupabaseProvider'
-import { saveField as saveFieldToDB } from '../utilities/FieldStore'
 import { Page } from '../components/Page'
 import { Header } from '../components/Header'
 import styles from './EditField.module.css'
@@ -11,12 +10,12 @@ import { Field as FieldType } from '../utilities/types'
 import { FieldsContext } from '../components/FieldsProvider'
 
 export const EditField: Component = () => {
-  const supabaseContext = useContext(SupabaseContext)
+  const { supabase } = useContext(SupabaseContext)
   const [fieldId, setFieldId] = createSignal(useParams().id)
   const navigate = useNavigate()
   const [thisField, setThisField] = createSignal<FieldType>()
   const auth = useContext(AuthenticationContext)
-  const { fields } = useContext(FieldsContext)
+  const { fields, saveField: saveFieldToDb } = useContext(FieldsContext)
 
   createEffect(() => {
     setThisField(fields()?.find((field: FieldType) => field.id === fieldId()))
@@ -44,11 +43,7 @@ export const EditField: Component = () => {
 
     // Set the rainfallDays to 0 since we are restarting this paint:
     // Eventually we may want to ask if a field is unplayable vs painted
-    saveFieldToDB({
-      supabase: supabaseContext.supabase,
-      field: { id: fieldId(), rainfallDays: 0, ...data },
-      paintTeamId: auth.user?.().paintTeam.id,
-    })
+    saveFieldToDb({ field: { id: fieldId(), rainfallDays: 0, ...data } })
     navigate(`/fields/${fieldId()}`, { replace: true })
   }
 
@@ -58,33 +53,21 @@ export const EditField: Component = () => {
         'Archive will simply hide the field, you can restore it later. Are you sure?',
       )
     ) {
-      saveFieldToDB({
-        supabase: supabaseContext.supabase,
-        field: { id: fieldId(), active: false },
-        paintTeamId: auth.user?.().paintTeam.id,
-      })
+      saveFieldToDb({ field: { id: fieldId(), active: false } })
       navigate(`/fields`, { replace: true })
     }
   }
 
   const confirmDelete = () => {
     if (confirm('Delete the field forever? Are you sure?')) {
-      saveFieldToDB({
-        supabase: supabaseContext.supabase,
-        field: { id: fieldId(), deleted: true },
-        paintTeamId: auth.user?.().paintTeam.id,
-      })
+      saveFieldToDb({ field: { id: fieldId(), deleted: true } })
       navigate(`/fields`, { replace: true })
     }
   }
 
   const confirmReset = () => {
     if (confirm('This will reset any rainfall/wear data. Are you sure?')) {
-      saveFieldToDB({
-        supabase: supabaseContext.supabase,
-        field: { id: fieldId(), rainfallFactor: 1 },
-        paintTeamId: auth.user?.().paintTeam.id,
-      })
+      saveFieldToDb({ field: { id: fieldId(), rainfallFactor: 1 } })
       navigate(`/fields`, { replace: true })
     }
   }

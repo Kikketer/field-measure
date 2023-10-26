@@ -18,11 +18,10 @@ export const SupabaseContext = createContext<{
 }>()
 export const SupabaseProvider = (props: SupabaseProvider) => {
   // When this is first added to the stack, just set the supabase variable
-  let supabase = getSupabase()!
+  let supabase = getSupabase()
 
   const resetSupabase = () => {
-    console.log('Resetting supabase!')
-    supabase = getSupabase()!
+    supabase = getSupabase()
     return supabase
   }
 

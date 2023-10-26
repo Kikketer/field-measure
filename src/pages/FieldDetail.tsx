@@ -1,4 +1,5 @@
 import { useParams } from '@solidjs/router'
+import { startOfDay } from 'date-fns'
 import {
   Component,
   createEffect,
@@ -6,32 +7,33 @@ import {
   Show,
   useContext,
 } from 'solid-js'
-import { SupabaseContext } from '../components/SupabaseProvider'
-import { SIZES } from '../utilities/constants'
-import { Field as FieldType, FieldSize } from '../utilities/types'
-import { formatDate } from '../utilities/utils'
+import { AuthenticationContext } from '../components/AuthenticationProvider'
+import { DaysLeftChip } from '../components/DaysLeftChip'
 import { ErrorPrompt } from '../components/ErrorPrompt'
-import styles from './FieldDetail.module.css'
-import { saveField as saveFieldToDb } from '../utilities/FieldStore'
+import { Field } from '../components/Field'
+import { FieldsContext } from '../components/FieldsProvider'
 import { Header } from '../components/Header'
 import { OnlineContext } from '../components/OnlineStatusProvider'
-import { StatusLabel } from '../components/StatusLabel'
 import { Page } from '../components/Page'
-import { Field } from '../components/Field'
-import { AuthenticationContext } from '../components/AuthenticationProvider'
-import { startOfDay } from 'date-fns'
-import { DaysLeftChip } from '../components/DaysLeftChip'
+import { StatusLabel } from '../components/StatusLabel'
+import { SupabaseContext } from '../components/SupabaseProvider'
+import { SIZES } from '../utilities/constants'
 import { getFieldWithAdjustedRainFactorAndDryDays } from '../utilities/predictNextPainting'
-import { FieldsContext } from '../components/FieldsProvider'
+import { Field as FieldType, FieldSize } from '../utilities/types'
+import { formatDate } from '../utilities/utils'
+import styles from './FieldDetail.module.css'
 
 export const FieldDetail: Component = () => {
-  const supabaseContext = useContext(SupabaseContext)
+  const { supabase } = useContext(SupabaseContext)
   const [fieldId, setFieldId] = createSignal(useParams().id)
   const [thisField, setThisField] = createSignal<FieldType>()
   const [saveError, setSaveError] = createSignal<string>()
   const isOnline = useContext(OnlineContext)
   const { user } = useContext(AuthenticationContext)
-  const { fields } = useContext(FieldsContext)
+  const { fields, saveField, fetchFields } = useContext(FieldsContext)
+
+  // Reload fields when this page loads
+  fetchFields()
 
   createEffect(() => {
     setThisField(fields()?.find((field: FieldType) => field.id === fieldId()))
@@ -50,11 +52,7 @@ export const FieldDetail: Component = () => {
     }
     fieldToSave.lastPainted = startOfDay(new Date())
 
-    await saveFieldToDb({
-      supabase: supabaseContext.supabase,
-      field: fieldToSave,
-      paintTeamId: user?.().paintTeam.id,
-    })
+    await saveField({ field: fieldToSave })
   }
 
   return (

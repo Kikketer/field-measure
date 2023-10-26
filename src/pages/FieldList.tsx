@@ -56,7 +56,10 @@ export const FieldList: Component = () => {
   const [groupedFields, setGroupedFields] = createSignal<{
     [groupName: string]: Field[]
   }>({ other: [] })
-  const { fields } = useContext(FieldsContext)
+  const { fields, fetchFields } = useContext(FieldsContext)
+
+  // Fetch the fields when we navigate to this page:
+  fetchFields()
 
   createEffect(() => {
     setGroupedFields(groupFields(fields?.()))

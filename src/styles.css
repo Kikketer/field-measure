@@ -18,6 +18,17 @@ button.danger {
   background-color: var(--del-color);
 }
 
+a[role='button'].ghost,
+button.ghost {
+  background-color: transparent;
+  border: 0;
+  display: inline;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  color: var(--secondary);
+}
+
 .vertical-align {
   display: flex;
   flex-direction: column;

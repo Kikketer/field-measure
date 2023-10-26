@@ -10,10 +10,12 @@ import {
   useContext,
 } from 'solid-js'
 import {
-  getFields,
+  getFields as getFieldsFromDb,
   onUpdate as updateFieldsInStore,
+  saveField as saveFieldToDb,
 } from '../utilities/FieldStore'
 import { Field } from '../utilities/types'
+import { AuthenticationContext } from './AuthenticationProvider'
 import { OnlineContext } from './OnlineStatusProvider'
 import { SupabaseContext } from './SupabaseProvider'
 import { VisibleContext } from './VisibleProvider'
@@ -25,6 +27,8 @@ type FieldsProvider = {
 export const FieldsContext = createContext<{
   fields?: Accessor<Field[]>
   isConnected?: Accessor<boolean>
+  fetchFields: () => Promise<Field[]>
+  saveField: (T: { field: Field }) => Promise<Field[]>
 }>()
 
 const startListening = async ({
@@ -32,14 +36,14 @@ const startListening = async ({
   onUpdate,
   onConnectionStatusChange,
 }: {
-  supabase: SupabaseClient
+  supabase: SupabaseClient | undefined
   onUpdate: (field: Field) => void
   onInsert?: (field: Field) => void
   onDelete?: (field: Field) => void
   onConnectionStatusChange?: (status: REALTIME_SUBSCRIBE_STATES) => void
 }) => {
   return supabase
-    .channel('fields')
+    ?.channel('fields')
     .on(
       'postgres_changes',
       { event: 'UPDATE', schema: 'public', table: 'fields' },
@@ -60,7 +64,8 @@ const startListening = async ({
 export const FieldsProvider: Component<FieldsProvider> = (props) => {
   const visible = useContext(VisibleContext)
   const online = useContext(OnlineContext)
-  const supabaseContext = useContext(SupabaseContext)
+  const { supabase, resetSupabase } = useContext(SupabaseContext)
+  const { user } = useContext(AuthenticationContext)
   const [connected, setConnected] = createSignal<boolean>(false)
   const [fields, setFields] = createSignal<Field[]>([])
   const [log, setLog] = createSignal('')
@@ -79,9 +84,7 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
       connectRetries++
       if (connectRetries > 2) {
         setLog((prev) => prev + 'Retried, resetting now!\n')
-        const supa = supabaseContext?.resetSupabase()
-        // location.reload()
-        // return
+        const supa = resetSupabase()
 
         setTimeout(
           async () => {
@@ -101,7 +104,7 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
 
   const onUpdate = async (updatedField: Field) => {
     const updatedFields = await updateFieldsInStore({
-      supabase: supabaseContext?.supabase,
+      supabase,
       updatedField,
     })
     setFields(updatedFields)
@@ -111,40 +114,56 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
 
   const onInsert = (insertedField: Field) => {}
 
+  const fetchFields = async () => {
+    const mappedFields = await getFieldsFromDb({
+      supabase,
+      isOnline: online?.(),
+    })
+    setFields(mappedFields)
+
+    return mappedFields
+  }
+
   // Fetch the fields if we are visible
   createEffect(async () => {
     if (visible?.()) {
-      setLog((prev) => prev + 'Is visible, fetching...\n')
-      const mappedFields = await getFields({
-        supabase: supabaseContext.supabase,
-        isOnline: online?.(),
-      })
-      setFields(mappedFields)
-
+      setLog((prev) => prev + 'Is visible\n')
       if (online?.()) {
         setLog((prev) => prev + 'Is online, connecting...\n')
         // Fetch this as well when we are now online
-        const mappedFields = await getFields({
-          supabase: supabaseContext.supabase,
-          isOnline: online?.(),
-        })
-        setFields(mappedFields)
+        await fetchFields()
         // And now start listening to the socket
         await startListening({
-          supabase: supabaseContext.supabase,
+          supabase,
           onUpdate,
           onDelete,
           onInsert,
           onConnectionStatusChange,
         })
+      } else {
+        // Fetch the fields anyway if we are offline (getting cached ones)
+        await fetchFields()
       }
     }
   })
 
+  const saveField = async ({ field }: { field: Field }) => {
+    const newField = await saveFieldToDb({
+      field,
+      supabase,
+      paintTeamId: user?.().paintTeam.id,
+    })
+    // Fetch but don't wait
+    fetchFields().then(() => undefined)
+    return newField
+  }
+
   return (
-    <FieldsContext.Provider value={{ fields, isConnected: connected }}>
+    <FieldsContext.Provider
+      value={{ fields, isConnected: connected, fetchFields, saveField }}
+    >
       {props.children}
-      <pre>{log()}</pre>
+      {/*<pre>{log()}</pre>*/}
     </FieldsContext.Provider>
   )
 }

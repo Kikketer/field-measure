@@ -1,11 +1,11 @@
 import { useLocation, useNavigate } from '@solidjs/router'
 import { Component, createSignal, Show, useContext } from 'solid-js'
+import { FieldsContext } from '../components/FieldsProvider'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
 import styles from './AddField.module.css'
 import { AuthenticationContext } from '../components/AuthenticationProvider'
 import { Field } from '../components/Field'
-import { saveField as saveFieldToDb } from '../utilities/FieldStore'
 import { Header } from '../components/Header'
 import { Page } from '../components/Page'
 import { SizeSlider } from '../components/SizeSlider'
@@ -20,6 +20,7 @@ export const AddField: Component = () => {
   const [saving, setSaving] = createSignal(false)
   const isQuick = useLocation().pathname === '/quick'
   const auth = useContext(AuthenticationContext)
+  const { saveField: saveFieldToDb } = useContext(FieldsContext)
 
   const resetAndSaveFieldSize = (fieldSize: FieldSize | string) => {
     // Check to find the value of fieldSize is within the enum of FieldSize
@@ -44,13 +45,10 @@ export const AddField: Component = () => {
 
     // Check validation for the form (if needed)
     setSaving(true)
-    saveFieldToDb(
-      { field: data, paintTeamId: auth?.user?.()?.paintTeam?.id },
-      (savedField) => {
-        setSaving(false)
-        navigate(`/fields/${savedField?.id}`, { replace: true })
-      },
-    )
+    const newField = await saveFieldToDb({ field: data })
+    console.log('new field? ', newField)
+    setSaving(false)
+    navigate(`/fields/${newField?.id}`, { replace: true })
   }
 
   return (

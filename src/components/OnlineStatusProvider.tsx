@@ -62,7 +62,9 @@ export const OnlineStatus: Component = () => {
         <OfflineIcon />
       </Show>
       <Show when={!fieldsContext?.isConnected?.()}>
-        <DisconnectedIcon />
+        <button class="ghost" onClick={() => location.reload()}>
+          <DisconnectedIcon />
+        </button>
       </Show>
     </>
   )
