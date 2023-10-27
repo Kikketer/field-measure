@@ -27,8 +27,9 @@ type FieldsProvider = {
 export const FieldsContext = createContext<{
   fields?: Accessor<Field[]>
   isConnected?: Accessor<boolean>
+  connecting?: Accessor<boolean>
   fetchFields: () => Promise<Field[]>
-  saveField: (T: { field: Field }) => Promise<Field[]>
+  saveField: (T: { field: Field }) => Promise<Field>
 }>()
 
 const startListening = async ({
@@ -66,6 +67,7 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
   const online = useContext(OnlineContext)
   const { supabase, resetSupabase } = useContext(SupabaseContext)
   const { user } = useContext(AuthenticationContext)
+  const [connecting, setConnecting] = createSignal<boolean>(false)
   const [connected, setConnected] = createSignal<boolean>(false)
   const [fields, setFields] = createSignal<Field[]>([])
   const [log, setLog] = createSignal('')
@@ -78,11 +80,17 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
     )
     if (status === 'SUBSCRIBED') {
       setConnected(true)
+      setConnecting(false)
       connectRetries = 0
     } else {
       setConnected(false)
       connectRetries++
-      if (connectRetries > 2) {
+      if (connectRetries > 4) {
+        // Just quit, and I'm not sure why supabase sockets do this
+        // If you refresh the screen all is well, all other network connections
+        // work... it's just an odd situation where it's in a "middle" ground
+        setConnecting(false)
+      } else if (connectRetries > 2) {
         setLog((prev) => prev + 'Retried, resetting now!\n')
         const supa = resetSupabase()
 
@@ -129,6 +137,7 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
     if (visible?.()) {
       setLog((prev) => prev + 'Is visible\n')
       if (online?.()) {
+        setConnecting(true)
         setLog((prev) => prev + 'Is online, connecting...\n')
         // Fetch this as well when we are now online
         await fetchFields()
@@ -143,6 +152,7 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
       } else {
         // Fetch the fields anyway if we are offline (getting cached ones)
         await fetchFields()
+        setConnecting(false)
       }
     }
   })
@@ -160,7 +170,13 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
 
   return (
     <FieldsContext.Provider
-      value={{ fields, isConnected: connected, fetchFields, saveField }}
+      value={{
+        fields,
+        isConnected: connected,
+        connecting,
+        fetchFields,
+        saveField,
+      }}
     >
       {props.children}
       {/*<pre>{log()}</pre>*/}

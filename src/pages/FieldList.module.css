@@ -13,6 +13,12 @@
   align-items: flex-end;
 }
 
+.DateRow {
+  display: flex;
+  gap: 0.3rem;
+  margin-top: 1px;
+}
+
 .FieldItem {
   display: grid;
   grid-template-columns: 1fr 1fr;

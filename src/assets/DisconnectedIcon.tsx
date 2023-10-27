@@ -1,4 +1,4 @@
-export const DisconnectedIcon = () => {
+export const DisconnectedIcon = (props) => {
   return (
     <svg
       stroke="currentColor"
@@ -12,6 +12,7 @@ export const DisconnectedIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
       aria-describedby="icon-disconnected"
       role="img"
+      {...props}
     >
       <title id="icon-disconnected">Disconnected</title>
       <path d="m19 5 3-3"></path>

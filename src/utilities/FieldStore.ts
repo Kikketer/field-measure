@@ -162,8 +162,6 @@ export const saveField = async ({
     .upsert(unmapField(proposedUpdatedField))
     .select()
 
-  console.log('inserted ', data, error)
-
   // Find the field with the undefined id, and set it to the new id:
   const proposedNewFieldIndex = existingFields.findIndex(
     (existingField) => existingField.id === undefined,

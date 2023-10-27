@@ -98,11 +98,12 @@ export const FieldList: Component = () => {
                       <div class={styles.StatusContainer}>
                         {/* Kind of a flaw of SolidJS: */}
                         <StatusLabel field={() => field} />
-                        <div>
+                        <div class={styles.DateRow}>
                           <Show when={field.predictedNextPaint}>
                             {formatDate(field.predictedNextPaint)}
                             <DaysLeftChip
                               predictedNextPaint={field.predictedNextPaint}
+                              lastPainted={field.lastPainted}
                             />
                           </Show>
                         </div>

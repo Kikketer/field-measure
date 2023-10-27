@@ -9,6 +9,7 @@ import {
 import { DisconnectedIcon } from '../assets/DisconnectedIcon'
 import { OfflineIcon } from '../assets/OfflineIcon'
 import { FieldsContext } from './FieldsProvider'
+import styles from './OnlineStatusProvider.module.css'
 
 type OnlineStatusProvider = {
   children: JSX.Element
@@ -63,7 +64,9 @@ export const OnlineStatus: Component = () => {
       </Show>
       <Show when={!fieldsContext?.isConnected?.()}>
         <button class="ghost" onClick={() => location.reload()}>
-          <DisconnectedIcon />
+          <DisconnectedIcon
+            class={fieldsContext?.connecting?.() ? styles.Pulse : ''}
+          />
         </button>
       </Show>
     </>

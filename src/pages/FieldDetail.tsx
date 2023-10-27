@@ -70,7 +70,7 @@ export const FieldDetail: Component = () => {
               <StatusLabel field={thisField} />
             </div>
           </div>
-          <ul>
+          <ul class={styles.List}>
             <li>
               <strong>Last painted:</strong>&nbsp;
               {formatDate(thisField()?.lastPainted)}
@@ -80,6 +80,7 @@ export const FieldDetail: Component = () => {
               {formatDate(thisField()?.predictedNextPaint)}
               <DaysLeftChip
                 predictedNextPaint={thisField()?.predictedNextPaint}
+                lastPainted={thisField()?.lastPainted}
               />
             </li>
             <li>
