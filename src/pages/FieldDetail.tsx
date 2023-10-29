@@ -79,11 +79,11 @@ export const FieldDetail: Component = () => {
           </div>
           <ul class={styles.List}>
             <li>
-              <strong>Last painted:</strong>&nbsp;
+              <strong>Last painted:</strong>
               {formatDate(thisField()?.lastPainted)}
             </li>
             <li>
-              <strong>Predicted next painting:</strong>&nbsp;
+              <strong>Predicted next painting:</strong>
               {formatDate(thisField()?.predictedNextPaint)}
               <DaysLeftChip
                 predictedNextPaint={thisField()?.predictedNextPaint}
@@ -91,7 +91,8 @@ export const FieldDetail: Component = () => {
               />
             </li>
             <li>
-              <strong>Size:</strong>&nbsp;{thisField()?.size} (
+              <strong>Size:</strong>
+              {thisField()?.size} (
               {thisField()?.customLength ??
                 SIZES[thisField()?.size ?? FieldSize.full]
                   ?.recommendedMaxLength}
@@ -101,10 +102,12 @@ export const FieldDetail: Component = () => {
               W)
             </li>
             <li>
-              <strong>Group:</strong>&nbsp;{thisField()?.group}
+              <strong>Description:</strong>
+              {thisField()?.description}
             </li>
             <li>
-              <strong>Location:</strong>&nbsp;{thisField()?.description}
+              <strong>Group:</strong>
+              {thisField()?.group}
             </li>
           </ul>
           <details>

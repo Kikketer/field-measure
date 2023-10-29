@@ -20,7 +20,7 @@ export const AddField: Component = () => {
   const [saving, setSaving] = createSignal(false)
   const isQuick = useLocation().pathname === '/quick'
   const auth = useContext(AuthenticationContext)
-  const { saveField: saveFieldToDb } = useContext(FieldsContext)
+  const fieldsContext = useContext(FieldsContext)
 
   const resetAndSaveFieldSize = (fieldSize: FieldSize | string) => {
     // Check to find the value of fieldSize is within the enum of FieldSize
@@ -47,7 +47,7 @@ export const AddField: Component = () => {
 
     // Check validation for the form (if needed)
     setSaving(true)
-    const newField = await saveFieldToDb({ field: data })
+    const newField = await fieldsContext?.saveField({ field: data })
     console.log('new field? ', newField)
     setSaving(false)
     navigate(`/fields/${newField?.id}`, { replace: true })

@@ -31,3 +31,10 @@
   flex: 1;
   text-align: center;
 }
+
+.EndSlot {
+  position: absolute;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.5rem;
+}

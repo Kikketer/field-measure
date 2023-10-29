@@ -89,16 +89,16 @@ export const EditField: Component = () => {
           <input type="text" name="name" value={thisField()?.name} />
         </label>
         <label>
-          Group:
-          <input type="text" name="group" value={thisField()?.group} />
-        </label>
-        <label>
           Description:
           <input
             type="text"
             name="description"
             value={thisField()?.description}
           />
+        </label>
+        <label>
+          Group:
+          <input type="text" name="group" value={thisField()?.group} />
         </label>
         <label>
           Length:

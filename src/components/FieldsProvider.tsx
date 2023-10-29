@@ -29,7 +29,7 @@ export const FieldsContext = createContext<{
   isConnected?: Accessor<boolean>
   connecting?: Accessor<boolean>
   fetchFields: () => Promise<Field[]>
-  saveField: (T: { field: Field }) => Promise<Field>
+  saveField: (T: { field: Partial<Field> }) => Promise<Field>
 }>()
 
 const startListening = async ({

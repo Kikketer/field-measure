@@ -8,6 +8,7 @@ import {
   useContext,
 } from 'solid-js'
 import { Header } from '../components/Header'
+import { OnlineContext } from '../components/OnlineStatusProvider'
 import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
 import { ChevronRightIcon } from '../assets/ChevronRightIcon'
@@ -56,6 +57,7 @@ export const FieldList: Component = () => {
   const [groupedFields, setGroupedFields] = createSignal<{
     [groupName: string]: Field[]
   }>({ other: [] })
+  const isOnline = useContext(OnlineContext)
   const { fields, fetchFields } = useContext(FieldsContext)
 
   // Fetch the fields when we navigate to this page:
@@ -118,7 +120,9 @@ export const FieldList: Component = () => {
         </For>
       </ul>
       <div class={styles.ActionContainer}>
-        <button onClick={() => navigate('new')}>+ Add Field</button>
+        <button onClick={() => navigate('new')} disabled={!isOnline?.()}>
+          + Add Field
+        </button>
         <button onClick={() => navigate('/quick')}>Quick Size</button>
       </div>
     </Page>

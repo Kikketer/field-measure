@@ -25,10 +25,12 @@ export const Header: Component<{
           </A>
         </Show>
         <h1 class={styles.H1}>{props.children}</h1>
-        <OnlineStatus />
-        <Show when={props.editFieldId && isOnline?.()}>
-          <A href={`edit`}>Edit</A>
-        </Show>
+        <div class={styles.EndSlot}>
+          <OnlineStatus />
+          <Show when={props.editFieldId && isOnline?.()}>
+            <A href={`edit`}>Edit</A>
+          </Show>
+        </div>
       </div>
     </div>
   )

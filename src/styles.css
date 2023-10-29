@@ -27,6 +27,10 @@ button.ghost {
   margin: 0;
   padding: 0;
   color: var(--secondary);
+
+  & > svg {
+    margin-top: -8px;
+  }
 }
 
 .vertical-align {
