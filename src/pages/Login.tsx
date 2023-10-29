@@ -26,6 +26,7 @@ export const Login = () => {
   })
 
   const signIn = () => {
+    console.log('Redirect to ', import.meta.env.VITE_REDIRECT_URL)
     supabaseContext.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
