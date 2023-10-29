@@ -8,12 +8,6 @@ console.log(`${new Date().toISOString()}: version: ${Deno.version.deno}`)
 
 Deno.serve(async (req: Request) => {
   try {
-    // This is needed if you're planning to invoke your function from a browser.
-    console.log('Method ', req.method)
-    if (req.method === 'OPTIONS') {
-      return new Response('ok', { headers: corsHeaders })
-    }
-
     // hmm, doesn't feel right... But the JWT validation happens before this is invoked
     const payload = req.headers
       .get('Authorization')
@@ -52,19 +46,19 @@ Deno.serve(async (req: Request) => {
       .from('paintteam')
       .select('*')
 
-    // const twentyHoursAgo = new Date().getTime() - 20 * 60 * 60 * 1000
-    // const history = await supabaseClient
-    //   .from('rainfall_history')
-    //   .select('*')
-    //   .gte('created_at', new Date(twentyHoursAgo).toISOString())
-    //
-    // if (history.data?.length) {
-    //   // We've already run this, don't do it again!
-    //   return new Response(JSON.stringify({}), {
-    //     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    //     status: 429,
-    //   })
-    // }
+    const twentyHoursAgo = new Date().getTime() - 20 * 60 * 60 * 1000
+    const history = await supabaseClient
+      .from('rainfall_history')
+      .select('*')
+      .gte('created_at', new Date(twentyHoursAgo).toISOString())
+
+    if (history.data?.length) {
+      // We've already run this, don't do it again!
+      return new Response(JSON.stringify({}), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 429,
+      })
+    }
 
     // Now for each team, call out the weather!
     for (const paintTeam of paintteams.data) {
@@ -77,6 +71,7 @@ Deno.serve(async (req: Request) => {
       // If rainfall for the day is above 4mm (0.16in), mark it as a rainfall day
       if (weather.precipitation.total > 4) {
         console.log('Rainfall will be incremented!')
+        // Increment the rainfall for the fields in this zipcode:
         const { error } = await supabaseClient.rpc('increment_rainfall', {
           paint_team_id: paintTeam.id,
           zipcode: paintTeam.zipcode,
@@ -103,26 +98,7 @@ Deno.serve(async (req: Request) => {
     // Then using that we can more accurately calculate the predicted date
     // Not just by current rainfall and factor, but by potential rain that's yet to fall
 
-    // We don't need to do this since it's a database function now:
-    // Now that we have all the fields rainfall numbers calculated, we need to
-    // set their predicted_next_paint dates!
-    // const { data: fields }: { data: DBField[] } = await supabaseClient
-    //   .from('fields')
-    //   .select('*')
-    // const predictedFields = fields.map((field) => {
-    //   // Eventually this will factor in average rainfall for the zipcode
-    //   const numberOfDays = getPredictedDaysUntilPaint(field)
-    //   return {
-    //     ...field,
-    //     predicted_next_paint: addDays(new Date(), numberOfDays),
-    //   }
-    // })
-    // // Now save all of these updates
-    // await supabaseClient.from('fields').upsert(predictedFields)
-
-    // Lastly run the predictedDate stored function to update all of the predictions
-    // const { error } = await supabaseClient.rpc('set_predicted_paint')
-    // if (error) throw error
+    // The Predicted date is re-calculated whenever a row is updated via Postgres triggers
 
     return new Response(JSON.stringify({}), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
