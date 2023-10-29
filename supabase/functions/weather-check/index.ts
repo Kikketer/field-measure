@@ -70,7 +70,7 @@ Deno.serve(async (req: Request) => {
 
       // If rainfall for the day is above 4mm (0.16in), mark it as a rainfall day
       if (weather.precipitation.total > 4) {
-        console.log('Rainfall will be incremented!')
+        console.log(`Rainfall will be incremented for ${paintTeam.zipcode}`)
         // Increment the rainfall for the fields in this zipcode:
         const { error } = await supabaseClient.rpc('increment_rainfall', {
           paint_team_id: paintTeam.id,
@@ -86,7 +86,7 @@ Deno.serve(async (req: Request) => {
         'weather_fetch_log',
         {
           zipcode: paintTeam.zipcode,
-          quantity: weather.precipitation.total,
+          quantity: Math.round(Number(weather.precipitation.total)),
         },
       )
       if (logError) throw logError
