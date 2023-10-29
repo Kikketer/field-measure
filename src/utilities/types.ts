@@ -34,6 +34,7 @@ export type Field = {
   active?: boolean
   modified?: Date
   deleted?: boolean
+  locked?: boolean
 }
 
 export enum FieldSize {

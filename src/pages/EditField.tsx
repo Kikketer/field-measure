@@ -67,7 +67,13 @@ export const EditField: Component = () => {
 
   const confirmReset = () => {
     if (confirm('This will reset any rainfall/wear data. Are you sure?')) {
-      saveFieldToDb({ field: { id: fieldId(), rainfallFactor: 1 } })
+      saveFieldToDb({
+        field: {
+          id: fieldId(),
+          rainfallFactor: 1,
+          maxDryDays: 14,
+        },
+      })
       navigate(`/fields`, { replace: true })
     }
   }
@@ -114,7 +120,6 @@ export const EditField: Component = () => {
           <summary>Advanced</summary>
           <label>
             Mark Last Painted:
-            <pre>{JSON.stringify(thisField()?.lastPainted)}</pre>
             <input
               type="date"
               name="lastPainted"

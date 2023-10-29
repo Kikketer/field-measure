@@ -1,5 +1,5 @@
 import { useParams } from '@solidjs/router'
-import { startOfDay } from 'date-fns'
+import { differenceInCalendarDays, startOfDay } from 'date-fns'
 import {
   Component,
   createEffect,
@@ -8,6 +8,7 @@ import {
   useContext,
 } from 'solid-js'
 import { AuthenticationContext } from '../components/AuthenticationProvider'
+import { ConfirmPaint } from '../components/ConfirmPaint'
 import { DaysLeftChip } from '../components/DaysLeftChip'
 import { ErrorPrompt } from '../components/ErrorPrompt'
 import { Field } from '../components/Field'
@@ -28,6 +29,7 @@ export const FieldDetail: Component = () => {
   const [fieldId, setFieldId] = createSignal(useParams().id)
   const [thisField, setThisField] = createSignal<FieldType>()
   const [saveError, setSaveError] = createSignal<string>()
+  const [showConfirmPaint, setShowConfirmPaint] = createSignal(false)
   const isOnline = useContext(OnlineContext)
   const { user } = useContext(AuthenticationContext)
   const { fields, saveField, fetchFields } = useContext(FieldsContext)
@@ -39,11 +41,14 @@ export const FieldDetail: Component = () => {
     setThisField(fields()?.find((field: FieldType) => field.id === fieldId()))
   }, [fields])
 
-  const paintField = async ({ skipFactor }: { skipFactor?: boolean } = {}) => {
+  const paintField = async ({
+    shouldAdjustFactor,
+  }: { shouldAdjustFactor?: boolean } = {}) => {
     if (!thisField()) return
+    setShowConfirmPaint(false)
 
     let fieldToSave = thisField()!
-    if (!skipFactor) {
+    if (shouldAdjustFactor) {
       fieldToSave = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: fieldToSave,
         // Right now we assume it's unplayable on the date you painted:
@@ -51,6 +56,8 @@ export const FieldDetail: Component = () => {
       })
     }
     fieldToSave.lastPainted = startOfDay(new Date())
+
+    console.log('Saving field ', fieldToSave)
 
     await saveField({ field: fieldToSave })
   }
@@ -121,19 +128,19 @@ export const FieldDetail: Component = () => {
                 customLength={() => thisField()?.customLength}
                 customWidth={() => thisField()?.customWidth}
               />
-              <div>
-                <button
-                  class="secondary"
-                  onClick={() => paintField({ skipFactor: true })}
-                  disabled={!isOnline?.()}
-                >
-                  Mark Painted but Playable
-                </button>
-              </div>
             </div>
           </details>
           <div>
-            <button onClick={() => paintField()} disabled={!isOnline?.()}>
+            <button
+              onClick={() => setShowConfirmPaint(true)}
+              disabled={
+                !isOnline?.() ||
+                differenceInCalendarDays(
+                  new Date(),
+                  thisField()?.lastPainted ?? new Date(),
+                ) < 3
+              }
+            >
               Mark Painted
             </button>
 
@@ -146,6 +153,17 @@ export const FieldDetail: Component = () => {
               Archive
             </a> */}
           </div>
+          <ConfirmPaint
+            show={showConfirmPaint}
+            daysRemaining={() =>
+              differenceInCalendarDays(
+                thisField()?.predictedNextPaint ?? new Date(),
+                new Date(),
+              )
+            }
+            onPaint={paintField}
+            onCancel={() => setShowConfirmPaint(false)}
+          />
         </div>
       </Show>
     </Page>

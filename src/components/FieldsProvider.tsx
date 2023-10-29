@@ -142,13 +142,16 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
         // Fetch this as well when we are now online
         await fetchFields()
         // And now start listening to the socket
-        await startListening({
-          supabase,
-          onUpdate,
-          onDelete,
-          onInsert,
-          onConnectionStatusChange,
-        })
+        // Removed sockets for now, they are unreliable on mobile
+        // await startListening({
+        //   supabase,
+        //   onUpdate,
+        //   onDelete,
+        //   onInsert,
+        //   onConnectionStatusChange,
+        // })
+        setConnected(true)
+        setConnecting(false)
       } else {
         // Fetch the fields anyway if we are offline (getting cached ones)
         await fetchFields()

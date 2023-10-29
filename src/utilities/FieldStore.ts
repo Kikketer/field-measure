@@ -1,4 +1,5 @@
 import { SupabaseClient } from '@supabase/supabase-js'
+import { addDays } from 'date-fns'
 import { Field } from './types'
 
 type FieldStore = {
@@ -19,6 +20,7 @@ const baselineField: Field = {
   rainfallDays: 0,
   rainfallFactor: 1,
   lastPainted: new Date(),
+  predictedNextPaint: addDays(new Date(), 14),
   markedUnplayable: new Date(),
   sortOrder: 0,
   active: true,

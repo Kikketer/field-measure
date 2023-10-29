@@ -43,6 +43,8 @@ export const AddField: Component = () => {
       data[formElement[0]] = formElement[1]
     }
 
+    console.log('Saving field ', data)
+
     // Check validation for the form (if needed)
     setSaving(true)
     const newField = await saveFieldToDb({ field: data })
