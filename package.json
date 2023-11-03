@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "icons": "pwa-assets-generator -c ./pwa-assets.config.ts  public/lines.png",
+    "icons": "pwa-assets-generator -c ./pwa-assets.config.ts  public/LineUpLogo.svg",
     "test": "jest",
     "e2e": "playwright test",
     "sync:env": "supabase secrets set --env-file ./supabase/.env --project-ref fcicxndtnljljypyjieb",
