@@ -48,53 +48,53 @@ describe('Calculate Conditions', () => {
   })
 
   describe('Adjust rainfall factor', () => {
-    test('should adjust rainfall factor if there is a previous rainfall and no rainfall this period', () => {
+    test('should not adjust rainfall factor if there was no rainfall this period', () => {
       const maxDryDays = 14
-      const previousRainfallDays = 5
       const rainfallDays = 0
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
+      // Rainfall history has one entry, 5 days is the typical days it can stand without painting
+      // Also the rainfall factor is equal so the "average" is still the same
+      const paintHistory = [{ rainfallFactor: 1, daysUnpainted: 5 }]
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
           maxDryDays,
-          previousRainfallDays,
           rainfallDays,
           rainfallFactor,
           lastPainted,
         },
+        // Marked unplayable 12 days after it's last paint
         markUnplayableOn: new Date('2023-10-13'),
+        paintHistory,
       })
 
-      expect(resultingField.rainfallFactor).toEqual(0.6)
+      expect(resultingField.rainfallFactor).toEqual(1)
+      // The current period is 12 days, the previous history was 5 so we now average to 9.5 max dry days
+      expect(resultingField.maxDryDays).toEqual(9.5)
     })
 
-    test('should reset rainfall factor if the dry period was shorter than the rainfall version', () => {
-      // If the previous period had rainfall and this current period did not
-      // it would make sense that this period should last longer!
-      // If this period (dry) was shorter than the previous (with rainfall), then something is amiss
-      // like the rainfall had no effect? maybe?
-      // In this case we need to set the rainfall factor to 0 since it seems rainfall has no effect
-      // Maybe in the next round it'll correct itself
+    test('should adjust the max dry days if there was no rainfall this period and unplayable was marked after the current maxDryDays', () => {
       const maxDryDays = 14
-      const previousRainfallDays = 5
       const rainfallDays = 0
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
+      const paintHistory = [{ rainfallFactor: 1, daysUnpainted: 5 }]
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
           maxDryDays,
-          previousRainfallDays,
           rainfallDays,
           rainfallFactor,
           lastPainted,
         },
-        // Marking it unplayable at 8 days (previous prediction was 9)
-        markUnplayableOn: new Date('2023-10-09'),
+        // Marking it unplayable at 17 days (higher than the previous max dry)
+        markUnplayableOn: new Date('2023-10-18'),
+        paintHistory,
       })
 
-      expect(resultingField.rainfallFactor).toEqual(0)
+      expect(resultingField.rainfallFactor).toEqual(1)
+      expect(resultingField.maxDryDays).toEqual(9.5)
     })
 
     test('should adjust maxDryDays if there is no previous period and no rain this period', () => {
@@ -102,6 +102,7 @@ describe('Calculate Conditions', () => {
       const rainfallDays = 0
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
+      const paintHistory = []
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
@@ -112,6 +113,7 @@ describe('Calculate Conditions', () => {
         },
         // Marking it unplayable at 10 days
         markUnplayableOn: new Date('2023-10-11'),
+        paintHistory,
       })
 
       // Rainfall factor should not adjust
@@ -122,22 +124,24 @@ describe('Calculate Conditions', () => {
 
     test('should adjust maxDryDays if the previous period was dry and no rain this period', () => {
       const maxDryDays = 14
-      // The previous period was dry as well:
-      const previousRainfallDays = 0
       const rainfallDays = 0
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
+      // The previous period was dry as well:
+      const paintHistory = [
+        // { rainfallDays: 0, rainfallFactor: 1, daysUnpainted: 5 },
+      ]
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
           maxDryDays,
-          previousRainfallDays,
           rainfallDays,
           rainfallFactor,
           lastPainted,
         },
         // Marking it unplayable at 10 days
         markUnplayableOn: new Date('2023-10-11'),
+        paintHistory,
       })
 
       // Rainfall factor should not adjust
@@ -146,21 +150,20 @@ describe('Calculate Conditions', () => {
       expect(resultingField.maxDryDays).toEqual(10)
     })
 
-    test('should adjust rainfall factor if there was rain this period, regardless of previous', () => {
+    test('should adjust rainfall factor if there was rain this period and an average of previous rainfall factors', () => {
       // This is probably the "normal" case where there has been rainfall
       // in at least the last two periods (or no previous period)
       // In this case we simply use the current rainfall to adjust the factor
       const maxDryDays = 14
-      // Previous is ignored since we hae rainfall days this period
-      const previousRainfallDays = 5
       const rainfallDays = 2
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
+      // Previous is ignored since we hae rainfall days this period
+      const paintHistory = [{ rainfallFactor: 1, daysUnpainted: 5 }]
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
           maxDryDays,
-          previousRainfallDays,
           rainfallDays,
           rainfallFactor,
           lastPainted,
@@ -168,9 +171,12 @@ describe('Calculate Conditions', () => {
         // 9 days and the previous factor would have been 12
         // So adjust the factor to make it work for 9
         markUnplayableOn: new Date('2023-10-10'),
+        paintHistory,
       })
 
-      expect(resultingField.rainfallFactor).toEqual(2.5)
+      // Rainfall factor changes to 1.75 because of the previous factor of 1,
+      // current factor of 1 but the dates have changed from 14 days to 9
+      expect(resultingField.rainfallFactor).toEqual(1.75)
     })
   })
 })

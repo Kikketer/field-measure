@@ -1,5 +1,5 @@
 import { differenceInCalendarDays } from 'date-fns'
-import { Field } from './types'
+import { Field, PaintHistory } from './types'
 
 export const getPredictedDaysUntilPaint = (
   field?: Pick<
@@ -19,27 +19,31 @@ export const getPredictedDaysUntilPaint = (
 export const getFieldWithAdjustedRainFactorAndDryDays = ({
   currentField,
   markUnplayableOn,
+  paintHistory,
 }: {
-  currentField: Field
+  currentField: Pick<
+    Field,
+    'maxDryDays' | 'rainfallDays' | 'rainfallFactor' | 'lastPainted'
+  >
   markUnplayableOn: Date
+  paintHistory: Array<Pick<PaintHistory, 'rainfallFactor' | 'daysUnpainted'>>
 }): Field => {
   const modifiedField = { ...currentField }
-  /**
-   * Max days with no rainfall = 14
-   * If unplayable and rainfall has happened, adjust the rainfall factor to match the duration since last painting
-   * If unplayable is flagged before that with no rainfall, reduce that number
-   *  - but also look at the previous time period and adjust the rainfactor to account for this new number
-   */
-  const previousPredictionOfDays = getPredictedDaysUntilPaint({
-    ...currentField,
-    rainfallDays: currentField.previousRainfallDays,
-  })
+
+  // Get the average number of days it went unpainted
+  let totalDaysUnpaintedFromHistory = null
+  if (paintHistory?.length) {
+    totalDaysUnpaintedFromHistory = paintHistory.reduce(
+      (acc, cur) => acc + cur.daysUnpainted,
+      0,
+    )
+  }
 
   const differenceBetweenLastPaintAndMarkedUnplayable =
     differenceInCalendarDays(markUnplayableOn, currentField.lastPainted)
 
-  // If we have rainfall this period then ignore any previous and just set it
-  // based on the current rainfall, this is the simplest case:
+  // If we have rainfall this period then adjust the rainfall factor
+  // based on the average of the previous rainfall factors and this new one:
   if (
     currentField.rainfallDays &&
     differenceBetweenLastPaintAndMarkedUnplayable < currentField.maxDryDays
@@ -47,41 +51,32 @@ export const getFieldWithAdjustedRainFactorAndDryDays = ({
     // currentMaxDry - (rainfallDays * n) = differenceBetweenlastPaintAndMarkedUnplayable
     const differenceOfDays =
       differenceBetweenLastPaintAndMarkedUnplayable - currentField.maxDryDays
-    modifiedField.rainfallFactor = differenceOfDays / -currentField.rainfallDays
+    const newRainfallFactor =
+      differenceOfDays / -(currentField.rainfallDays ?? 1)
+    const totalRainfallFactor =
+      paintHistory.reduce((acc, cur) => acc + cur.rainfallFactor, 0) +
+      newRainfallFactor
+
+    // Calculate the new rainfall factor using the average of the previous plus this one
+    modifiedField.rainfallFactor =
+      totalRainfallFactor / (paintHistory.length + 1)
   }
   // If the previous rainfall was 0 or not set (first round)
   // we simply adjust max dry days if needed
-  else if (!currentField.previousRainfallDays) {
+  else if (totalDaysUnpaintedFromHistory == null) {
     // If it was a dry period and no previous predictions
     // Simply update the max dry days:
     modifiedField.maxDryDays = differenceBetweenLastPaintAndMarkedUnplayable
   }
   // And we haven't had ANY rainfall (we need to adjust it's max dry days)
   // And we have some previous data to use to adjust the rainfall factor
-  else if (currentField.rainfallDays === 0 && previousPredictionOfDays) {
-    if (
-      differenceBetweenLastPaintAndMarkedUnplayable > previousPredictionOfDays
-    ) {
-      // Find the rainfall factor that makes the predicted days = previousPredicted
-      // Adjust maxDry to 12 and figure the rainfall factor from the previous rainfall to make it equal 12
-      // newFoundDryDays - (previousRainfallDays * UNKNOWNrainfalFactor) = previousPredictionDays
-      // 12 - (5 * n) = 9
-      // -(5 * n) = 9 - 12
-      // -5n = -3 [a]
-      // n = -3/-5 [b]
-      // n = 0.6
-      const differenceOfDays =
-        previousPredictionOfDays - differenceBetweenLastPaintAndMarkedUnplayable
-      modifiedField.rainfallFactor =
-        differenceOfDays / -currentField.previousRainfallDays
-    } else {
-      // This is a strange case where the dry period is shorter than the wet
-      // This means something is wrong and we should reset the rain factor to
-      // 0, since the rain seems to have no effect (or makes the paint MORE visible?)
-      modifiedField.rainfallFactor = 0
-      // I should likely report this or alert someone, this may actually mean
-      // our weather API is failing (this is an incorrect dry period)
-    }
+  else if (currentField.rainfallDays === 0) {
+    // Do not adjust rainfall factor if the current period has had no rainfall
+    // But DO adjust the max dry days to average of days unpainted and the duration of this period
+    // This doesn't account for history of rainfall factor but it's better than nothing
+    modifiedField.maxDryDays =
+      (totalDaysUnpaintedFromHistory + currentField.maxDryDays) /
+      (paintHistory.length + 1)
   }
 
   return { ...modifiedField, markedUnplayable: markUnplayableOn }

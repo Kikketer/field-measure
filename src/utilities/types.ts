@@ -37,6 +37,12 @@ export type Field = {
   locked?: boolean
 }
 
+export type PaintHistory = {
+  rainfallFactor: number
+  rainfallDays: number
+  daysUnpainted: number
+}
+
 export enum FieldSize {
   full = 'Full',
   elevenThirteen = '11/13',

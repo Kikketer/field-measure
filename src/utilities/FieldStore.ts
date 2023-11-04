@@ -1,11 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js'
-import { addDays } from 'date-fns'
+import { addDays, differenceInCalendarDays } from 'date-fns'
 import { Field } from './types'
-
-type FieldStore = {
-  lastFetch: Date | undefined
-  fields: Field[] | undefined
-}
 
 // Used when we create new fields, fills in the gaps:
 const baselineField: Field = {
@@ -28,9 +23,6 @@ const baselineField: Field = {
   paintTeamId: 0,
   deleted: false,
 }
-
-// This local cache mirrors local storae but doesn't have the "not-so-async" issues of localstorage
-const localCache: FieldStore = { fields: [], lastFetch: new Date() }
 
 const mapFields = (fields: any[]): Field[] => {
   // Convert all keys with underscores to camelCase:
@@ -89,6 +81,7 @@ export const getFields = async ({
       .select('*')
       .eq('active', true)
       .eq('deleted', false)
+      .order('name', { ascending: true })
 
     const fields = result?.data ?? []
 
@@ -179,6 +172,40 @@ export const saveField = async ({
   )
 
   return mapFields(data)[0]
+}
+
+export const getPaintHistory = async ({
+  supabase,
+}: {
+  supabase: SupabaseClient | undefined
+}) => {
+  const result = await supabase
+    ?.from('paint_history')
+    .select('*')
+    .order('created_at')
+    .limit(20)
+
+  return result?.data ?? []
+}
+
+export const logPainted = async ({
+  supabase,
+  field,
+  previouslyPaintedOn,
+}: {
+  supabase: SupabaseClient | undefined
+  field: Field
+  previouslyPaintedOn: Date
+}) => {
+  return supabase?.from('paint_history').insert({
+    field_id: field.id,
+    rainfall_factor: field.rainfallFactor,
+    rainfall_days: field.rainfallDays,
+    days_unpainted: differenceInCalendarDays(
+      field.lastPainted,
+      previouslyPaintedOn,
+    ),
+  })
 }
 
 /**

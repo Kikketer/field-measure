@@ -11,10 +11,12 @@ import {
 } from 'solid-js'
 import {
   getFields as getFieldsFromDb,
+  getPaintHistory as getPaintHistoryFromDb,
+  logPainted,
   onUpdate as updateFieldsInStore,
   saveField as saveFieldToDb,
 } from '../utilities/FieldStore'
-import { Field } from '../utilities/types'
+import { Field, PaintHistory } from '../utilities/types'
 import { AuthenticationContext } from './AuthenticationProvider'
 import { OnlineContext } from './OnlineStatusProvider'
 import { SupabaseContext } from './SupabaseProvider'
@@ -30,6 +32,11 @@ export const FieldsContext = createContext<{
   connecting?: Accessor<boolean>
   fetchFields: () => Promise<Field[]>
   saveField: (T: { field: Partial<Field> }) => Promise<Field>
+  logPaintedField: (T: {
+    field: Partial<Field>
+    previouslyPaintedOn: Date
+  }) => Promise<void>
+  getPaintHistory: () => Promise<{ fieldId: string; paintedOn: Date }[]>
 }>()
 
 const startListening = async ({
@@ -39,8 +46,6 @@ const startListening = async ({
 }: {
   supabase: SupabaseClient | undefined
   onUpdate: (field: Field) => void
-  onInsert?: (field: Field) => void
-  onDelete?: (field: Field) => void
   onConnectionStatusChange?: (status: REALTIME_SUBSCRIBE_STATES) => void
 }) => {
   return supabase
@@ -99,8 +104,6 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
             await startListening({
               supabase: supa,
               onUpdate,
-              onDelete,
-              onInsert,
               onConnectionStatusChange,
             })
           },
@@ -108,6 +111,32 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
         )
       }
     }
+  }
+
+  /**
+   * This adds a row to the painted field table
+   * This is used to create an average rainfall factor and max dry days
+   * that are a little more stable.
+   */
+  const logPaintedField = async ({
+    field,
+    previouslyPaintedOn,
+  }: {
+    field: Partial<Field>
+    previouslyPaintedOn: Date
+  }) => {
+    await logPainted({ supabase, field, previouslyPaintedOn })
+  }
+
+  const getPaintHistory = async (): Promise<PaintHistory[]> => {
+    const result = await getPaintHistoryFromDb({ supabase })
+    return (
+      result?.map((r) => ({
+        rainfallFactor: r.rainfall_factor,
+        rainfallDays: r.rainfall_days,
+        daysUnpainted: r.days_unpainted,
+      })) ?? []
+    )
   }
 
   const onUpdate = async (updatedField: Field) => {
@@ -118,10 +147,6 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
     setFields(updatedFields)
   }
 
-  const onDelete = (deletedField: Field) => {}
-
-  const onInsert = (insertedField: Field) => {}
-
   const fetchFields = async () => {
     const mappedFields = await getFieldsFromDb({
       supabase,
@@ -130,6 +155,17 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
     setFields(mappedFields)
 
     return mappedFields
+  }
+
+  const saveField = async ({ field }: { field: Partial<Field> }) => {
+    const newField = await saveFieldToDb({
+      field,
+      supabase,
+      paintTeamId: user?.().paintTeam.id,
+    })
+    // Fetch but don't wait
+    fetchFields().then(() => undefined)
+    return newField
   }
 
   // Fetch the fields if we are visible
@@ -146,8 +182,6 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
         // await startListening({
         //   supabase,
         //   onUpdate,
-        //   onDelete,
-        //   onInsert,
         //   onConnectionStatusChange,
         // })
         setConnected(true)
@@ -160,17 +194,6 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
     }
   })
 
-  const saveField = async ({ field }: { field: Field }) => {
-    const newField = await saveFieldToDb({
-      field,
-      supabase,
-      paintTeamId: user?.().paintTeam.id,
-    })
-    // Fetch but don't wait
-    fetchFields().then(() => undefined)
-    return newField
-  }
-
   return (
     <FieldsContext.Provider
       value={{
@@ -179,6 +202,8 @@ export const FieldsProvider: Component<FieldsProvider> = (props) => {
         connecting,
         fetchFields,
         saveField,
+        logPaintedField,
+        getPaintHistory,
       }}
     >
       {props.children}

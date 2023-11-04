@@ -19,6 +19,7 @@ import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
 import { SupabaseContext } from '../components/SupabaseProvider'
 import { SIZES } from '../utilities/constants'
+import { getPaintHistory } from '../utilities/FieldStore'
 import { getFieldWithAdjustedRainFactorAndDryDays } from '../utilities/predictNextPainting'
 import { Field as FieldType, FieldSize } from '../utilities/types'
 import { formatDate } from '../utilities/utils'
@@ -32,7 +33,8 @@ export const FieldDetail: Component = () => {
   const [showConfirmPaint, setShowConfirmPaint] = createSignal(false)
   const isOnline = useContext(OnlineContext)
   const { user } = useContext(AuthenticationContext)
-  const { fields, saveField, fetchFields } = useContext(FieldsContext)
+  const { fields, saveField, fetchFields, logPaintedField, getPaintHistory } =
+    useContext(FieldsContext)
 
   // Reload fields when this page loads
   fetchFields()
@@ -48,18 +50,27 @@ export const FieldDetail: Component = () => {
     setShowConfirmPaint(false)
 
     let fieldToSave = thisField()!
+    // Get the history for this field and use it to create an average
+    // for the rainfall factor and max dry days
+    const paintHistory = await getPaintHistory()
     if (shouldAdjustFactor) {
       fieldToSave = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: fieldToSave,
         // Right now we assume it's unplayable on the date you painted:
         markUnplayableOn: startOfDay(new Date()),
+        paintHistory,
       })
     }
     fieldToSave.lastPainted = startOfDay(new Date())
 
-    console.log('Saving field ', fieldToSave)
+    console.log('Saving field ', { fieldToSave, thisField: thisField() })
 
-    await saveField({ field: fieldToSave })
+    // await logPaintedField({
+    //   field: fieldToSave,
+    //   previouslyPaintedOn: thisField()?.lastPainted,
+    // })
+
+    // await saveField({ field: fieldToSave })
   }
 
   return (
