@@ -134,7 +134,7 @@ export const FieldDetail: Component = () => {
                 </li>
                 <li>
                   <strong>Rainfall factor:</strong>&nbsp;
-                  {thisField()?.rainfallFactor}
+                  {Math.floor((thisField()?.rainfallFactor ?? 0) * 1000) / 1000}
                 </li>
               </ul>
               <Field

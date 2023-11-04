@@ -81,7 +81,7 @@ export const getFields = async ({
       .select('*')
       .eq('active', true)
       .eq('deleted', false)
-      .order('name', { ascending: true })
+      .order('name')
 
     const fields = result?.data ?? []
 
@@ -101,6 +101,13 @@ export const getFields = async ({
     : { fields: [] }
 
   let fields = hydratedFieldStore?.fields ?? []
+
+  // sort by name:
+  fields = fields.sort((a: Field, b: Field) => {
+    if (a.name < b.name) return -1
+    if (a.name === b.name) return 0
+    return 1
+  })
 
   return mapFields(fields)
 }
