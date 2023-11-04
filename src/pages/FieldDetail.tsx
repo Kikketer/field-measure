@@ -65,12 +65,12 @@ export const FieldDetail: Component = () => {
 
     console.log('Saving field ', { fieldToSave, thisField: thisField() })
 
-    // await logPaintedField({
-    //   field: fieldToSave,
-    //   previouslyPaintedOn: thisField()?.lastPainted,
-    // })
+    await logPaintedField({
+      field: fieldToSave,
+      previouslyPaintedOn: thisField()?.lastPainted,
+    })
 
-    // await saveField({ field: fieldToSave })
+    await saveField({ field: fieldToSave })
   }
 
   return (
