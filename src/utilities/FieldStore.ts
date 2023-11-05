@@ -4,7 +4,7 @@ import { Field } from './types'
 
 // Used when we create new fields, fills in the gaps:
 const baselineField: Field = {
-  // id: undefined (by defualt but here to remind you that we have it)
+  // id: undefined (by default but here to remind you that we have it)
   createdAt: new Date(),
   size: 'Full',
   customWidth: undefined,

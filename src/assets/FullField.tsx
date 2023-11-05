@@ -10,12 +10,15 @@ export const FullField = () => {
       xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
       xmlns="http://www.w3.org/2000/svg"
       xmlns:svg="http://www.w3.org/2000/svg"
+      aria-describedby="field-full"
+      role="img"
     >
+      <title id="field-full">Soccer Field Full Size</title>
       <defs id="defs2" />
       <sodipodi:namedview
         id="namedview2"
         pagecolor="#ffffff"
-        bordercolor="#000000"
+        bordercolor="currentColor"
         borderopacity="0.25"
         inkscape:showpageshadow="2"
         inkscape:pageopacity="0.0"
@@ -31,26 +34,25 @@ export const FullField = () => {
         inkscape:window-maximized="0"
         inkscape:current-layer="g2"
       />
-      <title id="title1">soccer_field</title>
       <g id="g2" transform="translate(-37.5,-17.5)">
         <title id="title2">Layer 1</title>
         <path
           d="M 574.91406,451.49219 V 268.50781 a 91.5,91.5 0 0 0 -15.80273,1.38281 91.5,91.5 0 0 0 -15.40625,4.12696 91.5,91.5 0 0 0 -14.45508,6.74023 91.5,91.5 0 0 0 -13.06445,9.14844 91.5,91.5 0 0 0 -11.2793,11.2793 91.5,91.5 0 0 0 -9.14844,13.06445 91.5,91.5 0 0 0 -6.74023,14.45508 91.5,91.5 0 0 0 -4.12696,15.40625 A 91.5,91.5 0 0 0 483.5,360 a 91.5,91.5 0 0 0 1.39062,15.88867 91.5,91.5 0 0 0 4.12696,15.40625 91.5,91.5 0 0 0 6.74023,14.45508 91.5,91.5 0 0 0 9.14844,13.06445 91.5,91.5 0 0 0 11.2793,11.2793 91.5,91.5 0 0 0 13.06445,9.14844 91.5,91.5 0 0 0 14.45508,6.74023 91.5,91.5 0 0 0 15.40625,4.12695 91.5,91.5 0 0 0 15.80273,1.38282 z"
-          style="fill-opacity:0;stroke:#000000;stroke-width:5"
+          style="fill-opacity:0;stroke:currentColor;stroke-width:5"
           id="path2"
         />
         <circle
           id="svg_4"
-          fill="#000000"
-          stroke="#000000"
+          fill="none"
+          stroke="currentColor"
           r="2"
           cy="360"
           cx="575"
         />
         <circle
           id="svg_5"
-          fill="#000000"
-          stroke="#000000"
+          fill="none"
+          stroke="currentColor"
           r="2"
           cy="360"
           cx="160"
@@ -59,46 +61,46 @@ export const FullField = () => {
           id="svg_7"
           fill-opacity="0"
           stroke-width="5"
-          stroke="#000000"
+          stroke="currentColor"
           d="M 50,324.39999 H 40 v 72.20002 h 10 z"
         />
         <path
           id="svg_9"
           fill-opacity="0"
           stroke-width="5"
-          stroke="#000000"
+          stroke="currentColor"
           d="m 50,269.39999 h 55 V 451.60001 H 50 Z"
         />
         <path
           id="svg_11"
           fill-opacity="0"
           stroke-width="5"
-          stroke="#000000"
+          stroke="currentColor"
           d="M 50,159.39999 H 215 V 561.59998 H 50 Z"
         />
         <path
           id="svg_13"
-          fill="#ffffff"
+          fill="none"
           stroke-width="5"
-          stroke="#000000"
+          stroke="currentColor"
           d="m 215,286.875 a 91.5,91.5 0 0 1 0,146.25 z"
         />
         <path
           id="svg_15"
           fill-opacity="0"
           stroke-width="5"
-          stroke="#000000"
+          stroke="currentColor"
           d="M 50,30 A 10,10 0 0 0 60,20 H 50 Z"
         />
         <path
           id="svg_16"
           fill-opacity="0"
           stroke-width="5"
-          stroke="#000000"
+          stroke="currentColor"
           d="M 60,700 A 10,10 0 0 0 50,690 v 10 z"
         />
         <rect
-          style="fill:none;fill-opacity:0.940425;stroke:#000000;stroke-width:5.1;stroke-dasharray:none;stroke-opacity:1"
+          style="fill:none;fill-opacity:0.940425;stroke:currentColor;stroke-width:5.1;stroke-dasharray:none;stroke-opacity:1"
           id="rect2"
           width="525.2746"
           height="679.92395"
