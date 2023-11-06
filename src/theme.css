@@ -525,7 +525,7 @@ progress,
 
 @media only screen and (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
-    --block-bg: hsl(230deg 3.53% 19.1%);
+    --block-bg: hsl(230deg 3.53% 25%);
   }
 }
 
