@@ -109,6 +109,8 @@ export const getFields = async ({
     return 1
   })
 
+  console.log('sorted fields? ', fields)
+
   return mapFields(fields)
 }
 
@@ -168,7 +170,11 @@ export const saveField = async ({
   const proposedNewFieldIndex = existingFields.findIndex(
     (existingField) => existingField.id === undefined,
   )
-  existingFields.splice(proposedNewFieldIndex, 1, data[0])
+  existingFields.splice(proposedNewFieldIndex, 1, data[0]).sort((a, b) => {
+    if (a.name < b.name) return -1
+    if (a.name === b.name) return 0
+    return 1
+  })
 
   localStorage.setItem(
     'fieldStore',
@@ -230,7 +236,11 @@ export const onUpdate = async ({
   const indexOfExistingField = newFields.findIndex(
     (field: Field) => field.id === updatedField?.id,
   )
-  newFields.splice(indexOfExistingField, 1, updatedField)
+  newFields.splice(indexOfExistingField, 1, updatedField).sort((a, b) => {
+    if (a.name < b.name) return -1
+    if (a.name === b.name) return 0
+    return 1
+  })
 
   // And now re-save this back to the local storage
   localStorage.setItem(

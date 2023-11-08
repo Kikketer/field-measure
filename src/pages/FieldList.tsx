@@ -7,49 +7,31 @@ import {
   Show,
   useContext,
 } from 'solid-js'
+import { ChevronRightIcon } from '../assets/ChevronRightIcon'
+import { DaysLeftChip } from '../components/DaysLeftChip'
+import { FieldsContext } from '../components/FieldsProvider'
 import { Header } from '../components/Header'
 import { OnlineContext } from '../components/OnlineStatusProvider'
 import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
-import { ChevronRightIcon } from '../assets/ChevronRightIcon'
 import { Field } from '../utilities/types'
 import { formatDate } from '../utilities/utils'
 import styles from './FieldList.module.css'
-import { differenceInCalendarDays } from 'date-fns'
-import { DaysLeftChip } from '../components/DaysLeftChip'
-import { FieldsContext } from '../components/FieldsProvider'
 
 const groupFields = (fields: Field[]): { [groupName: string]: Field[] } => {
   // Group by "group"
-  const groupedFields = fields.reduce(
-    (acc: { [groupName: string]: Field[] }, field) => {
-      if (!field.group) {
-        acc.Other ? acc.Other.push(field) : (acc.Other = [field])
-        return acc
-      }
-
-      if (!acc[field.group]) {
-        acc[field.group] = []
-      }
-      acc[field.group].push(field)
+  return fields.reduce((acc: { [groupName: string]: Field[] }, field) => {
+    if (!field.group) {
+      acc.Other ? acc.Other.push(field) : (acc.Other = [field])
       return acc
-    },
-    {},
-  )
+    }
 
-  // Sort the fields in each group by the number of days until the next predicted painting
-  return Object.keys(groupedFields).reduce(
-    (acc: { [groupName: string]: Field[] }, groupName) => {
-      acc[groupName] = groupedFields[groupName].sort((a, b) =>
-        differenceInCalendarDays(
-          a.predictedNextPaint ?? new Date(),
-          b.predictedNextPaint ?? new Date(),
-        ),
-      )
-      return acc
-    },
-    {},
-  )
+    if (!acc[field.group]) {
+      acc[field.group] = []
+    }
+    acc[field.group].push(field)
+    return acc
+  }, {})
 }
 
 export const FieldList: Component = () => {

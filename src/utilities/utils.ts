@@ -5,7 +5,10 @@ export const getIsFieldPlayable = (field?: Field) => {
   if (!field) return false
 
   return (
-    differenceInCalendarDays(new Date(), field.lastPainted) < field.maxDryDays
+    differenceInCalendarDays(
+      new Date(field.predictedNextPaint ?? new Date()),
+      new Date(),
+    ) > 0
   )
 }
 
