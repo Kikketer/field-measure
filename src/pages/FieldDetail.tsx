@@ -62,6 +62,8 @@ export const FieldDetail: Component = () => {
       })
     }
     fieldToSave.lastPainted = startOfDay(new Date())
+    // Reset the rainfall days whenever we paint regardless if we adjusted the factor
+    fieldToSave.rainfallDays = 0
 
     console.log('Saving field ', { fieldToSave, thisField: thisField() })
 
