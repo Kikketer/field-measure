@@ -11,6 +11,7 @@ import { ChevronRightIcon } from '../assets/ChevronRightIcon'
 import { DaysLeftChip } from '../components/DaysLeftChip'
 import { FieldsContext } from '../components/FieldsProvider'
 import { Header } from '../components/Header'
+import { MessagingContext } from '../components/MessagingProvider.tsx'
 import { OnlineContext } from '../components/OnlineStatusProvider'
 import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
@@ -41,6 +42,7 @@ export const FieldList: Component = () => {
   }>({ other: [] })
   const isOnline = useContext(OnlineContext)
   const { fields, fetchFields } = useContext(FieldsContext)
+  const messagingContext = useContext(MessagingContext)
 
   // Fetch the fields when we navigate to this page:
   fetchFields()
@@ -52,6 +54,9 @@ export const FieldList: Component = () => {
   return (
     <Page>
       <Header>Fields</Header>
+      <button type="button" onClick={() => messagingContext.setupMessaging()}>
+        Get token
+      </button>
       <ul class={styles.FieldList}>
         <For each={Object.keys(groupedFields()).sort()}>
           {(groupName) => (
