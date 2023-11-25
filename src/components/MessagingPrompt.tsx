@@ -4,9 +4,8 @@ import styles from './MessagingPrompt.module.css'
 import { MessagingContext } from './MessagingProvider.tsx'
 
 export const MessagingPrompt: Component = () => {
-  const { hasSetupMessaging, ignoreMessaging } = useContext(MessagingContext)
-
-  console.log('setup messaging', hasSetupMessaging())
+  const { hasSetupMessaging, ignoreMessaging, setupMessaging } =
+    useContext(MessagingContext)
 
   if (hasSetupMessaging()) return null
 
@@ -25,7 +24,9 @@ export const MessagingPrompt: Component = () => {
         >
           No
         </button>
-        <button type="button">Yes</button>
+        <button type="button" onClick={() => setupMessaging()}>
+          Yes
+        </button>
       </div>
     </div>
   )
