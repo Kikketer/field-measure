@@ -11,6 +11,7 @@ import { ChevronRightIcon } from '../assets/ChevronRightIcon'
 import { DaysLeftChip } from '../components/DaysLeftChip'
 import { FieldsContext } from '../components/FieldsProvider'
 import { Header } from '../components/Header'
+import { MessagingPrompt } from '../components/MessagingPrompt.tsx'
 import { MessagingContext } from '../components/MessagingProvider.tsx'
 import { OnlineContext } from '../components/OnlineStatusProvider'
 import { Page } from '../components/Page'
@@ -53,6 +54,7 @@ export const FieldList: Component = () => {
 
   return (
     <Page>
+      <MessagingPrompt />
       <Header>Fields</Header>
       <button type="button" onClick={() => messagingContext.setupMessaging()}>
         Get token

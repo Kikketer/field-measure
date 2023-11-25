@@ -1,7 +1,13 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 import { initializeApp } from 'firebase/app'
 import { getMessaging, getToken, onMessage } from 'firebase/messaging'
-import { createContext, JSX, useContext } from 'solid-js'
+import {
+  Accessor,
+  createContext,
+  createSignal,
+  JSX,
+  useContext,
+} from 'solid-js'
 import { AuthenticationContext } from './AuthenticationProvider.tsx'
 import { SupabaseContext } from './SupabaseProvider.tsx'
 
@@ -40,8 +46,13 @@ const sendTokenToServer = async (
   localStorage.setItem('sentFirebaseMessagingToken', 'true')
 }
 
-export const MessagingContext =
-  createContext<() => { getToken: () => Promise<void> }>()
+export const MessagingContext = createContext<
+  () => {
+    getToken: () => Promise<void>
+    hasSetupMessaging: Accessor<boolean>
+    ignoreMessaging: () => void
+  }
+>()
 
 export const MessagingProvider = (props: MessagingProvider) => {
   const { user } = useContext(AuthenticationContext)
@@ -49,11 +60,15 @@ export const MessagingProvider = (props: MessagingProvider) => {
   // Initialize Firebase
   const firebaseApp = initializeApp(firebaseConfig)
   const messaging = getMessaging(firebaseApp)
+  const [hasSetupMessaging, setHasSetupMessaging] = createSignal(
+    !!localStorage.getItem('sentFirebaseMessagingToken'),
+  )
 
   const setupMessaging = async () => {
     try {
       Notification.requestPermission().then(async (permission) => {
         if (permission === 'granted') {
+          setHasSetupMessaging(true)
           // Check if we've already sent it by checking local storage
           const alreadySent = localStorage.getItem('sentFirebaseMessagingToken')
           if (!alreadySent) {
@@ -72,6 +87,12 @@ export const MessagingProvider = (props: MessagingProvider) => {
     } catch (err) {
       console.log('Error getting token: ', err)
     }
+  }
+
+  const ignoreMessaging = () => {
+    setHasSetupMessaging(true)
+    // Also set the local storage so we stop asking
+    localStorage.setItem('sentFirebaseMessagingToken', 'true')
   }
 
   onMessage(messaging, (payload) => {
@@ -95,6 +116,8 @@ export const MessagingProvider = (props: MessagingProvider) => {
   })
 
   const contextValue = {
+    hasSetupMessaging,
+    ignoreMessaging,
     setupMessaging,
   }
 
