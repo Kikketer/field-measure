@@ -33,8 +33,6 @@ const sendTokenToServer = async (
     return
   }
   console.log('Sending token to server...')
-  // Check if we've already sent it by checking local storage
-  const alreadySent = localStorage.getItem('sentFirebaseMessagingToken')
   // Insert a row into the device_tokens table with the current token and current user
   if (!alreadySent) {
     await supabase
@@ -56,28 +54,27 @@ export const MessagingProvider = (props: MessagingProvider) => {
 
   const setupMessaging = async () => {
     try {
-      console.log('User? ', user()?.id)
-      console.log('Getting token!')
-      const currentToken = await getToken(messaging, {
-        vapidKey: VAPID_KEY,
+      Notification.requestPermission().then(async (permission) => {
+        if (permission === 'granted') {
+          // Check if we've already sent it by checking local storage
+          const alreadySent = localStorage.getItem('sentFirebaseMessagingToken')
+          if (!alreadySent) {
+            console.log('Getting token!')
+            const currentToken = await getToken(messaging, {
+              vapidKey: VAPID_KEY,
+            })
+            console.log('Token: ', currentToken)
+            await sendTokenToServer(currentToken, supabase, user)
+            console.log('Successfully created the token!')
+          }
+        } else {
+          console.log('Unable to get permission to notify.')
+        }
       })
-      console.log('Token: ', currentToken)
-      await sendTokenToServer(currentToken, supabase, user)
-      console.log('Successfully created the token!')
     } catch (err) {
       console.log('Error getting token: ', err)
     }
   }
-
-  // Handle incoming messages. Called when:
-  // - a message is received while the app has focus
-  // - the user clicks on an app notification created by a service worker
-  //   `messaging.onBackgroundMessage` handler.
-  // messaging.onMessage((payload) => {
-  //   console.log('Message received. ', payload)
-  //   // Update the UI to include the received message.
-  //   // appendMessage(payload)
-  // })
 
   const contextValue = {
     setupMessaging,
