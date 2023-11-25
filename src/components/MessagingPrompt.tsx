@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { Component, useContext } from 'solid-js'
 import styles from './MessagingPrompt.module.css'
-import { MessagingContext } from './MessagingProvider.tsx'
+import { MessagingContext } from './MessagingProvider'
 
 export const MessagingPrompt: Component = () => {
   const { hasSetupMessaging, ignoreMessaging, setupMessaging } =

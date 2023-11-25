@@ -8,8 +8,8 @@ import {
   JSX,
   useContext,
 } from 'solid-js'
-import { AuthenticationContext } from './AuthenticationProvider.tsx'
-import { SupabaseContext } from './SupabaseProvider.tsx'
+import { AuthenticationContext } from './AuthenticationProvider'
+import { SupabaseContext } from './SupabaseProvider'
 
 const VAPID_KEY =
   'BJRycxAW6wdLbOnxyOfWhNfRK9XxBIWJv75plM2JKUJnsJSACA1Zwx-vMPCWD-EyiSAfX39NioWyLiRRZHme1B0'
