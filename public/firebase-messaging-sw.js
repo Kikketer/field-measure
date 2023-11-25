@@ -27,12 +27,16 @@ messaging.onBackgroundMessage((payload) => {
     '[firebase-messaging-sw.js] Received background message ',
     payload,
   )
-  // Customize notification here
-  const notificationTitle = 'Background Message Title'
-  const notificationOptions = {
-    body: 'Background Message body.',
-    icon: '/firebase-logo.png',
-  }
+  // For some reason any customization is ignored here, but we still need this function
+  // to be here for the background notification to work :|
+  // In fact any modifications to this would present 2 notifications and not open the tab!
 
-  self.registration.showNotification(notificationTitle, notificationOptions)
+  // // Customize notification here (lies)
+  // const notificationTitle = 'Background Message Title'
+  // const notificationOptions = {
+  //   body: 'Background Message body.',
+  //   icon: payload.notification.image,
+  // }
+  //
+  // self.registration.showNotification(notificationTitle, notificationOptions)
 })

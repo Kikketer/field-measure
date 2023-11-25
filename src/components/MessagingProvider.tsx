@@ -1,6 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 import { initializeApp } from 'firebase/app'
-import { getMessaging, getToken } from 'firebase/messaging'
+import { getMessaging, getToken, onMessage } from 'firebase/messaging'
 import { createContext, JSX, useContext } from 'solid-js'
 import { AuthenticationContext } from './AuthenticationProvider.tsx'
 import { SupabaseContext } from './SupabaseProvider.tsx'
@@ -34,12 +34,10 @@ const sendTokenToServer = async (
   }
   console.log('Sending token to server...')
   // Insert a row into the device_tokens table with the current token and current user
-  if (!alreadySent) {
-    await supabase
-      .from('device_tokens')
-      .insert([{ token: currentToken, user_id: user()?.id }])
-    localStorage.setItem('sentFirebaseMessagingToken', 'true')
-  }
+  await supabase
+    .from('device_tokens')
+    .insert([{ token: currentToken, user_id: user()?.id }])
+  localStorage.setItem('sentFirebaseMessagingToken', 'true')
 }
 
 export const MessagingContext =
@@ -75,6 +73,26 @@ export const MessagingProvider = (props: MessagingProvider) => {
       console.log('Error getting token: ', err)
     }
   }
+
+  onMessage(messaging, (payload) => {
+    console.log('OnMessage ', payload)
+    if (Notification.permission === 'granted') {
+      const notification = new Notification(
+        payload.notification.title + ' ⚽️',
+        {
+          body: payload.notification?.body,
+          image: payload.notification?.image,
+        },
+      )
+
+      notification.onclick = (event) => {
+        // event.preventDefault() // prevent the browser from focusing the Notification's tab
+        // window.open(payload.notification.click_action, '_blank')
+        // Be nice and close the notification when you click it:
+        notification.close()
+      }
+    }
+  })
 
   const contextValue = {
     setupMessaging,
