@@ -6,15 +6,23 @@
   left: 0;
   right: 0;
   z-index: 975;
-  border-bottom: 1px solid white;
+  border-bottom: 2px solid var(--muted-border-color);
+  box-shadow: var(--card-box-shadow);
   align-items: center;
   justify-content: space-between;
   padding: 0.5rem;
-  background: var(--background-color);
+  background: linear-gradient(
+    to bottom right,
+    #26882a 0%,
+    #d4f6ce 20%,
+    #d4f6ce 80%,
+    #36b3d9 100%
+  );
   animation-name: messagingPromptSlideDown;
   animation-duration: 500ms;
   animation-delay: 1s;
   animation-fill-mode: forwards;
+  font-weight: bold;
 
   & button {
     display: inline-block;

@@ -4,15 +4,14 @@ import styles from './MessagingPrompt.module.css'
 import { MessagingContext } from './MessagingProvider'
 
 export const MessagingPrompt: Component = () => {
-  const { hasSetupMessaging, ignoreMessaging, setupMessaging } =
-    useContext(MessagingContext)
+  const messagingContext = useContext(MessagingContext)
 
-  if (hasSetupMessaging()) return null
+  if (messagingContext?.hasSetupMessaging()) return null
 
   return (
     <div
       class={classNames(styles.MessagingPrompt, {
-        [styles.Hide]: hasSetupMessaging(),
+        [styles.Hide]: messagingContext?.hasSetupMessaging(),
       })}
     >
       <div class="text-center">Enable notifications?</div>
@@ -20,11 +19,14 @@ export const MessagingPrompt: Component = () => {
         <button
           class="secondary"
           type="button"
-          onClick={() => ignoreMessaging()}
+          onClick={() => messagingContext?.ignoreMessaging()}
         >
           No
         </button>
-        <button type="button" onClick={() => setupMessaging()}>
+        <button
+          type="button"
+          onClick={() => messagingContext?.setupMessaging()}
+        >
           Yes
         </button>
       </div>

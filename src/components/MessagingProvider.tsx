@@ -39,20 +39,26 @@ const sendTokenToServer = async (
     return
   }
   console.log('Sending token to server...')
+  const uniqueDeviceId = crypto.randomUUID()
   // Insert a row into the device_tokens table with the current token and current user
-  await supabase
-    .from('device_tokens')
-    .insert([{ token: currentToken, user_id: user()?.id }])
+  await supabase.from('device_tokens').insert([
+    {
+      token: currentToken,
+      user_id: user?.()?.id,
+      device_id: uniqueDeviceId,
+      device_info: navigator.userAgent,
+    },
+  ])
   localStorage.setItem('sentFirebaseMessagingToken', 'true')
+  // Save this device ID so we can possibly delete it from our db in the future if needed
+  localStorage.setItem('device_id', uniqueDeviceId)
 }
 
-export const MessagingContext = createContext<
-  () => {
-    getToken: () => Promise<void>
-    hasSetupMessaging: Accessor<boolean>
-    ignoreMessaging: () => void
-  }
->()
+export const MessagingContext = createContext<{
+  hasSetupMessaging: Accessor<boolean>
+  ignoreMessaging: () => void
+  setupMessaging: () => Promise<void>
+}>()
 
 export const MessagingProvider = (props: MessagingProvider) => {
   const { user } = useContext(AuthenticationContext)
