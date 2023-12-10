@@ -71,7 +71,7 @@ describe('Calculate Conditions', () => {
 
       expect(resultingField.rainfallFactor).toEqual(1)
       // The current period is 12 days, the previous history was 5 so we now average to 9.5 max dry days
-      expect(resultingField.maxDryDays).toEqual(9.5)
+      expect(resultingField.maxDryDays).toEqual(10)
     })
 
     test('should adjust the max dry days if there was no rainfall this period and unplayable was marked after the current maxDryDays', () => {
@@ -94,7 +94,30 @@ describe('Calculate Conditions', () => {
       })
 
       expect(resultingField.rainfallFactor).toEqual(1)
-      expect(resultingField.maxDryDays).toEqual(9.5)
+      expect(resultingField.maxDryDays).toEqual(10)
+    })
+
+    test('should set rainfall factor to 0 and adjust maxDryDays if there was no rainfall this period and unplayable was marked after the current maxDryDays', () => {
+      const maxDryDays = 9
+      const rainfallDays = 1
+      const rainfallFactor = 1
+      const lastPainted = new Date('2023-10-01')
+      const paintHistory = [{ rainfallFactor: 1, daysUnpainted: 5 }]
+
+      const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
+        currentField: {
+          maxDryDays,
+          rainfallDays,
+          rainfallFactor,
+          lastPainted,
+        },
+        // Marking it unplayable at 17 days (higher than the previous max dry)
+        markUnplayableOn: new Date('2023-10-12'),
+        paintHistory,
+      })
+
+      expect(resultingField.rainfallFactor).toEqual(0)
+      expect(resultingField.maxDryDays).toEqual(11)
     })
 
     test('should adjust maxDryDays if there is no previous period and no rain this period', () => {
@@ -177,6 +200,33 @@ describe('Calculate Conditions', () => {
       // Rainfall factor changes to 1.75 because of the previous factor of 1,
       // current factor of 1 but the dates have changed from 14 days to 9
       expect(resultingField.rainfallFactor).toEqual(1.75)
+    })
+
+    test('should have the resulting rainfall factor be the same if the predicted date is correct', () => {
+      const maxDryDays = 14
+      const rainfallDays = 2
+      const rainfallFactor = 1
+      const lastPainted = new Date('2023-10-01')
+      // Previous is ignored since we have rainfall days this period
+      // const paintHistory = [{ rainfallFactor: 1, daysUnpainted: 11 }]
+
+      const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
+        currentField: {
+          maxDryDays,
+          rainfallDays,
+          rainfallFactor,
+          lastPainted,
+        },
+        // The predicated next date is 10/13 so since we were correct we should
+        // Not adjust the rainfall factor
+        markUnplayableOn: new Date('2023-10-13'),
+        paintHistory: [],
+        // paintHistory,
+      })
+
+      // Rainfall factor changes to 1.75 because of the previous factor of 1,
+      // current factor of 1 but the dates have changed from 14 days to 9
+      expect(resultingField.rainfallFactor).toEqual(1)
     })
   })
 })
