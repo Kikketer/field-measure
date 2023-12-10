@@ -11,6 +11,8 @@ import { ChevronRightIcon } from '../assets/ChevronRightIcon'
 import { DaysLeftChip } from '../components/DaysLeftChip'
 import { FieldsContext } from '../components/FieldsProvider'
 import { Header } from '../components/Header'
+import { MessagingPrompt } from '../components/MessagingPrompt'
+import { MessagingContext } from '../components/MessagingProvider'
 import { OnlineContext } from '../components/OnlineStatusProvider'
 import { Page } from '../components/Page'
 import { StatusLabel } from '../components/StatusLabel'
@@ -51,6 +53,7 @@ export const FieldList: Component = () => {
 
   return (
     <Page>
+      <MessagingPrompt />
       <Header>Fields</Header>
       <ul class={styles.FieldList}>
         <For each={Object.keys(groupedFields()).sort()}>

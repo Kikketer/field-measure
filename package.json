@@ -10,7 +10,7 @@
     "icons": "pwa-assets-generator -c ./pwa-assets.config.ts  public/LineUpLogo.svg",
     "test": "jest",
     "e2e": "playwright test",
-    "sync:env": "supabase secrets set --env-file ./supabase/.env --project-ref fcicxndtnljljypyjieb",
+    "sync:secrets": "supabase secrets set --env-file ./supabase/.env --project-ref fcicxndtnljljypyjieb",
     "sync:functions": "supabase functions deploy --project-ref fcicxndtnljljypyjieb"
   },
   "license": "MIT",
@@ -51,6 +51,7 @@
     "@supabase/supabase-js": "^2.38.2",
     "classnames": "^2.3.1",
     "date-fns": "^2.30.0",
+    "firebase": "^10.6.0",
     "json5": "^2.2.3",
     "lodash-es": "^4.17.21",
     "solid-js": "^1.8.3",

@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import solidPlugin from 'vite-plugin-solid'
 import { VitePWA } from 'vite-plugin-pwa'
+import fs from 'fs'
+import path from 'path'
 // import devtools from 'solid-devtools/vite';
 
 export default defineConfig({
