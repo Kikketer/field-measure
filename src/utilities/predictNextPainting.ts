@@ -48,6 +48,18 @@ export const getFieldWithAdjustedRainFactorAndDryDays = ({
     currentField.rainfallDays &&
     differenceBetweenLastPaintAndMarkedUnplayable < currentField.maxDryDays
   ) {
+    // Let's see if we accurately predicted the painted date
+    // Find the predicted date:
+    const predictedDate = new Date(
+      new Date(currentField.lastPainted).setDate(
+        new Date(currentField.lastPainted).getDate() +
+          currentField.maxDryDays -
+          currentField.rainfallDays * currentField.rainfallFactor,
+      ),
+    )
+
+    console.log('predicted date ', predictedDate)
+
     // currentMaxDry - (rainfallDays * n) = differenceBetweenlastPaintAndMarkedUnplayable
     const differenceOfDays =
       differenceBetweenLastPaintAndMarkedUnplayable - currentField.maxDryDays
@@ -56,6 +68,13 @@ export const getFieldWithAdjustedRainFactorAndDryDays = ({
     const totalRainfallFactor =
       paintHistory.reduce((acc, cur) => acc + cur.rainfallFactor, 0) +
       newRainfallFactor
+
+    console.log('modifying the factor', {
+      differenceBetweenLastPaintAndMarkedUnplayable,
+      differenceOfDays,
+      newRainfallFactor,
+      totalRainfallFactor,
+    })
 
     // Calculate the new rainfall factor using the average of the previous plus this one
     modifiedField.rainfallFactor =
