@@ -15,6 +15,7 @@ import { MessagingPrompt } from '../components/MessagingPrompt'
 import { MessagingContext } from '../components/MessagingProvider'
 import { OnlineContext } from '../components/OnlineStatusProvider'
 import { Page } from '../components/Page'
+import { SettingsDrawer } from '../components/SettingsDrawer'
 import { StatusLabel } from '../components/StatusLabel'
 import { Field } from '../utilities/types'
 import { formatDate } from '../utilities/utils'
@@ -43,6 +44,7 @@ export const FieldList: Component = () => {
   }>({ other: [] })
   const isOnline = useContext(OnlineContext)
   const { fields, fetchFields } = useContext(FieldsContext)
+  const [isShowingDrawer, setIsShowingDrawer] = createSignal(false)
 
   // Fetch the fields when we navigate to this page:
   fetchFields()
@@ -54,7 +56,13 @@ export const FieldList: Component = () => {
   return (
     <Page>
       <MessagingPrompt />
-      <Header>Fields</Header>
+      <Header withMenu={true} setIsShowingDrawer={setIsShowingDrawer}>
+        Fields
+      </Header>
+      <SettingsDrawer
+        isShown={isShowingDrawer}
+        setIsShowingDrawer={setIsShowingDrawer}
+      />
       <ul class={styles.FieldList}>
         <For each={Object.keys(groupedFields()).sort()}>
           {(groupName) => (
