@@ -93,6 +93,9 @@ export const MessagingProvider = (props: MessagingProvider) => {
     } catch (err) {
       console.log('Error getting token: ', err)
     }
+
+    // Regardless of what happens, let's just not ask again
+    localStorage.setItem('sentFirebaseMessagingToken', 'true')
   }
 
   const ignoreMessaging = () => {

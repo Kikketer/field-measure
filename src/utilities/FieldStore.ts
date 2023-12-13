@@ -194,7 +194,7 @@ export const getPaintHistory = async ({
     ?.from('paint_history')
     .select('*')
     .order('created_at')
-    .limit(20)
+    .limit(3)
 
   return result?.data ?? []
 }
