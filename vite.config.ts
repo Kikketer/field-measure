@@ -21,7 +21,7 @@ export default defineConfig({
         start_url: '/',
         name: 'Field Manager',
         short_name: 'Field Manager',
-        description: 'Manage Youth Soccer FIelds',
+        description: 'Manage Youth Soccer Fields',
         icons: [
           {
             src: '/pwa-192x192.png',

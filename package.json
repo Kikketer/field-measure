@@ -1,6 +1,6 @@
 {
   "name": "field-measure",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A app to measure and manage painting of youth soccer fields",
   "scripts": {
     "start": "vite",
