@@ -48,13 +48,13 @@ describe('Calculate Conditions', () => {
   })
 
   describe('Adjust rainfall factor', () => {
-    test('should not adjust rainfall factor if there was no rainfall this period', () => {
-      const maxDryDays = 14
+    test('should not adjust rainfall factor or days if there was no rainfall this period and we were accurate', () => {
+      const maxDryDays = 10
       const rainfallDays = 0
-      const rainfallFactor = 1
-      const lastPainted = new Date('2023-10-01')
-      // Rainfall history has one entry, 5 days is the typical days it can stand without painting
-      // Also the rainfall factor is equal so the "average" is still the same
+      const rainfallFactor = 1.654
+      const lastPainted = new Date('2023-12-12T06:00:00+00:00')
+      // Even if there is a rainfall history, since we were accurate
+      // we do not factor this into the result
       const paintHistory = [{ rainfallFactor: 1, daysUnpainted: 5 }]
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
@@ -64,13 +64,14 @@ describe('Calculate Conditions', () => {
           rainfallFactor,
           lastPainted,
         },
-        // Marked unplayable 12 days after it's last paint
-        markUnplayableOn: new Date('2023-10-13'),
+        // Marked unplayable 10 days after it's last paint which is equal to our max dry days
+        markUnplayableOn: new Date('2023-12-22T06:00:00+00:00'),
         paintHistory,
       })
 
-      expect(resultingField.rainfallFactor).toEqual(1)
-      // The current period is 12 days, the previous history was 5 so we now average to 9.5 max dry days
+      // The current period is 10 days
+      // We were accurate so we leave the factor and the maxDryDays alone
+      expect(resultingField.rainfallFactor).toEqual(1.654)
       expect(resultingField.maxDryDays).toEqual(10)
     })
 
