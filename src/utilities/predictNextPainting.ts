@@ -111,26 +111,14 @@ export const getFieldWithAdjustedRainFactorAndDryDays = ({
   }
   // If the previous rainfall was 0 or not set (first round)
   // we simply adjust max dry days if needed
-  else if (totalDaysUnpaintedFromHistory == null) {
+  else if (
+    totalDaysUnpaintedFromHistory == null ||
+    currentField.rainfallDays === 0
+  ) {
     // If it was a dry period and no previous predictions
     // Simply update the max dry days:
     modifiedField.maxDryDays = Math.round(
       differenceBetweenLastPaintAndMarkedUnplayable,
-    )
-  }
-  // And we haven't had ANY rainfall (we need to adjust it's max dry days)
-  // And we have some previous data to use to adjust the rainfall factor
-  // But only if we are off in our estimation
-  else if (currentField.rainfallDays === 0) {
-    console.log('doing the last of it', {
-      differenceBetweenLastPaintAndMarkedUnplayable,
-    })
-    // Do not adjust rainfall factor if the current period has had no rainfall
-    // But DO adjust the max dry days to average of days unpainted and the duration of this period
-    // This doesn't account for history of rainfall factor but it's better than nothing
-    modifiedField.maxDryDays = Math.round(
-      (totalDaysUnpaintedFromHistory + currentField.maxDryDays) /
-        (paintHistory.length + 1),
     )
   }
 
