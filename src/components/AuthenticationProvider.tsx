@@ -1,6 +1,7 @@
 import {
   Component,
   createContext,
+  createEffect,
   createResource,
   JSX,
   Resource,
@@ -28,6 +29,16 @@ export const AuthenticationProvider: Component<AuthenticationProvider> = (
     () => supabaseContext?.supabase.auth.getSession(),
   )
   const [user] = createResource(() => getUser())
+
+  createEffect(() => {
+    if (session?.()?.data?.session?.provider_token) {
+      // Set the provider_token as we use this to use the google sheets API:
+      localStorage.setItem(
+        'provider_token',
+        session?.()?.data?.session?.provider_token ?? '',
+      )
+    }
+  })
 
   return (
     <AuthenticationContext.Provider value={{ session, user }}>
