@@ -30,6 +30,8 @@ export const Login = () => {
     supabaseContext.supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
+        // Read only for all spreadsheets so we can get the field data:
+        scopes: 'https://www.googleapis.com/auth/spreadsheets.readonly',
         redirectTo: import.meta.env.VITE_REDIRECT_URL,
       },
     })

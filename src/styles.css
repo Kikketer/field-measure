@@ -46,3 +46,7 @@ button.ghost {
 .text-center {
   text-align: center;
 }
+
+.no-scroll {
+  overflow: hidden;
+}
