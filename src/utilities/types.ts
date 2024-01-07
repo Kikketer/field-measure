@@ -49,3 +49,12 @@ export enum FieldSize {
   nineTen = '9/10',
   sevenEight = '7/8',
 }
+
+export type PaintTeam = {
+  id: string
+  name: string
+  zipcode?: string
+  scheduleSheetUrl?: string
+  scheduleSheetDateColumn?: string
+  scheduleSheetFieldNameColumn?: string
+}

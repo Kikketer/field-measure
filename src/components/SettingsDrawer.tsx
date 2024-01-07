@@ -1,5 +1,7 @@
+import { A } from '@solidjs/router'
 import { Accessor, createEffect, Setter } from 'solid-js'
 import { Show } from 'solid-js/web'
+import styles from './SettingsDrawer.module.css'
 
 export const SettingsDrawer = (props: {
   isShown: Accessor<boolean>
@@ -13,47 +15,33 @@ export const SettingsDrawer = (props: {
   // })
 
   createEffect(() => {
-    console.log('isShown', isShown?.())
+    if (isShown?.()) {
+      document.querySelector('body')?.classList.add('no-scroll')
+    } else {
+      document.querySelector('body')?.classList.remove('no-scroll')
+    }
   }, [isShown])
 
   return (
-    <>
-      <style>
-        {`
-        .drawer {
-          position: fixed;
-          top: 0;
-          height: 100vh;
-          width: 300px;
-          z-index: 1001;
-          right: 0;
-          background: var(--background-color);
-          padding: 1rem;
-          border-left: 1px solid var(--contrast-focus);
-        }
-        .drawer-backdrop {
-          position: fixed;
-          top: 0;
-          height: 100vh;
-          width: 100vw;
-          z-index: 1000;
-          right: 0;
-          background: rgba(0, 0, 0, 0.5);
-        }
-        `}
-      </style>
-      <Show when={isShown?.()}>
-        <div
-          class="drawer-backdrop"
-          onClick={() => props.setIsShowingDrawer?.(false)}
-        />
-        <div class="drawer">
+    <Show when={isShown?.()}>
+      <div
+        class={styles.drawerBackdrop}
+        onClick={() => props.setIsShowingDrawer?.(false)}
+      />
+      <div class={styles.drawer}>
+        <ul>
+          <li>
+            <A href={'team'}>Edit Team</A>
+          </li>
+        </ul>
+        <div>
           <ul>
             <li>Reset Push</li>
             <li>Test Push</li>
           </ul>
+          <p class={styles.small}>{navigator.userAgent}</p>
         </div>
-      </Show>
-    </>
+      </div>
+    </Show>
   )
 }

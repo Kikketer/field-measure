@@ -1,7 +1,7 @@
 export type PaintTeam = {
   id: string
   name: string
-  zipcode: string
+  zipcode?: string
 }
 
 export type Weather = {
