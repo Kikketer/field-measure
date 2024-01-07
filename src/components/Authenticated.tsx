@@ -7,7 +7,7 @@ import {
   Show,
   useContext,
 } from 'solid-js'
-import { AuthenticationContext } from './AuthenticationProvider'
+import { AuthenticationContext } from '../providers/AuthenticationProvider'
 import { Page } from './Page'
 import { Loader } from './Loader'
 

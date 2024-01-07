@@ -2,8 +2,8 @@ import { useNavigate } from '@solidjs/router'
 import { Component, useContext } from 'solid-js'
 import { Header } from '../components/Header'
 import { Page } from '../components/Page'
-import { SupabaseContext } from '../components/SupabaseProvider'
-import { TeamContext } from '../components/TeamProvider'
+import { SupabaseContext } from '../providers/SupabaseProvider'
+import { TeamContext } from '../providers/TeamProvider'
 
 export const EditTeam: Component = () => {
   const { supabase } = useContext(SupabaseContext)
@@ -46,11 +46,15 @@ export const EditTeam: Component = () => {
       <form onSubmit={saveTeam}>
         <label>
           Name:
-          <input type="text" name="name" value={team?.name()} />
+          <input type="text" name="name" value={team?.team?.().name} />
         </label>
         <label>
           Zip Code:
-          <input type="text" name="zipcode" value={team?.zipcode()} />
+          <input
+            type="text"
+            name="zipcode"
+            value={team?.team?.().zipcode ?? ''}
+          />
         </label>
         <details>
           <summary>Team Members</summary>
@@ -66,7 +70,7 @@ export const EditTeam: Component = () => {
             <input
               type="text"
               name="scheduleSheetUrl"
-              value={team?.scheduleSheetUrl?.()}
+              value={team?.team?.().scheduleSheetUrl ?? ''}
             />
           </label>
           <label>
@@ -74,7 +78,7 @@ export const EditTeam: Component = () => {
             <input
               type="text"
               name="scheduleSheetDateColumn"
-              value={team?.scheduleSheetDateColumn?.()}
+              value={team?.team?.().scheduleSheetDateColumn ?? ''}
             />
           </label>
           <label>
@@ -82,11 +86,11 @@ export const EditTeam: Component = () => {
             <input
               type="text"
               name="scheduleSheetFieldNameColumn"
-              value={team?.scheduleSheetFieldNameColumn?.()}
+              value={team?.team?.().scheduleSheetFieldNameColumn ?? ''}
             />
           </label>
         </details>
-        <div class={styles.ActionBox}>
+        <div>
           <button
             type="button"
             class="secondary"

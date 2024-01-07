@@ -3,7 +3,7 @@ import { createEffect, createSignal, Show, useContext } from 'solid-js'
 import logo from '../assets/fav.png'
 import { Loader } from '../components/Loader'
 import { Page } from '../components/Page'
-import { SupabaseContext } from '../components/SupabaseProvider'
+import { SupabaseContext } from '../providers/SupabaseProvider'
 import styles from './Login.module.css'
 
 export const Login = () => {

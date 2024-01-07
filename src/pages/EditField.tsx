@@ -1,13 +1,13 @@
 import { useNavigate, useParams } from '@solidjs/router'
 import { Component, createEffect, createSignal, useContext } from 'solid-js'
 import { parse, set, startOfDay } from 'date-fns'
-import { SupabaseContext } from '../components/SupabaseProvider'
+import { SupabaseContext } from '../providers/SupabaseProvider'
 import { Page } from '../components/Page'
 import { Header } from '../components/Header'
 import styles from './EditField.module.css'
-import { AuthenticationContext } from '../components/AuthenticationProvider'
+import { AuthenticationContext } from '../providers/AuthenticationProvider'
 import { Field as FieldType } from '../utilities/types'
-import { FieldsContext } from '../components/FieldsProvider'
+import { FieldsContext } from '../providers/FieldsProvider'
 
 export const EditField: Component = () => {
   const { supabase } = useContext(SupabaseContext)

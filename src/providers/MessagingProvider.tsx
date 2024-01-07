@@ -58,6 +58,8 @@ export const MessagingContext = createContext<{
   hasSetupMessaging: Accessor<boolean>
   ignoreMessaging: () => void
   setupMessaging: () => Promise<void>
+  resetMessaging: () => void
+  testPush: () => Promise<void>
 }>()
 
 export const MessagingProvider = (props: MessagingProvider) => {
@@ -104,6 +106,16 @@ export const MessagingProvider = (props: MessagingProvider) => {
     localStorage.setItem('sentFirebaseMessagingToken', 'true')
   }
 
+  const testPush = async () => {
+    await Promise.resolve()
+  }
+
+  const resetMessaging = async () => {
+    setHasSetupMessaging(false)
+    localStorage.removeItem('sentFirebaseMessagingToken')
+    // Note we leave the token on the server since NO ONE can delete the tokens (they aren't tied to auth)
+  }
+
   onMessage(messaging, (payload) => {
     console.log('OnMessage ', payload)
     if (Notification.permission === 'granted') {
@@ -128,6 +140,8 @@ export const MessagingProvider = (props: MessagingProvider) => {
     hasSetupMessaging,
     ignoreMessaging,
     setupMessaging,
+    resetMessaging,
+    testPush,
   }
 
   return (
