@@ -1,5 +1,5 @@
 import { useContext } from 'solid-js'
-import { SupabaseContext } from '../components/SupabaseProvider'
+import { SupabaseContext } from '../providers/SupabaseProvider'
 
 export const getUser = async () => {
   const supabaseContext = useContext(SupabaseContext)

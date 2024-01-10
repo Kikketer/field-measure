@@ -1,6 +1,6 @@
 import { Component, createSignal, useContext } from 'solid-js'
 import styles from './MessagingPrompt.module.css'
-import { MessagingContext } from './MessagingProvider'
+import { MessagingContext } from '../providers/MessagingProvider'
 
 export const MessagingPrompt: Component = () => {
   const messagingContext = useContext(MessagingContext)

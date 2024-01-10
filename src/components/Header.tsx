@@ -4,7 +4,7 @@ import { ChevronLeftIcon } from '../assets/ChevronLeftIcon'
 import { Hamburger } from './Hamburger'
 import { Field } from '../utilities/types'
 import styles from './Header.module.css'
-import { OnlineContext, OnlineStatus } from './OnlineStatusProvider'
+import { OnlineContext, OnlineStatus } from '../providers/OnlineStatusProvider'
 
 export const Header: Component<{
   children?: JSX.Element

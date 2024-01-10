@@ -9,14 +9,12 @@ import {
 } from 'solid-js'
 import { ChevronRightIcon } from '../assets/ChevronRightIcon'
 import { DaysLeftChip } from '../components/DaysLeftChip'
-import { FieldsContext } from '../components/FieldsProvider'
 import { Header } from '../components/Header'
-import { MessagingPrompt } from '../components/MessagingPrompt'
-import { MessagingContext } from '../components/MessagingProvider'
-import { OnlineContext } from '../components/OnlineStatusProvider'
 import { Page } from '../components/Page'
 import { SettingsDrawer } from '../components/SettingsDrawer'
 import { StatusLabel } from '../components/StatusLabel'
+import { FieldsContext } from '../providers/FieldsProvider'
+import { OnlineContext } from '../providers/OnlineStatusProvider'
 import { Field } from '../utilities/types'
 import { formatDate } from '../utilities/utils'
 import styles from './FieldList.module.css'
@@ -55,7 +53,7 @@ export const FieldList: Component = () => {
 
   return (
     <Page>
-      <MessagingPrompt />
+      {/*<MessagingPrompt />*/}
       <Header withMenu={true} setIsShowingDrawer={setIsShowingDrawer}>
         Fields
       </Header>
