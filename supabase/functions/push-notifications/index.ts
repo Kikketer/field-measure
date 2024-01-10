@@ -4,12 +4,14 @@ import { corsHeaders } from '../shared/_cors.ts'
 console.log('Starting push-notifications function...')
 
 Deno.serve(async (req) => {
+  console.log('Start sending notification...')
   const payload = req.headers
     .get('Authorization')
     .replace(/^Bearer /, '')
     .split('.')[1]
   const decodedPayload = JSON.parse(window.atob(payload))
 
+  console.log('Service role? ', decodedPayload.role)
   // Only allow the service role to call this edge function:
   if (decodedPayload.role !== 'service_role') {
     return new Response(JSON.stringify({}), {
