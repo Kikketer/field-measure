@@ -1,6 +1,11 @@
 import { SupabaseClient } from '@supabase/supabase-js'
-import { getMessaging, getToken, onMessage } from 'firebase/messaging'
-import { Accessor, createContext, createSignal, useContext } from 'solid-js'
+import {
+  Accessor,
+  createContext,
+  createEffect,
+  createSignal,
+  useContext,
+} from 'solid-js'
 import { AuthenticationContext } from './AuthenticationProvider'
 import { SupabaseContext } from './SupabaseProvider'
 
@@ -42,6 +47,54 @@ export const MessagingProvider = (props: MessagingProvider) => {
   const [hasSetupMessaging, setHasSetupMessaging] = createSignal(
     !!localStorage.getItem('sentMessageToken'),
   )
+  const [oneSignalLoaded, setOneSignalLoaded] = createSignal(false)
+  const [debug, setDebug] = createSignal({})
+
+  // Setup messaging:
+  window.OneSignalDeferred.push(async (OneSignal) => {
+    await OneSignal.init({
+      appId: import.meta.env.VITE_PUBLIC_PUSH_APP_ID,
+      safari_web_id: import.meta.env.VITE_PUBLIC_PUSH_SAFARI_ID,
+      allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
+      // notifyButton: {
+      //   enable: true,
+      // },
+      promptOptions: {
+        actionMessage:
+          'Would you like to be notified when fields are in need of painting?',
+        acceptButton: 'Sure',
+        slidedown: {
+          prompts: [
+            {
+              type: 'push',
+              autoPrompt: true,
+              delay: { timeDelay: 5 },
+            },
+          ],
+        },
+      },
+      welcomeNotification: {
+        disable: true,
+      },
+    })
+    setOneSignalLoaded(true)
+
+    setDebug({
+      optedIn: OneSignal.User.PushSubscription.optedIn,
+      id: OneSignal.User.PushSubscription.id,
+    })
+  })
+
+  // createEffect(() => {
+  //   if (oneSignalLoaded()) {
+  //     // setTimeout(() => {
+  //     console.log('one signal has loaded, time to prompt?')
+  //     console.log('this users push id', OneSignal.User.PushSubscription.id)
+  //     console.log('OptedIn?', OneSignal.User.PushSubscription.optedIn)
+  //     // OneSignal.Slidedown.promptPush()
+  //     // }, 5000)
+  //   }
+  // })
 
   const setupMessaging = async () => {
     try {
@@ -131,6 +184,7 @@ export const MessagingProvider = (props: MessagingProvider) => {
         setupMessaging,
         resetMessaging,
         testPush,
+        debug,
       }}
     >
       {props.children}

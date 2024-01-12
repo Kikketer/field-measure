@@ -54,7 +54,7 @@ export const SettingsDrawer = (props: {
               <button onClick={() => messaging?.testPush()}>Test Push</button>
             </li>
           </ul>
-          <p class={styles.small}>{navigator.userAgent}</p>
+          <p class={styles.small}>{messaging?.debug()}</p>
         </div>
       </div>
     </Show>
