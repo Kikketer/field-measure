@@ -1,5 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
-import { Component, createContext, JSX } from 'solid-js'
+import { createContext, JSX } from 'solid-js'
 
 const getSupabase = () => {
   return createClient(

@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 import { defineConfig } from 'vite'
 import solidPlugin from 'vite-plugin-solid'
 import { VitePWA } from 'vite-plugin-pwa'

@@ -25,7 +25,6 @@ export const TeamProvider: Component<{ children: JSX.Element }> = (props) => {
   const [team, setTeam] = createSignal({})
 
   createEffect(() => {
-    console.log('SEtting team?', auth?.user?.()?.paintTeam)
     if (!auth?.user?.()?.paintTeam) return
     setTeam(auth?.user?.()?.paintTeam)
   })
