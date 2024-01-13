@@ -159,15 +159,6 @@ export const FieldDetail: Component = () => {
             >
               Mark Painted
             </button>
-
-            {/* <Show when={getIsFieldPlayable(field())}>
-              <a role="button" class="contrast">
-                Mark Unplayable
-              </a>
-            </Show> */}
-            {/* <a role="button" class="secondary">
-              Archive
-            </a> */}
           </div>
           <ConfirmPaint
             show={showConfirmPaint}
@@ -176,6 +167,9 @@ export const FieldDetail: Component = () => {
                 thisField()?.predictedNextPaint ?? new Date(),
                 new Date(),
               )
+            }
+            reasonableLimitOfOverdueDays={() =>
+              (thisField()?.maxDryDays ?? 0) * 2
             }
             onPaint={paintField}
             onCancel={() => setShowConfirmPaint(false)}

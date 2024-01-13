@@ -7,7 +7,7 @@ export const ServiceWorker: Component = () => {
     immediate: false,
     onNeedRefresh: () => {
       // TODO make this a better looking thing:
-      if (window.confirm('New download available')) {
+      if (window.confirm('Update available, reload?')) {
         window.location.reload()
       }
     },

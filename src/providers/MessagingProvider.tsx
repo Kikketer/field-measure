@@ -35,7 +35,6 @@ const sendTokenToServer = async (
 
 export const MessagingContext = createContext<{
   hasSetupMessaging: Accessor<boolean>
-  ignoreMessaging: () => void
   setupMessaging: () => Promise<void>
   resetMessaging: () => void
   testPush: () => Promise<void>
@@ -47,8 +46,7 @@ export const MessagingProvider = (props: MessagingProvider) => {
   const [hasSetupMessaging, setHasSetupMessaging] = createSignal(
     !!localStorage.getItem('sentMessageToken'),
   )
-  const [oneSignalLoaded, setOneSignalLoaded] = createSignal(false)
-  const [debug, setDebug] = createSignal({})
+  const [debug, setDebug] = createSignal({ ready: true })
 
   // Setup messaging:
   window.OneSignalDeferred.push(async (OneSignal) => {
@@ -56,9 +54,6 @@ export const MessagingProvider = (props: MessagingProvider) => {
       appId: import.meta.env.VITE_PUBLIC_PUSH_APP_ID,
       safari_web_id: import.meta.env.VITE_PUBLIC_PUSH_SAFARI_ID,
       allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
-      // notifyButton: {
-      //   enable: true,
-      // },
       promptOptions: {
         actionMessage:
           'Would you like to be notified when fields are in need of painting?',
@@ -77,24 +72,13 @@ export const MessagingProvider = (props: MessagingProvider) => {
         disable: true,
       },
     })
-    setOneSignalLoaded(true)
 
     setDebug({
+      ...debug(),
       optedIn: OneSignal.User.PushSubscription.optedIn,
       id: OneSignal.User.PushSubscription.id,
     })
   })
-
-  // createEffect(() => {
-  //   if (oneSignalLoaded()) {
-  //     // setTimeout(() => {
-  //     console.log('one signal has loaded, time to prompt?')
-  //     console.log('this users push id', OneSignal.User.PushSubscription.id)
-  //     console.log('OptedIn?', OneSignal.User.PushSubscription.optedIn)
-  //     // OneSignal.Slidedown.promptPush()
-  //     // }, 5000)
-  //   }
-  // })
 
   const setupMessaging = async () => {
     try {
@@ -129,23 +113,18 @@ export const MessagingProvider = (props: MessagingProvider) => {
     localStorage.setItem('sentMessageToken', 'true')
   }
 
-  const ignoreMessaging = () => {
-    setHasSetupMessaging(true)
-    // Also set the local storage so we stop asking
-    localStorage.setItem('sentMessageToken', 'true')
-  }
-
   const testPush = async () => {
     await Promise.resolve()
   }
 
   const resetMessaging = async () => {
-    setHasSetupMessaging(false)
-    // Note we leave the token on the server since NO ONE can delete the tokens (they aren't tied to auth)
-    localStorage.removeItem('device_id')
-    localStorage.removeItem('sentMessageToken')
-    // Refresh the browser
-    window.location.reload()
+    // Delete the indexDb ONE_SIGNAL_SDK_DB
+    await window.indexedDB.deleteDatabase('ONE_SIGNAL_SDK_DB')
+    // Remove the local storage item "onesignal-notification-prompt"
+    localStorage.removeItem('onesignal-notification-prompt')
+    // And the "os_pageviews"
+    localStorage.removeItem('os_pageViews')
+    setDebug({ reset: true })
   }
 
   // onMessage(messaging, (payload) => {
@@ -180,7 +159,6 @@ export const MessagingProvider = (props: MessagingProvider) => {
     <MessagingContext.Provider
       value={{
         hasSetupMessaging,
-        ignoreMessaging,
         setupMessaging,
         resetMessaging,
         testPush,

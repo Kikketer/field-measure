@@ -53,7 +53,6 @@ export const FieldList: Component = () => {
 
   return (
     <Page>
-      {/*<MessagingPrompt />*/}
       <Header withMenu={true} setIsShowingDrawer={setIsShowingDrawer}>
         Fields
       </Header>
