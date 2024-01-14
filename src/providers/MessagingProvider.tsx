@@ -55,20 +55,19 @@ export const MessagingProvider = (props: MessagingProvider) => {
       appId: import.meta.env.VITE_PUBLIC_PUSH_APP_ID,
       safari_web_id: import.meta.env.VITE_PUBLIC_PUSH_SAFARI_ID,
       allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
-      // promptOptions: {
-      //   actionMessage:
-      //     'Would you like to be notified when fields are in need of painting?',
-      //   acceptButton: 'Sure',
-      //   slidedown: {
-      //     prompts: [
-      //       {
-      //         type: 'push',
-      //         autoPrompt: true,
-      //         delay: { timeDelay: 5 },
-      //       },
-      //     ],
-      //   },
-      // },
+      promptOptions: {
+        actionMessage:
+          'Would you like to be notified when fields are in need of painting?',
+        acceptButton: 'Sure',
+        slidedown: {
+          prompts: [
+            {
+              type: 'push',
+              autoPrompt: false,
+            },
+          ],
+        },
+      },
       welcomeNotification: {
         disable: true,
       },
@@ -128,14 +127,14 @@ export const MessagingProvider = (props: MessagingProvider) => {
   }
 
   const resetMessaging = async () => {
-    // // Delete the indexDb ONE_SIGNAL_SDK_DB
-    // await window.indexedDB.deleteDatabase('ONE_SIGNAL_SDK_DB')
-    // // Remove the local storage item "onesignal-notification-prompt"
-    // localStorage.removeItem('onesignal-notification-prompt')
-    // // And the "os_pageviews"
-    // localStorage.removeItem('os_pageViews')
-    // setDebug({ reset: true })
-    // hasSetupMessaging(false)
+    // Delete the indexDb ONE_SIGNAL_SDK_DB
+    await window.indexedDB.deleteDatabase('ONE_SIGNAL_SDK_DB')
+    // Remove the local storage item "onesignal-notification-prompt"
+    localStorage.removeItem('onesignal-notification-prompt')
+    // And the "os_pageviews"
+    localStorage.removeItem('os_pageViews')
+    setDebug({ reset: true })
+    hasSetupMessaging(false)
   }
 
   // createEffect(() => {
