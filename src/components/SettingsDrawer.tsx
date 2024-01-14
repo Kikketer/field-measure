@@ -8,7 +8,7 @@ export const SettingsDrawer = (props: {
   isShown: Accessor<boolean>
   setIsShowingDrawer: Setter<boolean>
 }) => {
-  const messaging = useContext(MessagingContext)
+  // const messaging = useContext(MessagingContext)
   // let drawer!: HTMLDivElement
   const { isShown } = props
 
@@ -43,24 +43,24 @@ export const SettingsDrawer = (props: {
             </A>
           </li>
         </ul>
-        <div>
-          <ul>
-            <li>
-              <button onClick={() => messaging?.resetMessaging()}>
-                Reset Push
-              </button>
-            </li>
-            <li>
-              <button onClick={() => messaging?.setupMessaging()}>
-                Setup Messaging
-              </button>
-            </li>
-            <li>
-              <button onClick={() => messaging?.testPush()}>Test Push</button>
-            </li>
-          </ul>
-          <p class={styles.small}>{JSON.stringify(messaging?.debug() ?? {})}</p>
-        </div>
+        {/*<div>*/}
+        {/*  <ul>*/}
+        {/*    <li>*/}
+        {/*      <button onClick={() => messaging?.resetMessaging()}>*/}
+        {/*        Reset Push*/}
+        {/*      </button>*/}
+        {/*    </li>*/}
+        {/*    <li>*/}
+        {/*      <button onClick={() => messaging?.setupMessaging()}>*/}
+        {/*        Setup Messaging*/}
+        {/*      </button>*/}
+        {/*    </li>*/}
+        {/*    <li>*/}
+        {/*      <button onClick={() => messaging?.testPush()}>Test Push</button>*/}
+        {/*    </li>*/}
+        {/*  </ul>*/}
+        {/*  <p class={styles.small}>{JSON.stringify(messaging?.debug() ?? {})}</p>*/}
+        {/*</div>*/}
       </div>
     </Show>
   )
