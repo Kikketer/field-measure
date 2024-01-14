@@ -51,6 +51,11 @@ export const SettingsDrawer = (props: {
               </button>
             </li>
             <li>
+              <button onClick={() => messaging?.setupMessaging()}>
+                Setup Messaging
+              </button>
+            </li>
+            <li>
               <button onClick={() => messaging?.testPush()}>Test Push</button>
             </li>
           </ul>

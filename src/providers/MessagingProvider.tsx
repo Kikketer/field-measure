@@ -46,6 +46,7 @@ export const MessagingProvider = (props: MessagingProvider) => {
   const [hasSetupMessaging, setHasSetupMessaging] = createSignal(
     !!localStorage.getItem('sentMessageToken'),
   )
+  const [oneSignalReady, setOneSignalReady] = createSignal(false)
   const [debug, setDebug] = createSignal({ ready: true })
 
   // Setup messaging:
@@ -54,25 +55,26 @@ export const MessagingProvider = (props: MessagingProvider) => {
       appId: import.meta.env.VITE_PUBLIC_PUSH_APP_ID,
       safari_web_id: import.meta.env.VITE_PUBLIC_PUSH_SAFARI_ID,
       allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
-      promptOptions: {
-        actionMessage:
-          'Would you like to be notified when fields are in need of painting?',
-        acceptButton: 'Sure',
-        slidedown: {
-          prompts: [
-            {
-              type: 'push',
-              autoPrompt: true,
-              delay: { timeDelay: 5 },
-            },
-          ],
-        },
-      },
+      // promptOptions: {
+      //   actionMessage:
+      //     'Would you like to be notified when fields are in need of painting?',
+      //   acceptButton: 'Sure',
+      //   slidedown: {
+      //     prompts: [
+      //       {
+      //         type: 'push',
+      //         autoPrompt: true,
+      //         delay: { timeDelay: 5 },
+      //       },
+      //     ],
+      //   },
+      // },
       welcomeNotification: {
         disable: true,
       },
     })
 
+    setOneSignalReady(true)
     setDebug({
       ...debug(),
       optedIn: OneSignal.User.PushSubscription.optedIn,
@@ -82,29 +84,37 @@ export const MessagingProvider = (props: MessagingProvider) => {
 
   const setupMessaging = async () => {
     try {
-      const permission = await Notification.requestPermission()
-      if (permission === 'granted') {
-        // Check if we've already sent it by checking local storage
-        const alreadySent = !!localStorage.getItem('sentMessageToken')
-        if (!alreadySent) {
-          const uniqueDeviceId = crypto.randomUUID()
-          localStorage.setItem('device_id', uniqueDeviceId)
-          // const currentToken = await getToken(messaging, {
-          //   vapidKey: VAPID_KEY,
-          // })
-          // console.log('Token: ', currentToken)
-          // await sendTokenToServer(
-          //   uniqueDeviceId,
-          //   currentToken,
-          //   supabase,
-          //   user,
-          // )
-          console.log('Successfully created the token!')
-        }
-        setHasSetupMessaging(true)
-      } else {
-        console.log('Unable to get permission to notify.')
+      if (!OneSignal) return
+      const isSupported = OneSignal.Notifications.isPushSupported()
+      if (!isSupported) return
+
+      await OneSignal.Notifications.requestPermission()
+      const permission = await OneSignal.Notifications.permission
+      setDebug({ ...debug(), permission, isSupported })
+      if (permission) {
+        console.log('permission granted!')
+        // Check to see if permissino was granted
+        // // Check if we've already sent it by checking local storage
+        // const alreadySent = !!localStorage.getItem('sentMessageToken')
+        // if (!alreadySent) {
+        // const uniqueDeviceId = crypto.randomUUID()
+        // localStorage.setItem('device_id', uniqueDeviceId)
+        // const currentToken = await getToken(messaging, {
+        //   vapidKey: VAPID_KEY,
+        // })
+        // console.log('Token: ', currentToken)
+        // await sendTokenToServer(
+        //   uniqueDeviceId,
+        //   currentToken,
+        //   supabase,
+        //   user,
+        // )
+        console.log('Successfully created the token!')
       }
+      setHasSetupMessaging(true)
+      // } else {
+      //   console.log('Unable to get permission to notify.')
+      // }
     } catch (err) {
       console.log('Error getting token: ', err)
     }
@@ -125,7 +135,14 @@ export const MessagingProvider = (props: MessagingProvider) => {
     // And the "os_pageviews"
     localStorage.removeItem('os_pageViews')
     setDebug({ reset: true })
+    hasSetupMessaging(false)
   }
+
+  createEffect(() => {
+    if (oneSignalReady() && !hasSetupMessaging()) {
+      console.log('Ask')
+    }
+  })
 
   // onMessage(messaging, (payload) => {
   //   console.log('OnMessage ', payload)
