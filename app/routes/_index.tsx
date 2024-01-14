@@ -1,5 +1,6 @@
 import { Link } from '@remix-run/react'
 import type { MetaFunction } from '@vercel/remix'
+import { useMessaging } from '~/providers/MessagingProvider'
 
 export const meta: MetaFunction = () => {
   return [
@@ -9,6 +10,8 @@ export const meta: MetaFunction = () => {
 }
 
 export default function Index() {
+  const { hasSetupMessaging } = useMessaging()
+
   return (
     <div>
       <ul>
@@ -16,6 +19,7 @@ export default function Index() {
           <Link to="field/123">Edit Field 123</Link>
         </li>
       </ul>
+      <p>Has setup: {JSON.stringify(hasSetupMessaging)}</p>
     </div>
   )
 }

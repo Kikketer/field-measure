@@ -9,6 +9,7 @@ import {
 } from '@remix-run/react'
 import { Analytics } from '@vercel/analytics/react'
 import type { LinksFunction } from '@vercel/remix'
+import { MessagingProvider } from '~/providers/MessagingProvider'
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
@@ -24,7 +25,9 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet />
+        <MessagingProvider>
+          <Outlet />
+        </MessagingProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
