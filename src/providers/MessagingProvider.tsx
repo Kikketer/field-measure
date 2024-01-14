@@ -135,7 +135,7 @@ export const MessagingProvider = (props: MessagingProvider) => {
     // And the "os_pageviews"
     localStorage.removeItem('os_pageViews')
     setDebug({ reset: true })
-    hasSetupMessaging(false)
+    // hasSetupMessaging(false)
   }
 
   // createEffect(() => {
