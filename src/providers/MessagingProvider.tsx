@@ -40,6 +40,38 @@ export const MessagingContext = createContext<{
   testPush: () => Promise<void>
 }>()
 
+// Setup messaging:
+window.OneSignalDeferred.push(async (OneSignal) => {
+  await OneSignal.init({
+    appId: import.meta.env.VITE_PUBLIC_PUSH_APP_ID,
+    safari_web_id: import.meta.env.VITE_PUBLIC_PUSH_SAFARI_ID,
+    allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
+    promptOptions: {
+      actionMessage:
+        'Would you like to be notified when fields are in need of painting?',
+      acceptButton: 'Sure',
+      slidedown: {
+        prompts: [
+          {
+            type: 'push',
+            autoPrompt: false,
+          },
+        ],
+      },
+    },
+    welcomeNotification: {
+      disable: true,
+    },
+  })
+
+  // setOneSignalReady(true)
+  // setDebug({
+  //   ...debug(),
+  //   optedIn: OneSignal.User.PushSubscription.optedIn,
+  //   id: OneSignal.User.PushSubscription.id,
+  // })
+})
+
 export const MessagingProvider = (props: MessagingProvider) => {
   const { user } = useContext(AuthenticationContext)
   const { supabase } = useContext(SupabaseContext)
@@ -48,38 +80,6 @@ export const MessagingProvider = (props: MessagingProvider) => {
   )
   const [oneSignalReady, setOneSignalReady] = createSignal(false)
   const [debug, setDebug] = createSignal({ ready: true })
-
-  // Setup messaging:
-  window.OneSignalDeferred.push(async (OneSignal) => {
-    await OneSignal.init({
-      appId: import.meta.env.VITE_PUBLIC_PUSH_APP_ID,
-      safari_web_id: import.meta.env.VITE_PUBLIC_PUSH_SAFARI_ID,
-      allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
-      promptOptions: {
-        actionMessage:
-          'Would you like to be notified when fields are in need of painting?',
-        acceptButton: 'Sure',
-        slidedown: {
-          prompts: [
-            {
-              type: 'push',
-              autoPrompt: false,
-            },
-          ],
-        },
-      },
-      welcomeNotification: {
-        disable: true,
-      },
-    })
-
-    // setOneSignalReady(true)
-    // setDebug({
-    //   ...debug(),
-    //   optedIn: OneSignal.User.PushSubscription.optedIn,
-    //   id: OneSignal.User.PushSubscription.id,
-    // })
-  })
 
   const setupMessaging = async () => {
     try {
