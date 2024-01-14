@@ -73,12 +73,12 @@ export const MessagingProvider = (props: MessagingProvider) => {
       },
     })
 
-    setOneSignalReady(true)
-    setDebug({
-      ...debug(),
-      optedIn: OneSignal.User.PushSubscription.optedIn,
-      id: OneSignal.User.PushSubscription.id,
-    })
+    // setOneSignalReady(true)
+    // setDebug({
+    //   ...debug(),
+    //   optedIn: OneSignal.User.PushSubscription.optedIn,
+    //   id: OneSignal.User.PushSubscription.id,
+    // })
   })
 
   const setupMessaging = async () => {
@@ -89,7 +89,7 @@ export const MessagingProvider = (props: MessagingProvider) => {
 
       await OneSignal.Notifications.requestPermission()
       const permission = await OneSignal.Notifications.permission
-      setDebug({ ...debug(), permission, isSupported })
+      // setDebug({ ...debug(), permission, isSupported })
       if (permission) {
         console.log('permission granted!')
         // Check to see if permissino was granted
@@ -133,8 +133,8 @@ export const MessagingProvider = (props: MessagingProvider) => {
     localStorage.removeItem('onesignal-notification-prompt')
     // And the "os_pageviews"
     localStorage.removeItem('os_pageViews')
-    setDebug({ reset: true })
-    hasSetupMessaging(false)
+    // setDebug({ reset: true })
+    // hasSetupMessaging(false)
   }
 
   // createEffect(() => {
