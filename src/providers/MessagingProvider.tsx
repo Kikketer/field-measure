@@ -111,7 +111,7 @@ export const MessagingProvider = (props: MessagingProvider) => {
         // )
         console.log('Successfully created the token!')
       }
-      setHasSetupMessaging(true)
+      // setHasSetupMessaging(true)
       // } else {
       //   console.log('Unable to get permission to notify.')
       // }
@@ -124,7 +124,7 @@ export const MessagingProvider = (props: MessagingProvider) => {
   }
 
   const testPush = async () => {
-    await Promise.resolve()
+    // OneSignal.sendSelfNotification()
   }
 
   const resetMessaging = async () => {
@@ -138,11 +138,11 @@ export const MessagingProvider = (props: MessagingProvider) => {
     hasSetupMessaging(false)
   }
 
-  createEffect(() => {
-    if (oneSignalReady() && !hasSetupMessaging()) {
-      console.log('Ask')
-    }
-  })
+  // createEffect(() => {
+  //   if (oneSignalReady() && !hasSetupMessaging()) {
+  //     console.log('Ask')
+  //   }
+  // })
 
   // onMessage(messaging, (payload) => {
   //   console.log('OnMessage ', payload)
