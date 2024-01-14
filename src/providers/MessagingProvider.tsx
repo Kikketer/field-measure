@@ -56,14 +56,14 @@ export const MessagingProvider = (props: MessagingProvider) => {
       safari_web_id: import.meta.env.VITE_PUBLIC_PUSH_SAFARI_ID,
       allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
       promptOptions: {
-        actionMessage:
-          'Would you like to be notified when fields are in need of painting?',
-        acceptButton: 'Sure',
+        // actionMessage:
+        //   'Would you like to be notified when fields are in need of painting?',
+        // acceptButton: 'Sure',
         slidedown: {
           prompts: [
             {
               type: 'push',
-              autoPrompt: false,
+              autoPrompt: true,
             },
           ],
         },
@@ -82,44 +82,44 @@ export const MessagingProvider = (props: MessagingProvider) => {
   })
 
   const setupMessaging = async () => {
-    try {
-      if (!OneSignal) return
-      const isSupported = OneSignal.Notifications.isPushSupported()
-      if (!isSupported) return
-
-      await OneSignal.Notifications.requestPermission()
-      const permission = await OneSignal.Notifications.permission
-      // setDebug({ ...debug(), permission, isSupported })
-      if (permission) {
-        console.log('permission granted!')
-        // Check to see if permissino was granted
-        // // Check if we've already sent it by checking local storage
-        // const alreadySent = !!localStorage.getItem('sentMessageToken')
-        // if (!alreadySent) {
-        // const uniqueDeviceId = crypto.randomUUID()
-        // localStorage.setItem('device_id', uniqueDeviceId)
-        // const currentToken = await getToken(messaging, {
-        //   vapidKey: VAPID_KEY,
-        // })
-        // console.log('Token: ', currentToken)
-        // await sendTokenToServer(
-        //   uniqueDeviceId,
-        //   currentToken,
-        //   supabase,
-        //   user,
-        // )
-        console.log('Successfully created the token!')
-      }
-      // setHasSetupMessaging(true)
-      // } else {
-      //   console.log('Unable to get permission to notify.')
-      // }
-    } catch (err) {
-      console.log('Error getting token: ', err)
-    }
-
-    // Regardless of what happens, let's just not ask again
-    localStorage.setItem('sentMessageToken', 'true')
+    // try {
+    //   if (!OneSignal) return
+    //   const isSupported = OneSignal.Notifications.isPushSupported()
+    //   if (!isSupported) return
+    //
+    //   await OneSignal.Notifications.requestPermission()
+    //   const permission = await OneSignal.Notifications.permission
+    //   // setDebug({ ...debug(), permission, isSupported })
+    //   if (permission) {
+    //     console.log('permission granted!')
+    //     // Check to see if permissino was granted
+    //     // // Check if we've already sent it by checking local storage
+    //     // const alreadySent = !!localStorage.getItem('sentMessageToken')
+    //     // if (!alreadySent) {
+    //     // const uniqueDeviceId = crypto.randomUUID()
+    //     // localStorage.setItem('device_id', uniqueDeviceId)
+    //     // const currentToken = await getToken(messaging, {
+    //     //   vapidKey: VAPID_KEY,
+    //     // })
+    //     // console.log('Token: ', currentToken)
+    //     // await sendTokenToServer(
+    //     //   uniqueDeviceId,
+    //     //   currentToken,
+    //     //   supabase,
+    //     //   user,
+    //     // )
+    //     console.log('Successfully created the token!')
+    //   }
+    //   // setHasSetupMessaging(true)
+    //   // } else {
+    //   //   console.log('Unable to get permission to notify.')
+    //   // }
+    // } catch (err) {
+    //   console.log('Error getting token: ', err)
+    // }
+    //
+    // // Regardless of what happens, let's just not ask again
+    // localStorage.setItem('sentMessageToken', 'true')
   }
 
   const testPush = async () => {
