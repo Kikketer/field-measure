@@ -1,26 +1,14 @@
 # Field Measurement (SolidJS)
 
-Like most of my projects this is an excuse to learn a different technology stack. This app I'm going to focus on SolidJS, html canvas and offline app.
+## Abandoned Path
 
-Apple has improved push notifications on home screen apps as well, so I'd like to explore that.
+This path (and SolidJS) was abandoned due to the low support that SolidJS has and my "I just now want to get this to work". The tipping point was push notifications. If you want to look at the learnings below you can see other technical rantings I had about SolidJS.
 
-The app itself will allow me to dynamically get the measurements needed for Soccer fields (in feet since we are calling it Soccer). There are often issues where we as the field painting crew need to make a field fit in a space. There's a lot of trig needed to calculate the distances that can be incredibly difficult when you are standing in an open field with your hands full of ropes, paint and measuring tape.
+1. Push notifications with OneSignal were not "officially" supported and caused infinite loop reloads on Chrome!
+2. There was a constant "just wrap it in a function" problem with SolidJS that made the app feel clustered and hard to read.  The DX of SolidJS isn't the greatest.
+3. SolidJS was never listed in Vercel, Supabase or OneSignal... Using these "should be better but aren't supported" libraries are nice to explore but when I need to actually get something done it's worth just using the more mainstream technologies.
 
-## Features
-
-- Get measurements for any field size to fit in any space
-- Know when you need to paint a field next given rainfall and time factors
-- Each field degradation is independently tracked and learns based on your painting routine
-
-## TODOs
-
-- Push notifications using Web Push
-- Connect to the game schedule sheets and use that in repaint factors
-
-## Stretch Goals
-
-1. Make it a SPA so we can "install" it on your phone (offline as well)
-2. Printable? Maybe? 😃
+This project is now going to be written using Remix + Chakra to make it easier to get it to production and "just get it done".
 
 ## Learnings
 
