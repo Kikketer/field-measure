@@ -128,13 +128,13 @@ export const MessagingProvider = (props: MessagingProvider) => {
   }
 
   const resetMessaging = async () => {
-    // Delete the indexDb ONE_SIGNAL_SDK_DB
-    await window.indexedDB.deleteDatabase('ONE_SIGNAL_SDK_DB')
-    // Remove the local storage item "onesignal-notification-prompt"
-    localStorage.removeItem('onesignal-notification-prompt')
-    // And the "os_pageviews"
-    localStorage.removeItem('os_pageViews')
-    setDebug({ reset: true })
+    // // Delete the indexDb ONE_SIGNAL_SDK_DB
+    // await window.indexedDB.deleteDatabase('ONE_SIGNAL_SDK_DB')
+    // // Remove the local storage item "onesignal-notification-prompt"
+    // localStorage.removeItem('onesignal-notification-prompt')
+    // // And the "os_pageviews"
+    // localStorage.removeItem('os_pageViews')
+    // setDebug({ reset: true })
     // hasSetupMessaging(false)
   }
 
