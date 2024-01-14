@@ -10,15 +10,15 @@ export const AuthRouter = () => {
   return (
     <AuthenticationProvider>
       <Authenticated>
-        <MessagingProvider>
-          <VisibleProvider>
-            <TeamProvider>
-              <FieldsProvider>
-                <Outlet />
-              </FieldsProvider>
-            </TeamProvider>
-          </VisibleProvider>
-        </MessagingProvider>
+        {/*<MessagingProvider>*/}
+        <VisibleProvider>
+          <TeamProvider>
+            <FieldsProvider>
+              <Outlet />
+            </FieldsProvider>
+          </TeamProvider>
+        </VisibleProvider>
+        {/*</MessagingProvider>*/}
       </Authenticated>
     </AuthenticationProvider>
   )

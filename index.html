@@ -19,23 +19,7 @@
         OneSignal.init({
           appId: '1fa87277-be4d-4598-82dd-5a0cd3ab0547',
           safari_web_id: 'web.onesignal.auto.3f58661c-f8ad-4946-a9b6-84125eec4421',
-          allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
-          promptOptions: {
-            // actionMessage:
-            //   'Would you like to be notified when fields are in need of painting?',
-            // acceptButton: 'Sure',
-            slidedown: {
-              prompts: [
-                {
-                  type: 'push',
-                  autoPrompt: false,
-                },
-              ],
-            },
-          },
-          welcomeNotification: {
-            disable: true,
-          },
+          // allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
         })
 
         // setOneSignalReady(true)
