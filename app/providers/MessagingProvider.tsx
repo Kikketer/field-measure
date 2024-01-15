@@ -6,7 +6,12 @@ import React, {
   PropsWithChildren,
 } from 'react'
 
-const MessagingContext = createContext<{ hasSetupMessaging: boolean }>({})
+type MessagingProvider = {
+  setupMessaging: () => void
+  hasSetupMessaging: boolean
+}
+
+const MessagingContext = createContext<MessagingProvider>(undefined as any)
 
 export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
   const [hasSetupMessaging, setHasSetupMessaging] = useState(false)

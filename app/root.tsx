@@ -1,7 +1,6 @@
 import { cssBundleHref } from '@remix-run/css-bundle'
 import {
   Links,
-  LiveReload,
   Meta,
   Outlet,
   Scripts,
@@ -9,6 +8,7 @@ import {
 } from '@remix-run/react'
 import { Analytics } from '@vercel/analytics/react'
 import type { LinksFunction } from '@vercel/remix'
+import { useSWEffect, LiveReload } from '@remix-pwa/sw'
 import { MessagingProvider } from '~/providers/MessagingProvider'
 
 export const links: LinksFunction = () => [
@@ -16,6 +16,8 @@ export const links: LinksFunction = () => [
 ]
 
 export default function App() {
+  useSWEffect()
+
   return (
     <html lang="en">
       <head>
