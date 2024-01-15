@@ -1,22 +1,22 @@
-import { json } from '@remix-run/node';
+import { json } from '@remix-run/node'
 
 export const loader = async () => {
   return json(
     {
-      short_name: 'PWA',
-      name: 'Remix PWA',
+      short_name: 'LineUp',
+      name: 'LineUp Field Manager',
       start_url: '/',
       display: 'standalone',
       background_color: '#d3d7dd',
-      theme_color: '#c34138',
+      theme_color: '#54A135',
       shortcuts: [
         {
-          name: 'Homepage',
+          name: 'Fields',
           url: '/',
           icons: [
             {
-              src: '/icons/android-icon-96x96.png',
-              sizes: '96x96',
+              src: '/icons/pwa-192x192.png',
+              sizes: '192x192',
               type: 'image/png',
               purpose: 'any monochrome',
             },
@@ -25,44 +25,25 @@ export const loader = async () => {
       ],
       icons: [
         {
-          src: '/icons/android-icon-36x36.png',
-          sizes: '36x36',
+          src: 'icons/pwa-64x64.png',
+          sizes: '64x64',
           type: 'image/png',
-          density: '0.75',
         },
         {
-          src: '/icons/android-icon-48x48.png',
-          sizes: '48x48',
-          type: 'image/png',
-          density: '1.0',
-        },
-        {
-          src: '/icons/android-icon-72x72.png',
-          sizes: '72x72',
-          type: 'image/png',
-          density: '1.5',
-        },
-        {
-          src: '/icons/android-icon-96x96.png',
-          sizes: '96x96',
-          type: 'image/png',
-          density: '2.0',
-        },
-        {
-          src: '/icons/android-icon-144x144.png',
-          sizes: '144x144',
-          type: 'image/png',
-          density: '3.0',
-        },
-        {
-          src: '/icons/android-chrome-192x192.png',
+          src: 'icons/pwa-192x192.png',
           sizes: '192x192',
           type: 'image/png',
         },
         {
-          src: '/icons/android-chrome-256x256.png',
-          sizes: '256x256',
+          src: 'icons/pwa-512x512.png',
+          sizes: '512x512',
           type: 'image/png',
+        },
+        {
+          src: 'icons/maskable-icon-512x512.png',
+          sizes: '512x512',
+          type: 'image/png',
+          purpose: 'maskable',
         },
       ],
     },
@@ -71,6 +52,6 @@ export const loader = async () => {
         'Cache-Control': 'public, max-age=600',
         'Content-Type': 'application/manifest+json',
       },
-    }
-  );
-};
+    },
+  )
+}

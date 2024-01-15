@@ -3,6 +3,7 @@
 export default {
   ignoredRouteFiles: ['**/.*'],
   serverBuildTarget: 'vercel',
+  serverDependenciesToBundle: [/@remix-pwa\/.*/],
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",
   // publicPath: "/build/",
