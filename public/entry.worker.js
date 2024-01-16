@@ -1919,13 +1919,6 @@ var require_root = __commonJS({
   }
 });
 
-// routes-module:routes/manifest[.]webmanifest.ts?worker
-var require_manifest_webmanifest = __commonJS({
-  "routes-module:routes/manifest[.]webmanifest.ts?worker"(exports, module) {
-    module.exports = {};
-  }
-});
-
 // routes-module:routes/field.$fieldId.tsx?worker
 var require_field_fieldId = __commonJS({
   "routes-module:routes/field.$fieldId.tsx?worker"(exports, module) {
@@ -5957,7 +5950,7 @@ var RemixCache = class {
       await this._lruCleanup();
       return await cache.put(request, toBeCachedRes.clone());
     } catch (error) {
-      if (false)
+      if (true)
         console.error("Failed to put to cache:", error);
     }
   }
@@ -6231,7 +6224,7 @@ var methodToColorMap = {
   groupEnd: null
   // No colored prefix on groupEnd
 };
-var logger = true ? (() => {
+var logger = false ? (() => {
   const api = {};
   const loggerMethods = Object.keys(methodToColorMap);
   for (const key of loggerMethods) {
@@ -6380,7 +6373,7 @@ var RemixNavigationHandler = class extends MessageHandler {
       if (!existingDocument || !isMount) {
         const response = await fetch(documentUrl);
         cachePromises.set(documentUrl, documentCache2.put(documentUrl, response).catch((error) => {
-          if (false)
+          if (true)
             logger.error(`Failed to cache document for ${documentUrl}:`, error);
         }));
       }
@@ -6393,11 +6386,11 @@ var RemixNavigationHandler = class extends MessageHandler {
             search = search ? `?${search}` : "";
             const url = location.pathname + search + location.hash;
             if (!cachePromises.has(url)) {
-              if (false)
+              if (true)
                 logger.debug("Caching data for:", url);
               const response = await fetch(url);
               cachePromises.set(url, dataCache2.put(url, response).catch((error) => {
-                if (false)
+                if (true)
                   logger.error(`Failed to cache data for ${url}:`, error);
               }));
             }
@@ -6457,13 +6450,12 @@ self.addEventListener("message", (event) => {
 
 // entry-module:@remix-pwa/build/magic
 var route0 = __toESM(require_root());
-var route1 = __toESM(require_manifest_webmanifest());
-var route2 = __toESM(require_field_fieldId());
-var route3 = __toESM(require_index());
-var route4 = __toESM(require_edge());
+var route1 = __toESM(require_field_fieldId());
+var route2 = __toESM(require_index());
+var route3 = __toESM(require_edge());
 
 // assets-module:@remix-pwa/dev?assets
-var assets = ["/build/root-7ENV7Q4Z.js", "/build/manifest-4C8EE4D7.js", "/build/entry.client-WM652J5M.js", "/build/routes/manifest[.]webmanifest-JH7MBYEB.js", "/build/routes/field.$fieldId-2V3EJQJH.js", "/build/routes/edge-JMWXTENQ.js", "/build/routes/_index-KCGDNDYX.js", "/build/_shared/chunk-VEM2C3W4.js", "/build/_shared/chunk-QIA4CDLF.js", "/build/_shared/chunk-Q3IECNXJ.js", "/build/_shared/chunk-PETVKQDC.js", "/build/_shared/chunk-GDLBX7ER.js"];
+var assets = ["/build/root-RAVMO6ZB.js", "/build/manifest-FE609815.js", "/build/entry.client-G63HIULT.js", "/build/__remix_entry_dev-YZNY4VGK.js", "/build/routes/manifest[.]webmanifest-J3KYYY3Q.js", "/build/routes/field.$fieldId-ACA4C26X.js", "/build/routes/edge-JJ2Z3JZG.js", "/build/routes/_index-5QAKQCQ6.js", "/build/_shared/runtime-GC7QIU56.js", "/build/_shared/remix_hmr-QT7YIOAS.js", "/build/_shared/react-dom-BEFB7ICU.js", "/build/_shared/react-3OYUNTOK.js", "/build/_shared/jsx-runtime-7NXSP56X.js", "/build/_shared/jsx-dev-runtime-RDH4Y5YT.js", "/build/_shared/esm-C6NAFRU7.js", "/build/_shared/client-DFZR44C7.js", "/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-VXABZRIN.js", "/build/_shared/chunk-VH52FOJI.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-SSZVLXBQ.js", "/build/_shared/chunk-PNG5AS42.js", "/build/_shared/chunk-OAGIBAMZ.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-BOXFZXVX.js"];
 
 // entry-module:@remix-pwa/build/magic
 var routes = {
@@ -6475,21 +6467,13 @@ var routes = {
     caseSensitive: void 0,
     module: route0
   },
-  "routes/manifest[.]webmanifest": {
-    id: "routes/manifest[.]webmanifest",
-    parentId: "root",
-    path: "manifest.webmanifest",
-    index: void 0,
-    caseSensitive: void 0,
-    module: route1
-  },
   "routes/field.$fieldId": {
     id: "routes/field.$fieldId",
     parentId: "root",
     path: "field/:fieldId",
     index: void 0,
     caseSensitive: void 0,
-    module: route2
+    module: route1
   },
   "routes/_index": {
     id: "routes/_index",
@@ -6497,7 +6481,7 @@ var routes = {
     path: void 0,
     index: true,
     caseSensitive: void 0,
-    module: route3
+    module: route2
   },
   "routes/edge": {
     id: "routes/edge",
@@ -6505,7 +6489,7 @@ var routes = {
     path: "edge",
     index: void 0,
     caseSensitive: void 0,
-    module: route4
+    module: route3
   }
 };
 var entry = { module: entry_worker_exports };
