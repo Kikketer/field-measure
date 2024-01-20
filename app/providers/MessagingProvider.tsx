@@ -24,18 +24,22 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
     try {
       console.log('Setting up!')
       setLog('Setting up!')
-      await OneSignal.init({ appId: '686428fa-a910-4e8d-b932-44b14cb9261f' })
-      // await OneSignal.init({
-      //   appId: '2cf5c0d3-e4b9-4890-ab37-48b14e268492',
-      //   allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
-      // })
+      await OneSignal.init({
+        appId: import.meta.env.VITE_PUBLIC_PUSH_APP_ID,
+        allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
+        notifyButton: {
+          enable: true,
+        },
+        serviceWorkerParam: { scope: '/push/onesignal/' },
+        serviceWorkerPath: 'push/onesignal/OneSignalSDKWorker.js',
+      })
       console.log(OneSignal.User.PushSubscription.optedIn)
       // if (hasInitialized.current) {
       //   console.log('Already initialized!')
       //   setLog(log + '\nAlready initialized!')
       //   return
       // }
-      await OneSignal.Slidedown.promptPush()
+      // await OneSignal.Slidedown.promptPush()
       hasInitialized.current = true
       setLog(log + '\nSetup!')
     } catch (err) {
