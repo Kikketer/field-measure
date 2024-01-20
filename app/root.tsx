@@ -5,9 +5,11 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from '@remix-run/react'
 import { Analytics } from '@vercel/analytics/react'
 import type { LinksFunction } from '@vercel/remix'
+import { json } from '@vercel/remix'
 import { useSWEffect, LiveReload } from '@remix-pwa/sw'
 import { MessagingProvider } from '~/providers/MessagingProvider'
 
@@ -15,7 +17,18 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
 ]
 
+export const loader = async () => {
+  // Set some environment variables
+  return json({
+    ENV: {
+      // Only add variables that are safe to expose to the client
+      VITE_PUBLIC_PUSH_APP_ID: process.env.VITE_PUBLIC_PUSH_APP_ID,
+    },
+  })
+}
+
 export default function App() {
+  const data = useLoaderData<typeof loader>()
   useSWEffect()
 
   return (
@@ -27,6 +40,11 @@ export default function App() {
         <Meta />
         <link rel="manifest" href="/manifest.webmanifest" />
         <Links />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(data.ENV)}`,
+          }}
+        />
         {/*<script*/}
         {/*  src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js"*/}
         {/*  defer*/}

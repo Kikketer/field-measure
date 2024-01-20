@@ -25,7 +25,7 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
       console.log('Setting up!')
       setLog('Setting up!')
       await OneSignal.init({
-        appId: import.meta.env.VITE_PUBLIC_PUSH_APP_ID,
+        appId: window.ENV.VITE_PUBLIC_PUSH_APP_ID,
         allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
         notifyButton: {
           enable: true,
