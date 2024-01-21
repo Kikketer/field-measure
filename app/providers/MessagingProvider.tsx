@@ -15,16 +15,21 @@ type MessagingProvider = {
 
 const MessagingContext = createContext<MessagingProvider>(undefined as any)
 
-export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
+export const MessagingProvider: FC<PropsWithChildren<{ appId?: string }>> = ({
+  appId,
+  children,
+}) => {
   const [hasSetupMessaging, setHasSetupMessaging] = useState(false)
   const [log, setLog] = useState('')
   const [hasInitialized, setHasInitialized] = useState(false)
 
   // Setup the messaging on initial load
   useEffect(() => {
+    if (!appId) return
+
     setLog(log + `\nSetting up messaging`)
     OneSignal.init({
-      appId: window.ENV.VITE_PUBLIC_PUSH_APP_ID,
+      appId,
       allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
       serviceWorkerParam: { scope: '/push/onesignal/' },
       serviceWorkerPath: 'push/onesignal/OneSignalSDKWorker.js',
@@ -42,7 +47,7 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
         setHasInitialized(false)
         setLog(log + `\nFailed ${err}`)
       })
-  }, [])
+  }, [appId])
 
   return (
     <MessagingContext.Provider

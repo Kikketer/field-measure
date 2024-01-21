@@ -9,14 +9,17 @@ export const meta: MetaFunction = () => {
   ]
 }
 
-export default function Index() {
+export default function _index() {
   const { log } = useMessaging()
 
   return (
     <div>
       <ul>
         <li>
-          <Link to="field/123">Edit Field 123</Link>
+          <Link to="fields">Fields Base</Link>
+        </li>
+        <li>
+          <Link to="fields/1111">Fields ID</Link>
         </li>
       </ul>
       <pre>{log}</pre>

@@ -1926,9 +1926,9 @@ var require_manifest_webmanifest = __commonJS({
   }
 });
 
-// routes-module:routes/field.$fieldId.tsx?worker
-var require_field_fieldId = __commonJS({
-  "routes-module:routes/field.$fieldId.tsx?worker"(exports, module) {
+// routes-module:routes/fields.$fieldId/route.tsx?worker
+var require_route = __commonJS({
+  "routes-module:routes/fields.$fieldId/route.tsx?worker"(exports, module) {
     module.exports = {};
   }
 });
@@ -1936,6 +1936,13 @@ var require_field_fieldId = __commonJS({
 // routes-module:routes/_index.tsx?worker
 var require_index = __commonJS({
   "routes-module:routes/_index.tsx?worker"(exports, module) {
+    module.exports = {};
+  }
+});
+
+// routes-module:routes/fields/route.tsx?worker
+var require_route2 = __commonJS({
+  "routes-module:routes/fields/route.tsx?worker"(exports, module) {
     module.exports = {};
   }
 });
@@ -6458,12 +6465,13 @@ self.addEventListener("message", (event) => {
 // entry-module:@remix-pwa/build/magic
 var route0 = __toESM(require_root());
 var route1 = __toESM(require_manifest_webmanifest());
-var route2 = __toESM(require_field_fieldId());
+var route2 = __toESM(require_route());
 var route3 = __toESM(require_index());
-var route4 = __toESM(require_edge());
+var route4 = __toESM(require_route2());
+var route5 = __toESM(require_edge());
 
 // assets-module:@remix-pwa/dev?assets
-var assets = ["/build/root-I57ILVKR.js", "/build/manifest-3BB661C0.js", "/build/entry.client-G63HIULT.js", "/build/__remix_entry_dev-YZNY4VGK.js", "/build/routes/manifest[.]webmanifest-J3KYYY3Q.js", "/build/routes/field.$fieldId-ACA4C26X.js", "/build/routes/edge-JJ2Z3JZG.js", "/build/routes/_index-BKOEVZYZ.js", "/build/_shared/runtime-GC7QIU56.js", "/build/_shared/remix_hmr-QT7YIOAS.js", "/build/_shared/react-dom-BEFB7ICU.js", "/build/_shared/react-3OYUNTOK.js", "/build/_shared/jsx-runtime-7NXSP56X.js", "/build/_shared/jsx-dev-runtime-RDH4Y5YT.js", "/build/_shared/esm-C6NAFRU7.js", "/build/_shared/client-DFZR44C7.js", "/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-ZLEUZWCO.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-VXABZRIN.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-SSZVLXBQ.js", "/build/_shared/chunk-PNG5AS42.js", "/build/_shared/chunk-OAGIBAMZ.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-BOXFZXVX.js"];
+var assets = ["/build/root-BRBYO4GG.js", "/build/manifest-E5C07469.js", "/build/entry.client-AVVRTED3.js", "/build/__remix_entry_dev-EVQQKIQ7.js", "/build/routes/manifest[.]webmanifest-J3KYYY3Q.js", "/build/routes/fields.$fieldId-S26XCZ6C.js", "/build/routes/fields-FIGSHAEA.js", "/build/routes/edge-X6BAFUZ3.js", "/build/routes/_index-C4AQ4O6Y.js", "/build/_shared/runtime-GC7QIU56.js", "/build/_shared/remix_hmr-QT7YIOAS.js", "/build/_shared/react-dom-BEFB7ICU.js", "/build/_shared/react-3OYUNTOK.js", "/build/_shared/jsx-runtime-7NXSP56X.js", "/build/_shared/jsx-dev-runtime-RDH4Y5YT.js", "/build/_shared/esm-C6NAFRU7.js", "/build/_shared/client-DFZR44C7.js", "/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-VXABZRIN.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-SSZVLXBQ.js", "/build/_shared/chunk-RVONGBQQ.js", "/build/_shared/chunk-PNG5AS42.js", "/build/_shared/chunk-OAGIBAMZ.js", "/build/_shared/chunk-M4O26PSN.js", "/build/_shared/chunk-LNVAN4OK.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/browser-EJYSO4LH.js", "/build/_shared/browser-43RDCSG3.js"];
 
 // entry-module:@remix-pwa/build/magic
 var routes = {
@@ -6483,10 +6491,10 @@ var routes = {
     caseSensitive: void 0,
     module: route1
   },
-  "routes/field.$fieldId": {
-    id: "routes/field.$fieldId",
-    parentId: "root",
-    path: "field/:fieldId",
+  "routes/fields.$fieldId": {
+    id: "routes/fields.$fieldId",
+    parentId: "routes/fields",
+    path: ":fieldId",
     index: void 0,
     caseSensitive: void 0,
     module: route2
@@ -6499,13 +6507,21 @@ var routes = {
     caseSensitive: void 0,
     module: route3
   },
+  "routes/fields": {
+    id: "routes/fields",
+    parentId: "root",
+    path: "fields",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route4
+  },
   "routes/edge": {
     id: "routes/edge",
     parentId: "root",
     path: "edge",
     index: void 0,
     caseSensitive: void 0,
-    module: route4
+    module: route5
   }
 };
 var entry = { module: entry_worker_exports };
