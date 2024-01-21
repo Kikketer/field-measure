@@ -10,7 +10,7 @@ export const meta: MetaFunction = () => {
 }
 
 export default function Index() {
-  const { hasSetupMessaging, setupMessaging, log } = useMessaging()
+  const { log } = useMessaging()
 
   return (
     <div>
@@ -19,8 +19,6 @@ export default function Index() {
           <Link to="field/123">Edit Field 123</Link>
         </li>
       </ul>
-      <button onClick={() => setupMessaging()}>Setup Messaging</button>
-      <p>Has setup: {JSON.stringify(hasSetupMessaging)}</p>
       <pre>{log}</pre>
     </div>
   )
