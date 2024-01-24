@@ -1,5 +1,6 @@
 import { Link } from '@remix-run/react'
 import type { MetaFunction } from '@vercel/remix'
+import { useAuthentication } from '~/providers/AuthenticationProvider'
 
 export const meta: MetaFunction = () => {
   return [
@@ -9,16 +10,24 @@ export const meta: MetaFunction = () => {
 }
 
 export default function _index() {
+  const { loading, signIn, signOut, user } = useAuthentication()
+
   return (
     <div>
       <ul>
         <li>
           <Link to="fields">Fields Base</Link>
         </li>
-        <li>
-          <Link to="fields/1111">Fields ID</Link>
-        </li>
       </ul>
+      <pre>
+        {JSON.stringify(loading)} and {JSON.stringify(!!user)}
+      </pre>
+      <button type="button" onClick={() => signIn()}>
+        Login
+      </button>
+      <button type="button" onClick={() => signOut()}>
+        Log out
+      </button>
     </div>
   )
 }

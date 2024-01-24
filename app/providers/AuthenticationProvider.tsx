@@ -1,4 +1,3 @@
-// context/AuthContext.tsx
 import React, {
   createContext,
   FC,
@@ -8,16 +7,25 @@ import React, {
   useState,
 } from 'react'
 import { useSupabase } from '~/providers/SupabaseProvider'
+import type { User } from '@supabase/supabase-js'
 
-const AuthContext = createContext<{ signIn: () => Promise<void> } | undefined>(
-  undefined,
-)
+const AuthContext = createContext<
+  | {
+      loading?: boolean
+      signIn: () => Promise<void>
+      signOut: () => Promise<void>
+      user?: User
+    }
+  | undefined
+>(undefined)
 
 export const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
   const supabase = useSupabase()
+  const [user, setUser] = useState<User | undefined>()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!supabase) return
+    if (!supabase || user) return
 
     // Check active sessions and sets the user
     supabase.auth
@@ -30,6 +38,7 @@ export const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
             session?.data?.session?.provider_token ?? '',
           )
         }
+        // setUser(session?.data?.user)
       })
       .catch((err) => {
         console.error(err)
@@ -37,9 +46,9 @@ export const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
 
     // Listen for changes on auth state (login, signup, logout)
     const { data: listener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        // setUser(session?.user || null)
-        console.log('authentication has changed, event: ', event)
+      (_event, session) => {
+        setUser(session?.user)
+        setLoading(false)
       },
     )
 
@@ -61,16 +70,17 @@ export const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
     })
   }
 
-  // // Sign out
-  // const signOut = async () => {
-  //   await supabase.auth.signOut()
-  //   setUser(null)
-  // }
+  // Sign out
+  const signOut = async () => {
+    await supabase.auth.signOut()
+    setUser(undefined)
+  }
 
   const value = {
-    // user,
+    loading,
+    user,
     signIn,
-    // signOut,
+    signOut,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

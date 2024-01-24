@@ -11,7 +11,9 @@ import { Analytics } from '@vercel/analytics/react'
 import type { LinksFunction } from '@vercel/remix'
 import { json } from '@vercel/remix'
 import { useSWEffect, LiveReload } from '@remix-pwa/sw'
+import { AuthenticationProvider } from '~/providers/AuthenticationProvider'
 import { MessagingProvider } from '~/providers/MessagingProvider'
+import { SupabaseProvider } from '~/providers/SupabaseProvider'
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
@@ -50,7 +52,11 @@ export default function App() {
       </head>
       <body>
         {/*<MessagingProvider>*/}
-        <Outlet />
+        <SupabaseProvider>
+          <AuthenticationProvider>
+            <Outlet />
+          </AuthenticationProvider>
+        </SupabaseProvider>
         {/*</MessagingProvider>*/}
         <ScrollRestoration />
         <Scripts />

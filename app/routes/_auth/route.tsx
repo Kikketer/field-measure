@@ -1,22 +1,21 @@
-import { Outlet } from '@remix-run/react'
-import { AuthenticationProvider } from '~/providers/AuthenticationProvider'
-import { SupabaseProvider } from '~/providers/SupabaseProvider'
+import { Outlet, useNavigate } from '@remix-run/react'
+import { useEffect } from 'react'
+import { useAuthentication } from '~/providers/AuthenticationProvider'
 
-function Authenticated() {
+export default function Authenticated() {
+  const { user, loading } = useAuthentication()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!user && !loading) {
+      navigate('/', { replace: true })
+    }
+  }, [user, loading])
+
   return (
     <div>
       <h1>Auth</h1>
       <Outlet />
     </div>
-  )
-}
-
-export default function AuthenticatedRoute() {
-  return (
-    <SupabaseProvider>
-      <AuthenticationProvider>
-        <Authenticated />
-      </AuthenticationProvider>
-    </SupabaseProvider>
   )
 }
