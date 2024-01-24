@@ -1,6 +1,5 @@
 import { Link } from '@remix-run/react'
 import type { MetaFunction } from '@vercel/remix'
-import { useMessaging } from '~/providers/MessagingProvider'
 
 export const meta: MetaFunction = () => {
   return [
@@ -10,8 +9,6 @@ export const meta: MetaFunction = () => {
 }
 
 export default function _index() {
-  const { log } = useMessaging()
-
   return (
     <div>
       <ul>
@@ -22,7 +19,6 @@ export default function _index() {
           <Link to="fields/1111">Fields ID</Link>
         </li>
       </ul>
-      <pre>{log}</pre>
     </div>
   )
 }

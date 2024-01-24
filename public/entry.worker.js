@@ -1926,9 +1926,16 @@ var require_manifest_webmanifest = __commonJS({
   }
 });
 
-// routes-module:routes/fields.$fieldId/route.tsx?worker
+// routes-module:routes/_auth.fields.$fieldId/route.tsx?worker
 var require_route = __commonJS({
-  "routes-module:routes/fields.$fieldId/route.tsx?worker"(exports, module) {
+  "routes-module:routes/_auth.fields.$fieldId/route.tsx?worker"(exports, module) {
+    module.exports = {};
+  }
+});
+
+// routes-module:routes/_auth.fields/route.tsx?worker
+var require_route2 = __commonJS({
+  "routes-module:routes/_auth.fields/route.tsx?worker"(exports, module) {
     module.exports = {};
   }
 });
@@ -1940,9 +1947,9 @@ var require_index = __commonJS({
   }
 });
 
-// routes-module:routes/fields/route.tsx?worker
-var require_route2 = __commonJS({
-  "routes-module:routes/fields/route.tsx?worker"(exports, module) {
+// routes-module:routes/_auth/route.tsx?worker
+var require_route3 = __commonJS({
+  "routes-module:routes/_auth/route.tsx?worker"(exports, module) {
     module.exports = {};
   }
 });
@@ -6466,12 +6473,13 @@ self.addEventListener("message", (event) => {
 var route0 = __toESM(require_root());
 var route1 = __toESM(require_manifest_webmanifest());
 var route2 = __toESM(require_route());
-var route3 = __toESM(require_index());
-var route4 = __toESM(require_route2());
-var route5 = __toESM(require_edge());
+var route3 = __toESM(require_route2());
+var route4 = __toESM(require_index());
+var route5 = __toESM(require_route3());
+var route6 = __toESM(require_edge());
 
 // assets-module:@remix-pwa/dev?assets
-var assets = ["/build/root-BRBYO4GG.js", "/build/manifest-E5C07469.js", "/build/entry.client-AVVRTED3.js", "/build/__remix_entry_dev-EVQQKIQ7.js", "/build/routes/manifest[.]webmanifest-J3KYYY3Q.js", "/build/routes/fields.$fieldId-S26XCZ6C.js", "/build/routes/fields-FIGSHAEA.js", "/build/routes/edge-X6BAFUZ3.js", "/build/routes/_index-C4AQ4O6Y.js", "/build/_shared/runtime-GC7QIU56.js", "/build/_shared/remix_hmr-QT7YIOAS.js", "/build/_shared/react-dom-BEFB7ICU.js", "/build/_shared/react-3OYUNTOK.js", "/build/_shared/jsx-runtime-7NXSP56X.js", "/build/_shared/jsx-dev-runtime-RDH4Y5YT.js", "/build/_shared/esm-C6NAFRU7.js", "/build/_shared/client-DFZR44C7.js", "/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-VXABZRIN.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-SSZVLXBQ.js", "/build/_shared/chunk-RVONGBQQ.js", "/build/_shared/chunk-PNG5AS42.js", "/build/_shared/chunk-OAGIBAMZ.js", "/build/_shared/chunk-M4O26PSN.js", "/build/_shared/chunk-LNVAN4OK.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/browser-EJYSO4LH.js", "/build/_shared/browser-43RDCSG3.js"];
+var assets = ["/build/root-HR5HTXF7.js", "/build/manifest-C0735D34.js", "/build/entry.client-AVVRTED3.js", "/build/__remix_entry_dev-EVQQKIQ7.js", "/build/routes/manifest[.]webmanifest-J3KYYY3Q.js", "/build/routes/edge-X6BAFUZ3.js", "/build/routes/_index-NLWQNDZ5.js", "/build/routes/_auth.fields.$fieldId-RM2TC4TR.js", "/build/routes/_auth.fields-FREMCNSD.js", "/build/routes/_auth-5BIVPM5N.js", "/build/_shared/runtime-GC7QIU56.js", "/build/_shared/remix_hmr-QT7YIOAS.js", "/build/_shared/react-dom-BEFB7ICU.js", "/build/_shared/react-3OYUNTOK.js", "/build/_shared/jsx-runtime-7NXSP56X.js", "/build/_shared/jsx-dev-runtime-RDH4Y5YT.js", "/build/_shared/esm-C6NAFRU7.js", "/build/_shared/client-DFZR44C7.js", "/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-VXABZRIN.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-SSZVLXBQ.js", "/build/_shared/chunk-PNG5AS42.js", "/build/_shared/chunk-OAGIBAMZ.js", "/build/_shared/chunk-M4O26PSN.js", "/build/_shared/chunk-LBKVDQVA.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/browser-EJYSO4LH.js", "/build/_shared/browser-43RDCSG3.js"];
 
 // entry-module:@remix-pwa/build/magic
 var routes = {
@@ -6491,13 +6499,21 @@ var routes = {
     caseSensitive: void 0,
     module: route1
   },
-  "routes/fields.$fieldId": {
-    id: "routes/fields.$fieldId",
-    parentId: "routes/fields",
+  "routes/_auth.fields.$fieldId": {
+    id: "routes/_auth.fields.$fieldId",
+    parentId: "routes/_auth.fields",
     path: ":fieldId",
     index: void 0,
     caseSensitive: void 0,
     module: route2
+  },
+  "routes/_auth.fields": {
+    id: "routes/_auth.fields",
+    parentId: "routes/_auth",
+    path: "fields",
+    index: void 0,
+    caseSensitive: void 0,
+    module: route3
   },
   "routes/_index": {
     id: "routes/_index",
@@ -6505,15 +6521,15 @@ var routes = {
     path: void 0,
     index: true,
     caseSensitive: void 0,
-    module: route3
+    module: route4
   },
-  "routes/fields": {
-    id: "routes/fields",
+  "routes/_auth": {
+    id: "routes/_auth",
     parentId: "root",
-    path: "fields",
+    path: void 0,
     index: void 0,
     caseSensitive: void 0,
-    module: route4
+    module: route5
   },
   "routes/edge": {
     id: "routes/edge",
@@ -6521,7 +6537,7 @@ var routes = {
     path: "edge",
     index: void 0,
     caseSensitive: void 0,
-    module: route5
+    module: route6
   }
 };
 var entry = { module: entry_worker_exports };

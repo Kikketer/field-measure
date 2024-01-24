@@ -1,45 +1,47 @@
-import { useLoaderData } from '@remix-run/react'
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
-import { json } from '@vercel/remix'
 import {
   createContext,
   FC,
   PropsWithChildren,
   useContext,
   useEffect,
-  useMemo,
+  useState,
 } from 'react'
 
-type SupabaseProvider = {
-  supabase: SupabaseClient<Record<string, any>, 'public', any>
-}
+type SupabaseProvider =
+  | SupabaseClient<Record<string, any>, 'public', any>
+  | undefined
 
 const SupabaseContext = createContext<SupabaseProvider>(undefined as any)
 
-export const SupabaseProvider: FC<
-  PropsWithChildren<{ supabaseUrl?: string; supabaseAnonKey?: string }>
-> = ({ supabaseUrl, supabaseAnonKey, children }) => {
-  const supabase = useMemo(() => {
-    if (!supabaseAnonKey || !supabaseUrl) return
+export const SupabaseProvider: FC<PropsWithChildren> = ({ children }) => {
+  const [supabase, setSupabase] = useState<SupabaseClient<any, 'public', any>>()
 
-    return createClient(supabaseUrl, supabaseAnonKey)
-  }, [supabaseAnonKey, supabaseUrl])
+  useEffect(() => {
+    if (!window.ENV.SUPABASE_URL || !window.ENV.SUPABASE_ANON_KEY) return
 
-  if (!supabaseUrl || !supabaseAnonKey) {
+    setSupabase(
+      createClient(window.ENV.SUPABASE_URL, window.ENV.SUPABASE_ANON_KEY),
+    )
+  }, [])
+
+  if (!supabase) {
     return <div>Loading Supabase...</div>
   }
 
   return (
-    <SupabaseContext.Provider value={{}}>{children}</SupabaseContext.Provider>
+    <SupabaseContext.Provider value={supabase}>
+      {children}
+    </SupabaseContext.Provider>
   )
 }
 
 export function useSupabase() {
-  const context = useContext(SupabaseContext)
+  const supabase = useContext(SupabaseContext)
 
-  if (context === undefined) {
+  if (!supabase) {
     throw new Error('useSupabase must be used within a SupabaseProvider')
   }
 
-  return context.supabase
+  return supabase
 }

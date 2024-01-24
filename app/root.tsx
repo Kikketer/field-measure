@@ -20,12 +20,17 @@ export const links: LinksFunction = () => [
 export const loader = async () => {
   // Set some environment variables
   return json({
-    pushId: process.env.VITE_PUBLIC_PUSH_APP_ID,
+    ENV: {
+      PUSH_APP_ID: process.env.PUSH_APP_ID,
+      SUPABASE_URL: process.env.SUPABASE_URL,
+      SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+      LOGIN_REDIRECT_URL: process.env.LOGIN_REDIRECT_URL,
+    },
   })
 }
 
 export default function App() {
-  const data = useLoaderData<typeof loader>()
+  const { ENV } = useLoaderData<typeof loader>()
   useSWEffect()
 
   return (
@@ -37,11 +42,16 @@ export default function App() {
         <Meta />
         <link rel="manifest" href="/manifest.webmanifest" />
         <Links />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(ENV)};`,
+          }}
+        />
       </head>
       <body>
-        <MessagingProvider appId={data.pushId}>
-          <Outlet />
-        </MessagingProvider>
+        {/*<MessagingProvider>*/}
+        <Outlet />
+        {/*</MessagingProvider>*/}
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
