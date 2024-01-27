@@ -1,99 +1,60 @@
-import React, {
-  createContext,
-  FC,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
-import { useSupabase } from '~/providers/SupabaseProvider'
-import type { User } from '@supabase/supabase-js'
+// Create a context, provider and hook for the user's authentication state (logged in or not)
+import { useOutletContext } from '@remix-run/react'
+import { SupabaseClient } from '@supabase/supabase-js'
+import { createContext, ReactNode, useCallback, useContext } from 'react'
+import { Database } from '~/database.types'
 
-const AuthContext = createContext<
-  | {
-      loading?: boolean
-      signIn: () => Promise<void>
-      signOut: () => Promise<void>
-      user?: User
-    }
-  | undefined
->(undefined)
+interface AuthenticationContextProps {}
 
-export const AuthenticationProvider: FC<PropsWithChildren> = ({ children }) => {
-  const supabase = useSupabase()
-  const [user, setUser] = useState<User | undefined>()
-  const [loading, setLoading] = useState(true)
+export const AuthenticationContext = createContext<AuthenticationContextProps>({
+  signIn: () => {},
+  signOut: () => {},
+})
 
-  useEffect(() => {
-    if (!supabase || user) return
+export function AuthenticationProvider({ children }: { children: ReactNode }) {
+  const { supabase } = useOutletContext<{
+    supabase: SupabaseClient<Database>
+  }>()
 
-    // Check active sessions and sets the user
-    supabase.auth
-      .getSession()
-      .then((session) => {
-        console.log('got session?', session)
-        if (session?.data?.session?.provider_token) {
-          localStorage.setItem(
-            'provider_token',
-            session?.data?.session?.provider_token ?? '',
-          )
-        }
-        // setUser(session?.data?.user)
+  const signIn = useCallback(async () => {
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          // Read only for all spreadsheets so we can get the field data:
+          scopes: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+          // construct the url based on our current url:
+          redirectTo: `${window.location.protocol}//${window.location.hostname}${window.location.port ? window.location.port : ''}/auth/callback`,
+        },
       })
-      .catch((err) => {
-        console.error(err)
-      })
-
-    // Listen for changes on auth state (login, signup, logout)
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user)
-        setLoading(false)
-      },
-    )
-
-    return () => {
-      listener?.subscription.unsubscribe()
+    } catch (err) {
+      console.error('Failed to log in ', err)
     }
   }, [supabase])
 
-  // Sign in with Google
-  const signIn = async () => {
-    console.log('Signing in!')
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        // Read only for all spreadsheets so we can get the field data:
-        scopes: 'https://www.googleapis.com/auth/spreadsheets.readonly',
-        redirectTo: window.ENV.LOGIN_REDIRECT_URL,
-      },
-    })
-  }
+  const signOut = useCallback(async () => {
+    try {
+      await supabase.auth.signOut()
+    } catch (err) {
+      console.error('Failed to log out', err)
+    }
+  }, [supabase])
 
-  // Sign out
-  const signOut = async () => {
-    await supabase.auth.signOut()
-    setUser(undefined)
-  }
-
-  const value = {
-    loading,
-    user,
-    signIn,
-    signOut,
-  }
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthenticationContext.Provider
+      value={{
+        signIn,
+        signOut,
+      }}
+    >
+      {children}
+      <button onClick={signIn}>Login</button>
+      <br />
+      <button onClick={signOut}>Logout</button>
+    </AuthenticationContext.Provider>
+  )
 }
 
 export function useAuthentication() {
-  const context = useContext(AuthContext)
-
-  if (context === undefined) {
-    throw new Error(
-      'useAuthentication must be used within a AuthenticationProvider',
-    )
-  }
-
-  return context
+  return useContext(AuthenticationContext)
 }
