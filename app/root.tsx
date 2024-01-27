@@ -52,11 +52,9 @@ export default function App() {
       </head>
       <body>
         {/*<MessagingProvider>*/}
-        <SupabaseProvider>
-          <AuthenticationProvider>
-            <Outlet />
-          </AuthenticationProvider>
-        </SupabaseProvider>
+        {/*<AuthenticationProvider>*/}
+        <Outlet />
+        {/*</AuthenticationProvider>*/}
         {/*</MessagingProvider>*/}
         <ScrollRestoration />
         <Scripts />
