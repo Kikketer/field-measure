@@ -5,7 +5,6 @@ export default function route() {
     <>
       <div>Fields...</div>
       <Link to="1111">Field 1111</Link>
-      <Outlet />
     </>
   )
 }

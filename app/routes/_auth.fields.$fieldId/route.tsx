@@ -21,7 +21,7 @@ export default function EditField() {
   return (
     <>
       <div>Edit Field {params.fieldId}</div>
-      <div>Message: </div>
+      <div>Message:</div>
     </>
   )
 }
