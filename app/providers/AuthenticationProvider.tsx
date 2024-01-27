@@ -4,11 +4,14 @@ import { SupabaseClient } from '@supabase/supabase-js'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
 import { Database } from '~/database.types'
 
-interface AuthenticationContextProps {}
+interface AuthenticationContextProps {
+  signIn: () => Promise<void>
+  signOut: () => Promise<void>
+}
 
 export const AuthenticationContext = createContext<AuthenticationContextProps>({
-  signIn: () => {},
-  signOut: () => {},
+  signIn: () => Promise.resolve(),
+  signOut: () => Promise.resolve(),
 })
 
 export function AuthenticationProvider({ children }: { children: ReactNode }) {
@@ -34,7 +37,9 @@ export function AuthenticationProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     try {
+      console.log('signing out? ')
       await supabase.auth.signOut()
+      console.log('Signed out!')
     } catch (err) {
       console.error('Failed to log out', err)
     }
@@ -48,9 +53,6 @@ export function AuthenticationProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-      <button onClick={signIn}>Login</button>
-      <br />
-      <button onClick={signOut}>Logout</button>
     </AuthenticationContext.Provider>
   )
 }

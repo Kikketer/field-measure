@@ -7,6 +7,9 @@
   "scripts": {
     "build": "run-s build:*",
     "start": "remix-serve ./build/index.js",
+    "dev": "run-p dev:*",
+    "dev:remix": "remix dev --manual",
+    "dev:worker": "remix-pwa dev",
     "typecheck": "tsc",
     "icons": "pwa-assets-generator --preset minimal-2023  public/LineUpLogo.svg",
     "test": "jest",
@@ -15,10 +18,7 @@
     "sync:secrets": "supabase secrets set --env-file ./supabase/.env --project-ref fcicxndtnljljypyjieb",
     "sync:functions": "supabase functions deploy --project-ref fcicxndtnljljypyjieb",
     "build:remix": "remix build",
-    "build:worker": "remix-pwa build",
-    "dev": "run-p dev:*",
-    "dev:remix": "remix dev --manual",
-    "dev:worker": "remix-pwa dev"
+    "build:worker": "remix-pwa build"
   },
   "license": "MIT",
   "devDependencies": {

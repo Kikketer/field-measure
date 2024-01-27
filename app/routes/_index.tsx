@@ -1,3 +1,4 @@
+import { redirect } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { User } from '@supabase/supabase-js'
 import type { MetaFunction, SessionData } from '@vercel/remix'
@@ -28,6 +29,13 @@ export const loader = async ({ request }: { request: any }) => {
     data: { session },
   } = await supabaseClient.auth.getSession()
 
+  // If session is valid, we are logged in and we redirect to /fields
+  if (session) {
+    return redirect('/fields', {
+      headers: response.headers,
+    })
+  }
+
   return json(
     { data, user: session?.user },
     {
@@ -44,30 +52,31 @@ export const meta: MetaFunction = () => {
 }
 
 export default function _index() {
+  return (
+    <AuthenticationProvider>
+      <Comp />
+    </AuthenticationProvider>
+  )
+}
+
+const Comp = () => {
   const { data, user } = useLoaderData<{
     data: Database['public']['Tables']['demo']['Row']
     user: User | null
   }>()
-  // const { loading, signIn, signOut, user } = useAuthentication()
-
-  // useEffect(() => {
-  //   if (user && !loading) {
-  //     console.log('Time to travel!')
-  //   }
-  // }, [user, loading])
+  const { signIn, signOut } = useAuthentication()
 
   return (
-    <AuthenticationProvider>
+    <>
       <h1>LineUp Field Manager</h1>
-      <pre>{/*{JSON.stringify(loading)} and {JSON.stringify(!!user)}*/}</pre>
+      {user && <Link to={'/fields'}>Fields</Link>}
       <pre>User: {JSON.stringify(user ?? {}, null, 2)}</pre>
       <pre>Data: {JSON.stringify(data ?? {}, null, 2)}</pre>
-      {/*<button type="button" onClick={() => signIn()}>*/}
-      {/*  Login*/}
-      {/*</button>*/}
-      {/*<button type="button" onClick={() => signOut()}>*/}
-      {/*  Log out*/}
-      {/*</button>*/}
-    </AuthenticationProvider>
+      {user ? (
+        <button onClick={signOut}>Logout</button>
+      ) : (
+        <button onClick={signIn}>Login</button>
+      )}
+    </>
   )
 }
