@@ -30,23 +30,8 @@ export async function loader({ request }: { request: any }) {
 }
 
 export default function Authenticated() {
-  const { session } = useLoaderData()
-  // const { supabase } = useOutletContext<{
-  //   supabase: SupabaseClient<Database>
-  // }>()
-  // const { user, loading } = useAuthentication()
-  // const navigate = useNavigate()
-
-  // useEffect(() => {
-  //   if (!user && !loading) {
-  //     navigate('/', { replace: true })
-  //   }
-  // }, [user, loading])
-
   return (
     <AuthenticationProvider>
-      <h1>Auth</h1>
-      <pre>{JSON.stringify(session ?? {}, null, 2)}</pre>
       <Outlet />
     </AuthenticationProvider>
   )

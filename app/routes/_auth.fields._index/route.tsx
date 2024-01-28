@@ -1,26 +1,47 @@
-import { Link, useLoaderData, useNavigation } from '@remix-run/react'
-import { useAuthentication } from '~/providers/AuthenticationProvider'
+import { Link, useLoaderData } from '@remix-run/react'
+import { Footer } from '~/components/Footer'
+import { Slideout } from '~/components/Slideout'
+import { Database } from '~/database.types'
+import { getFields } from '~/utils/data'
 
-export function loader() {
-  return {}
+type Field = Database['public']['Tables']['fields']['Row']
+
+export async function loader({
+  request,
+}: {
+  request: any
+}): Promise<{ fields?: { [groupName: string]: Field[] } }> {
+  const fields = await getFields({ request })
+
+  return { fields }
 }
 
 export default function route() {
-  const loaderData = useLoaderData()
-  const navigation = useNavigation()
-  const { signOut } = useAuthentication()
-
-  console.log('Rendered ', navigation.state)
+  const { fields } = useLoaderData<{
+    fields?: Record<string, Field[]>
+  }>()
+  // const navigation = useNavigation()
 
   return (
     <>
-      <div>Fields...</div>
-      <Link to="1111">Field 1111</Link>
-      {navigation.state === 'loading' && <div>LOADING....</div>}
-      <br />
-      <button type="button" onClick={signOut}>
-        Log Out
-      </button>
+      <h1>Fields</h1>
+      <ul>
+        {Object.keys(fields ?? {}).map((groupName) => (
+          <li key={groupName}>
+            <h2>{groupName}</h2>
+            <ul>
+              {fields![groupName].map((field) => (
+                <li key={field.id}>
+                  <Link to={`/fields/${field.name}`}>{field.name}</Link>
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))}
+      </ul>
+      {/*{navigation.state === 'loading' && <div>LOADING....</div>}*/}
+      <Slideout />
+      <Footer />
     </>
   )
 }
