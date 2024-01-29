@@ -1,14 +1,8 @@
-import { redirect } from '@remix-run/node'
-import {
-  Form,
-  Link,
-  MetaFunction,
-  useLoaderData,
-  useParams,
-} from '@remix-run/react'
-import { createServerClient } from '@supabase/auth-helpers-remix'
+import { Link, MetaFunction, useLoaderData, useParams } from '@remix-run/react'
+import { redirect } from '@vercel/remix'
+import { DaysChip } from '~/components/DaysChip'
 import { Database } from '~/database.types'
-import { getField, getFields } from '~/utils/data'
+import { getField } from '~/utils/data'
 
 type Field = Database['public']['Tables']['fields']['Row']
 
@@ -20,6 +14,10 @@ export async function loader({
   params: { fieldName: string }
 }) {
   const field = await getField({ request, name: params.fieldName })
+
+  if (!field) {
+    return redirect(`/fields`)
+  }
 
   return {
     field,
@@ -39,6 +37,10 @@ export default function EditField() {
   return (
     <>
       <h1>Field Details {params.fieldName}</h1>
+      <DaysChip
+        predictedNextPaint={new Date(field.predicted_next_paint ?? new Date())}
+        lastPainted={new Date(field.last_painted ?? new Date())}
+      />
       <pre>{JSON.stringify(field, null, 2)}</pre>
       <div>
         <Link to="/fields" replace={true}>

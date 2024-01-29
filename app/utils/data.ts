@@ -1,4 +1,3 @@
-import { redirect } from '@vercel/remix'
 import { createServerClient } from '@supabase/auth-helpers-remix'
 import { Database } from '~/database.types'
 import { groupFields } from './groupFields'
@@ -33,13 +32,13 @@ export const updateField = async ({
   // removes the id (and other things I don't want you to be able to edit)
   const { id, ...siftedField } = foundField[0]
 
-  const { data: newField } = await supabaseClient
+  const { data: newFields } = await supabaseClient
     .from('fields')
     .update({ ...siftedField, ...field })
     .eq('id', id)
     .select('*')
 
-  return newField?.[0]
+  return newFields?.[0]
 }
 
 export const getField = async ({
