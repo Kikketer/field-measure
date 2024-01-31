@@ -1,3 +1,4 @@
+import { LoaderFunctionArgs } from '@vercel/remix'
 import { createServerClient } from '@supabase/auth-helpers-remix'
 import { Database } from '~/database.types'
 import { groupFields } from './groupFields'
@@ -9,7 +10,7 @@ export const updateField = async ({
   fieldName,
   field,
 }: {
-  request: any
+  request: LoaderFunctionArgs['request']
   fieldName: Field['name']
   field: Partial<Field>
 }): Promise<Field | undefined> => {
@@ -45,9 +46,9 @@ export const getField = async ({
   request,
   name,
 }: {
-  request: any
+  request: LoaderFunctionArgs['request']
   name: Field['name']
-}) => {
+}): Promise<Field | undefined> => {
   const response = new Response()
   const supabaseClient = createServerClient(
     process.env.SUPABASE_URL!,
@@ -66,7 +67,9 @@ export const getField = async ({
   return data[0]
 }
 
-export const getFields = async ({ request }: { request: any }) => {
+export const getFields = async ({
+  request,
+}: Pick<LoaderFunctionArgs, 'request'>) => {
   const response = new Response()
   const supabaseClient = createServerClient(
     process.env.SUPABASE_URL!,
@@ -85,4 +88,38 @@ export const getFields = async ({ request }: { request: any }) => {
   return groupFields(data)
 }
 
-export const markFieldPainted = async (id: Field['id']) => {}
+export const getPaintHistory = async ({
+  request,
+  fieldId,
+}: {
+  request: LoaderFunctionArgs['request']
+  fieldId: Database['public']['Tables']['fields']['Row']['id']
+}): Promise<
+  Database['public']['Tables']['paint_history']['Row'][] | undefined
+> => {
+  const response = new Response()
+  const supabaseClient = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    { request, response },
+  )
+
+  const { data } = await supabaseClient
+    .from('paint_history')
+    .select('*')
+    .eq('field_id', fieldId)
+    .order('created_at', { ascending: false })
+    .limit(3)
+
+  if (!data?.length) return
+
+  return data
+}
+
+export const logPaintedField = async ({
+  field,
+  previouslyPaintedOn,
+}: {
+  field: Field
+  previouslyPaintedOn: Date
+}) => {}

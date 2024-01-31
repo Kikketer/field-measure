@@ -11,7 +11,7 @@ export const getFieldWithAdjustedRainFactorAndDryDays = ({
 }: {
   currentField: Field
   markUnplayableOn: Date
-  paintHistory: PaintHistory[]
+  paintHistory: Database['public']['Tables']['paint_history']['Row'][]
 }): Field => {
   const modifiedField: Field = { ...currentField }
 
