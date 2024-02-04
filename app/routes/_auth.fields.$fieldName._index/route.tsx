@@ -32,17 +32,22 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return redirect(`/fields`)
   }
 
-  const field = await getField({ request, name: params.fieldName })
+  try {
+    const field = await getField({ request, name: params.fieldName })
 
-  if (!field) {
-    return redirect(`/fields`)
-  }
+    if (!field) {
+      return redirect(`/fields`)
+    }
 
-  const paintHistory = await getPaintHistory({ request, fieldId: field.id })
+    const paintHistory = await getPaintHistory({ request, fieldId: field.id })
 
-  return {
-    field,
-    paintHistory,
+    return {
+      field,
+      paintHistory,
+    }
+  } catch (err) {
+    console.error(err)
+    return { error: err }
   }
 }
 
@@ -100,9 +105,10 @@ export const meta: MetaFunction = () => {
   ]
 }
 export default function EditField() {
-  const { field, paintHistory } = useLoaderData<{
+  const { field, paintHistory, error } = useLoaderData<{
     field: Field
     paintHistory: PaintHistory[]
+    error?: Error
   }>()
   const params = useParams()
   const [showConfirmPaint, setShowConfirmPaint] = useState(false)
@@ -113,6 +119,15 @@ export default function EditField() {
     // Possible validations...
 
     e.target.submit()
+  }
+
+  if (error) {
+    return (
+      <div>
+        <h1>Error</h1>
+        <pre>{error}</pre>
+      </div>
+    )
   }
 
   return (
