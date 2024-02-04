@@ -12,13 +12,18 @@ export async function loader({
   request: any
   params: { fieldName: string }
 }) {
-  const field = await getField({ request, name: params.fieldName })
+  try {
+    const field = await getField({ request, name: params.fieldName })
 
-  if (!field) {
-    return redirect(`/fields`)
+    if (!field) {
+      return redirect(`/fields`)
+    }
+
+    return { field }
+  } catch (error) {
+    console.error(error)
+    return { error }
   }
-
-  return { field }
 }
 
 export const action = async ({ params, request }: ActionFunctionArgs) => {
@@ -38,11 +43,16 @@ export const action = async ({ params, request }: ActionFunctionArgs) => {
 }
 
 export default function FieldEdit() {
-  const { field } = useLoaderData<{ field: Field }>()
+  const { field, error } = useLoaderData<{ field?: Field; error?: Error }>()
   const navigate = useNavigate()
 
   const cancel = () => {
     navigate(`/fields/${field.name}`, { replace: true })
+  }
+
+  if (error) {
+    console.log(error)
+    return <pre>{error}</pre>
   }
 
   return (
