@@ -131,44 +131,40 @@ export default function EditField() {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Await resolve={field} errorElement={<p>Could not fetch data</p>}>
-        <h1>Field Details {params.fieldName}</h1>
-        <DaysChip
-          predictedNextPaint={
-            new Date(field.predicted_next_paint ?? new Date())
+    <>
+      <h1>Field Details {params.fieldName}</h1>
+      <DaysChip
+        predictedNextPaint={new Date(field.predicted_next_paint ?? new Date())}
+        lastPainted={new Date(field.last_painted ?? new Date())}
+      />
+      <pre>{JSON.stringify(field, null, 2)}</pre>
+      <pre>{JSON.stringify(paintHistory ?? [], null, 2)}</pre>
+      <Form method="post" onSubmit={paintField}>
+        <input type="hidden" name="field_name" value={field.name} />
+        <input type="hidden" name="painted_action" ref={paintActionInput} />
+        <button
+          type="submit"
+          onClick={() =>
+            (paintActionInput.current!.value = PaintActions.adjust)
           }
-          lastPainted={new Date(field.last_painted ?? new Date())}
-        />
-        <pre>{JSON.stringify(field, null, 2)}</pre>
-        <pre>{JSON.stringify(paintHistory ?? [], null, 2)}</pre>
-        <Form method="post" onSubmit={paintField}>
-          <input type="hidden" name="field_name" value={field.name} />
-          <input type="hidden" name="painted_action" ref={paintActionInput} />
-          <button
-            type="submit"
-            onClick={() =>
-              (paintActionInput.current!.value = PaintActions.adjust)
-            }
-          >
-            Paint, Adjust Factor
-          </button>
-          <button
-            type="submit"
-            onClick={() =>
-              (paintActionInput.current!.value = PaintActions.dontAdjust)
-            }
-          >
-            Paint, Leave
-          </button>
-        </Form>
-        <div>
-          <Link to="/fields" replace={true}>
-            Back
-          </Link>
-          <Link to="edit">Edit</Link>
-        </div>
-      </Await>
-    </Suspense>
+        >
+          Paint, Adjust Factor
+        </button>
+        <button
+          type="submit"
+          onClick={() =>
+            (paintActionInput.current!.value = PaintActions.dontAdjust)
+          }
+        >
+          Paint, Leave
+        </button>
+      </Form>
+      <div>
+        <Link to="/fields" replace={true}>
+          Back
+        </Link>
+        <Link to="edit">Edit</Link>
+      </div>
+    </>
   )
 }

@@ -1,4 +1,5 @@
-import { Link, useLoaderData } from '@remix-run/react'
+import { Await, Link, useLoaderData } from '@remix-run/react'
+import { Suspense } from 'react'
 import { DaysChip } from '~/components/DaysChip'
 import { Footer } from '~/components/Footer'
 import { Slideout } from '~/components/Slideout'
@@ -11,16 +12,29 @@ export async function loader({
   request,
 }: {
   request: any
-}): Promise<{ fields?: { [groupName: string]: Field[] } }> {
-  const fields = await getFields({ request })
+}): Promise<{ fields?: { [groupName: string]: Field[] }; error?: Error }> {
+  try {
+    const fields = await getFields({ request })
 
-  return { fields }
+    return { fields }
+  } catch (err) {
+    return { fields: {}, error: err as Error }
+  }
 }
 
 export default function route() {
-  const { fields } = useLoaderData<{
+  const { fields, error } = useLoaderData<{
     fields?: Record<string, Field[]>
+    error?: Error
   }>()
+
+  if (error) {
+    return (
+      <div>
+        <h1>Error:</h1> <pre>{error?.message}</pre>
+      </div>
+    )
+  }
 
   return (
     <>
