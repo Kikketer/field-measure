@@ -28,27 +28,28 @@ enum PaintActions {
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  if (!params.fieldName) {
-    return redirect(`/fields`)
-  }
-
-  try {
-    const field = await getField({ request, name: params.fieldName })
-
-    if (!field) {
-      return redirect(`/fields`)
-    }
-
-    const paintHistory = await getPaintHistory({ request, fieldId: field.id })
-
-    return {
-      field,
-      paintHistory,
-    }
-  } catch (err) {
-    console.error(err)
-    return { error: err }
-  }
+  return { bullshit: true }
+  // if (!params.fieldName) {
+  //   return redirect(`/fields`)
+  // }
+  //
+  // try {
+  //   const field = await getField({ request, name: params.fieldName })
+  //
+  //   if (!field) {
+  //     return redirect(`/fields`)
+  //   }
+  //
+  //   const paintHistory = await getPaintHistory({ request, fieldId: field.id })
+  //
+  //   return {
+  //     field,
+  //     paintHistory,
+  //   }
+  // } catch (err) {
+  //   console.error(err)
+  //   return { error: err }
+  // }
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -105,10 +106,11 @@ export const meta: MetaFunction = () => {
   ]
 }
 export default function EditField() {
-  const { field, paintHistory, error } = useLoaderData<{
+  const data = useLoaderData<{
     field: Field
     paintHistory: PaintHistory[]
     error?: Error
+    bullshit?: boolean
   }>()
   const params = useParams()
   const [showConfirmPaint, setShowConfirmPaint] = useState(false)
@@ -121,54 +123,60 @@ export default function EditField() {
     e.target.submit()
   }
 
-  if (error) {
+  if (data.bullshit) {
+    return <div>Bullshit</div>
+  }
+
+  if (data.error) {
     return (
       <div>
         <h1>Error</h1>
-        <pre>{error}</pre>
+        <pre>{data.error}</pre>
       </div>
     )
   }
 
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Await resolve={field} errorElement={<p>Could not fetch data</p>}>
-        <h1>Field Details {params.fieldName}</h1>
-        <DaysChip
-          predictedNextPaint={
-            new Date(field.predicted_next_paint ?? new Date())
-          }
-          lastPainted={new Date(field.last_painted ?? new Date())}
-        />
-        <pre>{JSON.stringify(field, null, 2)}</pre>
-        <pre>{JSON.stringify(paintHistory ?? [], null, 2)}</pre>
-        <Form method="post" onSubmit={paintField}>
-          <input type="hidden" name="field_name" value={field.name} />
-          <input type="hidden" name="painted_action" ref={paintActionInput} />
-          <button
-            type="submit"
-            onClick={() =>
-              (paintActionInput.current!.value = PaintActions.adjust)
-            }
-          >
-            Paint, Adjust Factor
-          </button>
-          <button
-            type="submit"
-            onClick={() =>
-              (paintActionInput.current!.value = PaintActions.dontAdjust)
-            }
-          >
-            Paint, Leave
-          </button>
-        </Form>
-        <div>
-          <Link to="/fields" replace={true}>
-            Back
-          </Link>
-          <Link to="edit">Edit</Link>
-        </div>
-      </Await>
-    </Suspense>
-  )
+  return <div>Yep</div>
+
+  // return (
+  //   <Suspense fallback={<div>Loading...</div>}>
+  //     <Await resolve={field} errorElement={<p>Could not fetch data</p>}>
+  //       <h1>Field Details {params.fieldName}</h1>
+  //       <DaysChip
+  //         predictedNextPaint={
+  //           new Date(field.predicted_next_paint ?? new Date())
+  //         }
+  //         lastPainted={new Date(field.last_painted ?? new Date())}
+  //       />
+  //       <pre>{JSON.stringify(field, null, 2)}</pre>
+  //       <pre>{JSON.stringify(paintHistory ?? [], null, 2)}</pre>
+  //       <Form method="post" onSubmit={paintField}>
+  //         <input type="hidden" name="field_name" value={field.name} />
+  //         <input type="hidden" name="painted_action" ref={paintActionInput} />
+  //         <button
+  //           type="submit"
+  //           onClick={() =>
+  //             (paintActionInput.current!.value = PaintActions.adjust)
+  //           }
+  //         >
+  //           Paint, Adjust Factor
+  //         </button>
+  //         <button
+  //           type="submit"
+  //           onClick={() =>
+  //             (paintActionInput.current!.value = PaintActions.dontAdjust)
+  //           }
+  //         >
+  //           Paint, Leave
+  //         </button>
+  //       </Form>
+  //       <div>
+  //         <Link to="/fields" replace={true}>
+  //           Back
+  //         </Link>
+  //         <Link to="edit">Edit</Link>
+  //       </div>
+  //     </Await>
+  //   </Suspense>
+  // )
 }
