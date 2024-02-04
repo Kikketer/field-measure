@@ -67,6 +67,7 @@ const Comp = () => {
     <>
       <h1>LineUp Field Manager</h1>
       {user && <Link to={'/fields'}>Fields</Link>}
+      <Link to={'/quick'}>Quick</Link>
       <pre>User: {JSON.stringify(user ?? {}, null, 2)}</pre>
       <pre>Data: {JSON.stringify(data ?? {}, null, 2)}</pre>
       {user ? (
