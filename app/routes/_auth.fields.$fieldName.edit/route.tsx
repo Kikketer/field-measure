@@ -1,6 +1,5 @@
-import { ActionFunctionArgs, redirect } from '@vercel/remix'
 import { Form, Link, useLoaderData, useNavigate } from '@remix-run/react'
-import { createServerClient } from '@supabase/auth-helpers-remix'
+import { ActionFunctionArgs, redirect } from '@vercel/remix'
 import { Database } from '~/database.types'
 import { getField, updateField } from '~/utils/data'
 

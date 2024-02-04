@@ -1,5 +1,6 @@
 import { LoaderFunctionArgs } from '@vercel/remix'
 import { createServerClient } from '@supabase/auth-helpers-remix'
+import { differenceInCalendarDays } from 'date-fns'
 import { Database } from '~/database.types'
 import { groupFields } from './groupFields'
 
@@ -32,6 +33,8 @@ export const updateField = async ({
 
   // removes the id (and other things I don't want you to be able to edit)
   const { id, ...siftedField } = foundField[0]
+
+  console.log('Saving field ', { ...siftedField, ...field })
 
   const { data: newFields } = await supabaseClient
     .from('fields')
@@ -117,9 +120,28 @@ export const getPaintHistory = async ({
 }
 
 export const logPaintedField = async ({
+  request,
   field,
   previouslyPaintedOn,
 }: {
+  request: LoaderFunctionArgs['request']
   field: Field
   previouslyPaintedOn: Date
-}) => {}
+}) => {
+  const response = new Response()
+  const supabaseClient = createServerClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_ANON_KEY!,
+    { request, response },
+  )
+
+  return supabaseClient?.from('paint_history').insert({
+    field_id: field.id,
+    rainfall_factor: field.rainfall_factor,
+    rainfall_days: field.rainfall_days,
+    days_unpainted: differenceInCalendarDays(
+      new Date(field.last_painted ?? new Date()),
+      previouslyPaintedOn,
+    ),
+  })
+}

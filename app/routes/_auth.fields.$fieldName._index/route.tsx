@@ -1,9 +1,9 @@
 import {
+  Form,
   Link,
   MetaFunction,
   useLoaderData,
   useParams,
-  Form,
 } from '@remix-run/react'
 import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from '@vercel/remix'
 import { startOfDay } from 'date-fns'
@@ -50,30 +50,46 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const actionType = formData.get('painted_action')
   const fieldName = formData.get('field_name')
 
+  console.log(
+    'Doing the action',
+    actionType,
+    actionType === PaintActions.adjust,
+  )
+
   const field = await getField({ request, name: fieldName?.toString() ?? '' })
 
   if (!field) throw new Error('Invalid field')
 
-  const updatedField: Field = { ...field }
+  const paintHistory = await getPaintHistory({ request, fieldId: field.id })
 
-  switch (actionType) {
-    case PaintActions.adjust:
-      break
-    default:
-      break
+  let updatedField: Field = { ...field }
+
+  if (actionType === PaintActions.adjust) {
+    updatedField = getFieldWithAdjustedRainFactorAndDryDays({
+      currentField: field,
+      // Right now we assume it's unplayable on the date you painted:
+      markUnplayableOn: startOfDay(new Date()),
+      paintHistory: paintHistory ?? [],
+    })
   }
+
+  // Mark last painted as today:
+  updatedField.last_painted = startOfDay(new Date()).toISOString()
 
   // reset the rainfall days:
   updatedField.rainfall_days = 0
 
-  const complete = await updateField({
+  await logPaintedField({
+    request,
+    field: updatedField,
+    previouslyPaintedOn: new Date(field.last_painted ?? new Date()),
+  })
+
+  return await updateField({
     fieldName: field.name,
     field: updatedField,
     request,
   })
-
-  return complete
-  // return redirect(`/fields/${field.name}`)
 }
 
 export const meta: MetaFunction = () => {
@@ -90,36 +106,6 @@ export default function EditField() {
   const params = useParams()
   const [showConfirmPaint, setShowConfirmPaint] = useState(false)
   const paintActionInput = useRef<HTMLInputElement>()
-
-  // const paintField = async ({
-  //   shouldAdjustFactor,
-  // }: { shouldAdjustFactor?: boolean } = {}) => {
-  //   setShowConfirmPaint(false)
-  //
-  //   let fieldToSave = field
-  //   // Get the history for this field and use it to create an average
-  //   // for the rainfall factor and max dry days
-  //   if (shouldAdjustFactor) {
-  //     fieldToSave = getFieldWithAdjustedRainFactorAndDryDays({
-  //       currentField: fieldToSave,
-  //       // Right now we assume it's unplayable on the date you painted:
-  //       markUnplayableOn: startOfDay(new Date()),
-  //       paintHistory,
-  //     })
-  //   }
-  //   fieldToSave.last_painted = startOfDay(new Date()).toISOString()
-  //   // Reset the rainfall days whenever we paint regardless if we adjusted the factor
-  //   fieldToSave.rainfall_days = 0
-  //
-  //   console.log('Saving field ', { fieldToSave })
-  //
-  //   // await logPaintedField({
-  //   //   field: fieldToSave,
-  //   //   previouslyPaintedOn: new Date(field.last_painted ?? new Date()),
-  //   // })
-  //
-  //   // await updateField({ field: fieldToSave })
-  // }
 
   const paintField = (e) => {
     e.preventDefault()

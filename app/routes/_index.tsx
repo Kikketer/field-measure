@@ -1,18 +1,15 @@
 import { redirect } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
+import { createServerClient } from '@supabase/auth-helpers-remix'
 import { User } from '@supabase/supabase-js'
-import type { MetaFunction, SessionData } from '@vercel/remix'
-import { useEffect } from 'react'
+
+import type { MetaFunction } from '@vercel/remix'
+import { json } from '@vercel/remix'
 import { Database } from '~/database.types'
 import {
   AuthenticationProvider,
   useAuthentication,
 } from '~/providers/AuthenticationProvider'
-
-import { json } from '@vercel/remix'
-import { createServerClient } from '@supabase/auth-helpers-remix'
-
-// import type { LoaderArgs } from '@vercel/remix' // change this import to whatever runtime you are using
 
 export const loader = async ({ request }: { request: any }) => {
   const response = new Response()
