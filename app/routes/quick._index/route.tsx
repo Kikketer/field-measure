@@ -7,6 +7,7 @@ export default function Quick() {
       <Link to="/fields" replace={true}>
         Fields
       </Link>
+      <Link to="/quick/the-id">Inner BS</Link>
       <Link to="/" replace={true}>
         Root
       </Link>
