@@ -4,11 +4,10 @@ import {
   MetaFunction,
   useLoaderData,
   useParams,
-  Await,
 } from '@remix-run/react'
 import { ActionFunctionArgs, LoaderFunctionArgs, redirect } from '@vercel/remix'
 import { startOfDay } from 'date-fns'
-import { Suspense, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { DaysChip } from '~/components/DaysChip'
 import { Database } from '~/database.types'
 import {
@@ -32,22 +31,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return redirect(`/fields`)
   }
 
-  try {
-    const field = await getField({ request, name: params.fieldName })
+  const field = await getField({ request, name: params.fieldName })
 
-    if (!field) {
-      return redirect(`/fields`)
-    }
+  if (!field) {
+    return redirect(`/fields`)
+  }
 
-    const paintHistory = await getPaintHistory({ request, fieldId: field.id })
+  const paintHistory = await getPaintHistory({ request, fieldId: field.id })
 
-    return {
-      field,
-      paintHistory,
-    }
-  } catch (err) {
-    console.error(err)
-    return { error: err }
+  return {
+    field,
+    paintHistory,
   }
 }
 
@@ -105,10 +99,9 @@ export const meta: MetaFunction = () => {
   ]
 }
 export default function EditField() {
-  const { field, paintHistory, error } = useLoaderData<{
+  const { field, paintHistory } = useLoaderData<{
     field: Field
     paintHistory: PaintHistory[]
-    error?: Error
   }>()
   const params = useParams()
   const [showConfirmPaint, setShowConfirmPaint] = useState(false)
@@ -119,15 +112,6 @@ export default function EditField() {
     // Possible validations...
 
     e.target.submit()
-  }
-
-  if (error) {
-    return (
-      <div>
-        <h1>Error</h1>
-        <pre>{error?.message}</pre>
-      </div>
-    )
   }
 
   return (

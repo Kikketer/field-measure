@@ -1,9 +1,9 @@
-import { redirect } from '@vercel/remix'
-import { Outlet, useLoaderData, useOutletContext } from '@remix-run/react'
+import { Outlet } from '@remix-run/react'
 import { createServerClient } from '@supabase/auth-helpers-remix'
-import { SupabaseClient } from '@supabase/supabase-js'
-import { Database } from '~/database.types'
+import { redirect } from '@vercel/remix'
 import { AuthenticationProvider } from '~/providers/AuthenticationProvider'
+
+export { ErrorBoundary } from '~/components/GenericErrorBoundary'
 
 export async function loader({ request }: { request: any }) {
   const response = new Response()
