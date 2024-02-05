@@ -1,6 +1,6 @@
 import { FC, useEffect, useMemo, useState } from 'react'
 import { differenceInCalendarDays } from 'date-fns'
-import { ClientOnly } from '~/components/useClientOnly'
+import { ClientOnly } from '~/components/ClientOnly'
 
 const getColorAtPercentage = (percentage: number) => {
   if (percentage < 50) return '#388E3C'
