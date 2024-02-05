@@ -1,5 +1,6 @@
-import { FC, useMemo } from 'react'
+import { FC, useEffect, useMemo, useState } from 'react'
 import { differenceInCalendarDays } from 'date-fns'
+import { ClientOnly } from '~/components/useClientOnly'
 
 const getColorAtPercentage = (percentage: number) => {
   if (percentage < 50) return '#388E3C'
@@ -7,16 +8,33 @@ const getColorAtPercentage = (percentage: number) => {
   return '#C62828'
 }
 
-export const DaysChip: FC<{ predictedNextPaint: Date; lastPainted: Date }> = ({
-  predictedNextPaint,
-  lastPainted,
-}) => {
+export const DaysChip: FC<{
+  predictedNextPaint?: string | null
+  lastPainted?: string | null
+}> = ({ predictedNextPaint, lastPainted }) => {
+  return (
+    <ClientOnly>
+      <DaysChipComponent
+        predictedNextPaint={predictedNextPaint}
+        lastPainted={lastPainted}
+      />
+    </ClientOnly>
+  )
+}
+
+const DaysChipComponent: FC<{
+  predictedNextPaint?: string | null
+  lastPainted?: string | null
+}> = ({ predictedNextPaint, lastPainted }) => {
   if (!predictedNextPaint || !lastPainted) return null
 
-  const percentage = useMemo(() => {
+  const [percentage, setPercentage] = useState(0)
+
+  useEffect(() => {
+    // We put this in a useEffect since it needs to run client-side
     const totalDaysPredicted = differenceInCalendarDays(
-      predictedNextPaint ?? new Date(),
-      lastPainted,
+      new Date(predictedNextPaint ?? new Date()),
+      new Date(lastPainted ?? new Date()),
     )
 
     // If the total days predicted is less than 0 (happens when a field is
@@ -24,15 +42,18 @@ export const DaysChip: FC<{ predictedNextPaint: Date; lastPainted: Date }> = ({
     // make the prediction go negative: 10 max dry, 19 days of rain, rainfall factor 1.125 = 21.375 days
     // which means it's prediction is about -11.375 days)
     // We simply say "it's in need of painting" (cap at 100% degraded)
-    if (totalDaysPredicted < 0) return 100
+    if (totalDaysPredicted < 0) {
+      setPercentage(100)
+      return
+    }
 
     const daysLeft = differenceInCalendarDays(
-      predictedNextPaint ?? new Date(),
+      new Date(predictedNextPaint ?? new Date()),
       new Date(),
     )
 
     // Also flip it, 99% = basically gone
-    return (1 - daysLeft / totalDaysPredicted) * 100
+    setPercentage((1 - daysLeft / totalDaysPredicted) * 100)
   }, [predictedNextPaint, lastPainted])
 
   return (
@@ -49,7 +70,12 @@ export const DaysChip: FC<{ predictedNextPaint: Date; lastPainted: Date }> = ({
       ) : (
         <div />
       )}
-      <div>{differenceInCalendarDays(predictedNextPaint, new Date())}</div>
+      <div>
+        {differenceInCalendarDays(
+          new Date(predictedNextPaint ?? new Date()),
+          new Date(),
+        )}
+      </div>
     </>
   )
 }

@@ -1,5 +1,5 @@
 import { Link, useLoaderData } from '@remix-run/react'
-// import { DaysChip } from '~/components/DaysChip'
+import { DaysChip } from '~/components/DaysChip'
 import { Footer } from '~/components/Footer'
 import { Slideout } from '~/components/Slideout'
 import { Database } from '~/database.types'
@@ -33,12 +33,10 @@ export default function route() {
               {fields![groupName].map((field) => (
                 <li key={field.id}>
                   <Link to={`/fields/${field.name}`}>{field.name}</Link>
-                  {/*<DaysChip*/}
-                  {/*  predictedNextPaint={*/}
-                  {/*    new Date(field.predicted_next_paint ?? new Date())*/}
-                  {/*  }*/}
-                  {/*  lastPainted={new Date(field.last_painted ?? new Date())}*/}
-                  {/*/>*/}
+                  <DaysChip
+                    predictedNextPaint={field.predicted_next_paint}
+                    lastPainted={field.last_painted}
+                  />
                 </li>
               ))}
             </ul>
