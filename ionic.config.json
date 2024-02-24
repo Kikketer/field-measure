@@ -1,0 +1,7 @@
+{
+  "name": "field-ion",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}

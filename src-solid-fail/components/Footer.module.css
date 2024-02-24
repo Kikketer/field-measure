@@ -1,8 +1,0 @@
-.Footer {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  color: var(--muted-color);
-  font-size: 0.8rem;
-  padding-bottom: 1rem;
-}

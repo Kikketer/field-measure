@@ -2,54 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="/favicon.ico" />
-    <link
-      rel="apple-touch-icon"
-      href="apple-touch-icon-180x180.png"
-      sizes="180x180"
-    />
-    <meta name="theme-color" content="#FFFFFF" />
-    <title>Line Up - Field Manager</title>
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
-    <script>
-      window.OneSignalDeferred = window.OneSignalDeferred || []
-      // Setup OneSignal:
-      window.OneSignalDeferred.push((OneSignal) => {
-        OneSignal.init({
-          appId: '2cf5c0d3-e4b9-4890-ab37-48b14e268492',
-          safari_web_id: 'web.onesignal.auto.26872e49-0741-4e76-94b8-10ddfedc5443',
-          // appId: '1fa87277-be4d-4598-82dd-5a0cd3ab0547',
-          // safari_web_id: 'web.onesignal.auto.3f58661c-f8ad-4946-a9b6-84125eec4421',
-          allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
-          promptOptions: {
-            // actionMessage:
-            //   'Would you like to be notified when fields are in need of painting?',
-            // acceptButton: 'Sure',
-            slidedown: {
-              prompts: [
-                {
-                  type: 'push',
-                  autoPrompt: true,
-                },
-              ],
-            },
-          },
-        })
+    <title>Ionic App</title>
 
-        // setOneSignalReady(true)
-        // setDebug({
-        //   ...debug(),
-        //   optedIn: OneSignal.User.PushSubscription.optedIn,
-        //   id: OneSignal.User.PushSubscription.id,
-        // })
-      })
-    </script>
+    <base href="/" />
+
+    <meta name="color-scheme" content="light dark" />
+    <meta
+      name="viewport"
+      content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+
+    <link rel="manifest" href="/manifest.json" />
+
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+
+    <!-- add to homescreen for ios -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Ionic App" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-
-    <script src="/src/index.tsx" type="module"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
