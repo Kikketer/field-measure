@@ -1,7 +1,10 @@
 import {
+  IonAlert,
   IonBackButton,
+  IonButton,
   IonButtons,
   IonContent,
+  IonFooter,
   IonHeader,
   IonItem,
   IonLabel,
@@ -9,18 +12,22 @@ import {
   IonNote,
   IonPage,
   IonSkeletonText,
+  IonTitle,
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
 import React, { useState } from 'react'
 import { useParams } from 'react-router'
+import { ConfirmPaint } from '../components/ConfirmPaint'
 import { getField } from '../data/fields'
 import { SIZES } from '../utilities/constants'
 import { Field, FieldSize } from '../utilities/types'
 import './FieldDetail.css'
 
 export const FieldDetail = () => {
+  const isOnline = true
   const [loading, setLoading] = useState(false)
+  const [showConfirmPaint, setShowConfirmPaint] = useState(false)
   const [field, setField] = useState<Field>()
   const params = useParams<{ id: string }>()
 
@@ -58,64 +65,113 @@ export const FieldDetail = () => {
                       {/*<StatusLabel field={thisField} />*/}
                     </IonLabel>
                   </IonItem>
-                  <IonList>
-                    <IonItem>
-                      <strong>Last painted:</strong>
-                      {field.lastPainted.toLocaleDateString()}
-                    </IonItem>
-                    <IonItem>
-                      <strong>Predicted next painting:</strong>
-                      {field.predictedNextPaint?.toLocaleDateString()}
-                      <div>10</div>
-                      {/*<DaysLeftChip*/}
-                      {/*  predictedNextPaint={field.predictedNextPaint}*/}
-                      {/*  lastPainted={field.lastPainted}*/}
-                      {/*/>*/}
-                    </IonItem>
-                    <IonItem>
-                      <strong>Size:</strong>
-                      {field.size} (
-                      {field.customLength ??
-                        SIZES[field.size ?? FieldSize.full]
-                          ?.recommendedMaxLength}
-                      L x{' '}
-                      {field.customWidth ??
-                        SIZES[field.size ?? FieldSize.full]
-                          ?.recommendedMaxWidth}
-                      W)
-                    </IonItem>
-                    {!!field.group && (
-                      <IonItem>
-                        <strong>Group:</strong>
-                        {field.group}
-                      </IonItem>
-                    )}
-                  </IonList>
-                  <details>
-                    <summary>Details</summary>
-                    <div>
-                      <ul>
-                        <li>
-                          <strong>Max dry days:</strong>&nbsp;{field.maxDryDays}
-                        </li>
-                        <li>
-                          <strong>Rainfall days:</strong>&nbsp;
-                          {field.rainfallDays}
-                        </li>
-                        <li>
-                          <strong>Rainfall factor:</strong>&nbsp;
-                          {Math.floor((field.rainfallFactor ?? 0) * 1000) /
-                            1000}
-                        </li>
-                      </ul>
-                      <div>Field Draw</div>
-                      {/*<Field*/}
-                      {/*  fieldSize={() => field.size as FieldSize}*/}
-                      {/*  customLength={() => field.customLength}*/}
-                      {/*  customWidth={() => field.customWidth}*/}
-                      {/*/>*/}
-                    </div>
-                  </details>
+
+                  <table aria-description="Field information">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <IonLabel style={{ fontWeight: 'bold' }}>
+                            Last painted
+                          </IonLabel>
+                        </td>
+                        <td>
+                          <IonLabel slot="end">
+                            {field.lastPainted.toLocaleDateString()}
+                          </IonLabel>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <IonLabel style={{ fontWeight: 'bold' }}>
+                            Predicted
+                          </IonLabel>
+                        </td>
+                        <td>
+                          <IonLabel slot="end">
+                            10
+                            {/*{field.predictedNextPaint?.toLocaleDateString()}*/}
+                          </IonLabel>
+                          {/*<DaysLeftChip*/}
+                          {/*  predictedNextPaint={field.predictedNextPaint}*/}
+                          {/*  lastPainted={field.lastPainted}*/}
+                          {/*/>*/}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <IonLabel style={{ fontWeight: 'bold' }}>
+                            Size
+                          </IonLabel>
+                        </td>
+                        <td>
+                          <IonLabel slot="end">
+                            {field.size} (
+                            {field.customLength ??
+                              SIZES[field.size ?? FieldSize.full]
+                                ?.recommendedMaxLength}
+                            L x{' '}
+                            {field.customWidth ??
+                              SIZES[field.size ?? FieldSize.full]
+                                ?.recommendedMaxWidth}
+                            W)
+                          </IonLabel>
+                        </td>
+                      </tr>
+                      {!!field.group && (
+                        <tr>
+                          <td>
+                            <IonLabel style={{ fontWeight: 'bold' }}>
+                              Group
+                            </IonLabel>
+                          </td>
+                          <td>
+                            <IonLabel slot="end">{field.group}</IonLabel>
+                          </td>
+                        </tr>
+                      )}
+                      <tr>
+                        <td>
+                          <IonLabel style={{ fontWeight: 'bold' }}>
+                            Max dry days
+                          </IonLabel>
+                        </td>
+                        <td>
+                          <IonLabel slot="end">{field.maxDryDays}</IonLabel>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <IonLabel style={{ fontWeight: 'bold' }}>
+                            Rainfall days
+                          </IonLabel>
+                        </td>
+                        <td>
+                          <IonLabel slot="end">{field.rainfallDays}</IonLabel>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <IonLabel style={{ fontWeight: 'bold' }}>
+                            Rainfall factor
+                          </IonLabel>
+                        </td>
+                        <td>
+                          <IonLabel slot="end">
+                            {Math.floor((field.rainfallFactor ?? 0) * 1000) /
+                              1000}
+                          </IonLabel>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div>
+                    <div>Field Draw</div>
+                    {/*<Field*/}
+                    {/*  fieldSize={() => field.size as FieldSize}*/}
+                    {/*  customLength={() => field.customLength}*/}
+                    {/*  customWidth={() => field.customWidth}*/}
+                    {/*/>*/}
+                  </div>
                   {/*<div>*/}
                   {/*  <button*/}
                   {/*    onClick={() => setShowConfirmPaint(true)}*/}
@@ -152,6 +208,59 @@ export const FieldDetail = () => {
           </>
         )}
       </IonContent>
+      <IonFooter
+        className="ion-padding"
+        style={{ display: 'flex', justifyContent: 'flex-end' }}
+      >
+        <IonButton
+          onClick={() => setShowConfirmPaint(true)}
+          // disabled={
+          //   !isOnline ||
+          //   differenceInCalendarDays(
+          //     new Date(),
+          //     field.lastPainted ?? new Date(),
+          //   ) < 3
+          // }
+        >
+          Mark Painted
+        </IonButton>
+        <ConfirmPaint
+          show={showConfirmPaint}
+          daysRemaining={10}
+          onPaint={() => {}}
+          reasonableLimitOfOverdueDays={10}
+          onCancel={() => setShowConfirmPaint(false)}
+        />
+        {/*<IonAlert*/}
+        {/*  isOpen={showConfirmPaint}*/}
+        {/*  header="A Short Title Is Best"*/}
+        {/*  subHeader="A Sub Header Is Optional"*/}
+        {/*  message="A message should be a short, complete sentence."*/}
+        {/*  buttons={[*/}
+        {/*    {*/}
+        {/*      text: 'Cancel',*/}
+        {/*      role: 'cancel',*/}
+        {/*      handler: () => {*/}
+        {/*        console.log('Alert canceled')*/}
+        {/*      },*/}
+        {/*    },*/}
+        {/*    {*/}
+        {/*      text: 'Was playable until yesterday',*/}
+        {/*      handler: () => {*/}
+        {/*        console.log('Alert canceled')*/}
+        {/*      },*/}
+        {/*    },*/}
+        {/*    {*/}
+        {/*      text: 'Mark Painted',*/}
+        {/*      role: 'confirm',*/}
+        {/*      handler: () => {*/}
+        {/*        console.log('Alert confirmed')*/}
+        {/*      },*/}
+        {/*    },*/}
+        {/*  ]}*/}
+        {/*  onDidDismiss={() => setShowConfirmPaint(false)}*/}
+        {/*></IonAlert>*/}
+      </IonFooter>
     </IonPage>
   )
 }

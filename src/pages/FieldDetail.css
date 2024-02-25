@@ -4,4 +4,31 @@
     margin: 0;
     padding: 0;
   }
+
+  table {
+    width: 100%;
+    border: 1px solid var(--ion-border-color);
+    border-radius: var(--border-radius);
+    border-collapse: unset;
+  }
+
+  thead {
+    background: var(--secondary-container-background);
+  }
+
+  tr:nth-child(even) {
+    background: var(--secondary-container-background);
+  }
+  tr:last-child {
+    td:first-child {
+      border-bottom-left-radius: var(--border-radius);
+    }
+    td:last-child {
+      border-bottom-right-radius: var(--border-radius);
+    }
+  }
+
+  td {
+    padding: 0.5rem;
+  }
 }

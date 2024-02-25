@@ -3,6 +3,13 @@ http://ionicframework.com/docs/theming/ */
 
 /** Ionic CSS Variables **/
 :root {
+  /* My variables */
+  --secondary-container-background: #f7f7f7;
+
+  --ion-border-color: rgba(0, 0, 0, 0.2);
+  --ion-toolbar-background: var(--secondary-container-background);
+  --border-radius: 14px;
+
   /** primary **/
   --ion-color-primary: #3880ff;
   --ion-color-primary-rgb: 56, 128, 255;
@@ -83,6 +90,11 @@ http://ionicframework.com/docs/theming/ */
    */
 
   body {
+    --secondary-container-background: var(--ion-color-step-150);
+
+    --ion-border-color: rgba(0, 0, 0, 0.2);
+    --ion-toolbar-background: var(--secondary-container-background);
+
     --ion-color-primary: #428cff;
     --ion-color-primary-rgb: 66, 140, 255;
     --ion-color-primary-contrast: #ffffff;
@@ -235,7 +247,7 @@ http://ionicframework.com/docs/theming/ */
 }
 
 html {
-  /* For more information on dynamic font scaling, visit the documentation: 
+  /* For more information on dynamic font scaling, visit the documentation:
   https://ionicframework.com/docs/layout/dynamic-font-scaling */
   --ion-dynamic-font: var(--ion-default-dynamic-font);
 }
