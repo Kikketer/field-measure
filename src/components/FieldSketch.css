@@ -4,7 +4,7 @@
 
   .label {
     background: var(--secondary-container-background);
-    padding: 0 0.5rem;
+    padding: 0.1rem 0.3rem;
     text-align: center;
     position: absolute;
   }
