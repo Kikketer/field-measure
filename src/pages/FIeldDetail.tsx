@@ -23,6 +23,7 @@ import { getField } from '../data/fields'
 import { SIZES } from '../utilities/constants'
 import { Field, FieldSize } from '../utilities/types'
 import './FieldDetail.css'
+import { FieldSketch } from '../components/FieldSketch'
 
 export const FieldDetail = () => {
   const isOnline = true
@@ -54,7 +55,7 @@ export const FieldDetail = () => {
           <>
             {field ? (
               <>
-                <div className="ion-padding">
+                <div className="ion-padding col gap-4">
                   <IonItem lines="none" style={{ alignItems: 'start' }}>
                     <IonLabel>
                       <h1>{field.name}</h1>
@@ -164,42 +165,12 @@ export const FieldDetail = () => {
                       </tr>
                     </tbody>
                   </table>
-                  <div>
-                    <div>Field Draw</div>
-                    {/*<Field*/}
-                    {/*  fieldSize={() => field.size as FieldSize}*/}
-                    {/*  customLength={() => field.customLength}*/}
-                    {/*  customWidth={() => field.customWidth}*/}
-                    {/*/>*/}
-                  </div>
-                  {/*<div>*/}
-                  {/*  <button*/}
-                  {/*    onClick={() => setShowConfirmPaint(true)}*/}
-                  {/*    disabled={*/}
-                  {/*      !isOnline?.() ||*/}
-                  {/*      differenceInCalendarDays(*/}
-                  {/*        new Date(),*/}
-                  {/*        field.lastPainted ?? new Date(),*/}
-                  {/*      ) < 3*/}
-                  {/*    }*/}
-                  {/*  >*/}
-                  {/*    Mark Painted*/}
-                  {/*  </button>*/}
-                  {/*</div>*/}
-                  {/*<ConfirmPaint*/}
-                  {/*  show={showConfirmPaint}*/}
-                  {/*  daysRemaining={() =>*/}
-                  {/*    differenceInCalendarDays(*/}
-                  {/*      field.predictedNextPaint ?? new Date(),*/}
-                  {/*      new Date(),*/}
-                  {/*    )*/}
-                  {/*  }*/}
-                  {/*  reasonableLimitOfOverdueDays={() =>*/}
-                  {/*    (field.maxDryDays ?? 0) * 2*/}
-                  {/*  }*/}
-                  {/*  onPaint={paintField}*/}
-                  {/*  onCancel={() => setShowConfirmPaint(false)}*/}
-                  {/*/>*/}
+
+                  <FieldSketch
+                    fieldSize={field.size as FieldSize}
+                    customLength={field.customLength}
+                    customWidth={field.customWidth}
+                  />
                 </div>
               </>
             ) : (
@@ -208,59 +179,30 @@ export const FieldDetail = () => {
           </>
         )}
       </IonContent>
-      <IonFooter
-        className="ion-padding"
-        style={{ display: 'flex', justifyContent: 'flex-end' }}
-      >
-        <IonButton
-          onClick={() => setShowConfirmPaint(true)}
-          // disabled={
-          //   !isOnline ||
-          //   differenceInCalendarDays(
-          //     new Date(),
-          //     field.lastPainted ?? new Date(),
-          //   ) < 3
-          // }
-        >
-          Mark Painted
-        </IonButton>
-        <ConfirmPaint
-          show={showConfirmPaint}
-          daysRemaining={10}
-          onPaint={() => {}}
-          reasonableLimitOfOverdueDays={10}
-          onCancel={() => setShowConfirmPaint(false)}
-        />
-        {/*<IonAlert*/}
-        {/*  isOpen={showConfirmPaint}*/}
-        {/*  header="A Short Title Is Best"*/}
-        {/*  subHeader="A Sub Header Is Optional"*/}
-        {/*  message="A message should be a short, complete sentence."*/}
-        {/*  buttons={[*/}
-        {/*    {*/}
-        {/*      text: 'Cancel',*/}
-        {/*      role: 'cancel',*/}
-        {/*      handler: () => {*/}
-        {/*        console.log('Alert canceled')*/}
-        {/*      },*/}
-        {/*    },*/}
-        {/*    {*/}
-        {/*      text: 'Was playable until yesterday',*/}
-        {/*      handler: () => {*/}
-        {/*        console.log('Alert canceled')*/}
-        {/*      },*/}
-        {/*    },*/}
-        {/*    {*/}
-        {/*      text: 'Mark Painted',*/}
-        {/*      role: 'confirm',*/}
-        {/*      handler: () => {*/}
-        {/*        console.log('Alert confirmed')*/}
-        {/*      },*/}
-        {/*    },*/}
-        {/*  ]}*/}
-        {/*  onDidDismiss={() => setShowConfirmPaint(false)}*/}
-        {/*></IonAlert>*/}
+      <IonFooter collapse="fade">
+        <IonToolbar>
+          <IonButton
+            slot="primary"
+            onClick={() => setShowConfirmPaint(true)}
+            // disabled={
+            //   !isOnline ||
+            //   differenceInCalendarDays(
+            //     new Date(),
+            //     field.lastPainted ?? new Date(),
+            //   ) < 3
+            // }
+          >
+            Mark Painted
+          </IonButton>
+        </IonToolbar>
       </IonFooter>
+      <ConfirmPaint
+        show={showConfirmPaint}
+        daysRemaining={10}
+        onPaint={() => {}}
+        reasonableLimitOfOverdueDays={10}
+        onCancel={() => setShowConfirmPaint(false)}
+      />
     </IonPage>
   )
 }
