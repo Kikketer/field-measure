@@ -1,0 +1,12 @@
+#home-page {
+  .grd {
+    display: grid;
+    grid-template-rows: 8fr 1fr;
+  }
+
+  .button-block {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+}

@@ -1,6 +1,7 @@
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { Redirect, Route } from 'react-router-dom'
+import { SupabaseProvider } from './components/SupabaseProvider'
 import { FieldDetail } from './pages/FIeldDetail'
 import Fields from './pages/Fields'
 
@@ -23,24 +24,32 @@ import '@ionic/react/css/display.css'
 /* Theme variables */
 import './theme/variables.css'
 import './theme/globals.css'
+import { AuthRoute } from './components/AuthRoute'
+import { Home } from './pages/Home'
 
 setupIonicReact()
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route path="/" exact={true}>
-          <Redirect to="/fields" />
-        </Route>
-        <Route path="/fields" exact={true}>
-          <Fields />
-        </Route>
-        <Route path="/fields/:id">
-          <FieldDetail />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
+    <SupabaseProvider>
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route path="/" exact={true}>
+            <Home />
+          </Route>
+          <Route path="/fields" exact={true}>
+            <AuthRoute>
+              <Fields />
+            </AuthRoute>
+          </Route>
+          <Route path="/fields/:id">
+            <AuthRoute>
+              <FieldDetail />
+            </AuthRoute>
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </SupabaseProvider>
   </IonApp>
 )
 

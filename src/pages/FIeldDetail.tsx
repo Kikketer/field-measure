@@ -45,6 +45,7 @@ export const FieldDetail = () => {
           <IonButtons slot="start">
             <IonBackButton text="Fields" defaultHref="/fields"></IonBackButton>
           </IonButtons>
+          {!loading && field && <IonTitle>Field A</IonTitle>}
         </IonToolbar>
       </IonHeader>
 
@@ -55,10 +56,14 @@ export const FieldDetail = () => {
           <>
             {field ? (
               <>
+                <IonHeader collapse="condense">
+                  <IonToolbar>
+                    <IonTitle size="large">Field A</IonTitle>
+                  </IonToolbar>
+                </IonHeader>
                 <div className="ion-padding col gap-4">
                   <IonItem lines="none" style={{ alignItems: 'start' }}>
                     <IonLabel>
-                      <h1>{field.name}</h1>
                       <IonNote>{field.description}</IonNote>
                     </IonLabel>
                     <IonLabel slot="end">
@@ -179,7 +184,7 @@ export const FieldDetail = () => {
           </>
         )}
       </IonContent>
-      <IonFooter collapse="fade">
+      <IonFooter translucent collapse="fade">
         <IonToolbar>
           <IonButton
             slot="primary"

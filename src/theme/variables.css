@@ -4,14 +4,23 @@ http://ionicframework.com/docs/theming/ */
 /** Ionic CSS Variables **/
 :root {
   /* My variables */
-  --secondary-container-background: #f7f7f7;
+  --accent: #442b48;
+  --border: #726e60;
+  --primary: #98b06f;
+  --secondary: #ece9eb;
+  --white: #fdfdff;
 
-  --ion-border-color: rgba(0, 0, 0, 0.2);
+  --ion-background-color: var(--white);
+  --ion-border-color: var(--border);
+
+  --secondary-container-background: var(--secondary);
+
+  /*--ion-border-color: rgba(0, 0, 0, 0.2);*/
   --ion-toolbar-background: var(--secondary-container-background);
   --border-radius: 14px;
 
   /** primary **/
-  --ion-color-primary: #3880ff;
+  --ion-color-primary: var(--accent);
   --ion-color-primary-rgb: 56, 128, 255;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
@@ -19,7 +28,7 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-primary-tint: #4c8dff;
 
   /** secondary **/
-  --ion-color-secondary: #3dc2ff;
+  --ion-color-secondary: var(--border);
   --ion-color-secondary-rgb: 61, 194, 255;
   --ion-color-secondary-contrast: #ffffff;
   --ion-color-secondary-contrast-rgb: 255, 255, 255;
