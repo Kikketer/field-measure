@@ -1,8 +1,3 @@
-import { FieldListItem } from '../components/FieldListItem'
-import MessageListItem from '../components/MessageListItem'
-import { useState } from 'react'
-import { getFields } from '../data/fields'
-import { Message, getMessages } from '../data/messages'
 import {
   IonContent,
   IonHeader,
@@ -14,13 +9,20 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
+import { useEffect, useState } from 'react'
+import { FieldListItem } from '../components/FieldListItem'
+import { useSupabase } from '../components/SupabaseProvider'
+import { getFields } from '../utilities/data'
 import { Field } from '../utilities/types'
 
 const Fields: React.FC = () => {
   const [fields, setFields] = useState<Field[]>([])
+  const { supabase } = useSupabase()
 
   useIonViewWillEnter(() => {
-    getFields().then((fields) => setFields(fields))
+    if (supabase) {
+      getFields({ supabase }).then((fields) => setFields(fields))
+    }
   })
 
   const refresh = (e: CustomEvent) => {

@@ -19,7 +19,8 @@ import {
 import React, { useState } from 'react'
 import { useParams } from 'react-router'
 import { ConfirmPaint } from '../components/ConfirmPaint'
-import { getField } from '../data/fields'
+import { useSupabase } from '../components/SupabaseProvider'
+import { getField } from '../utilities/data'
 import { SIZES } from '../utilities/constants'
 import { Field, FieldSize } from '../utilities/types'
 import './FieldDetail.css'
@@ -31,9 +32,10 @@ export const FieldDetail = () => {
   const [showConfirmPaint, setShowConfirmPaint] = useState(false)
   const [field, setField] = useState<Field>()
   const params = useParams<{ id: string }>()
+  const { supabase } = useSupabase()
 
   useIonViewWillEnter(() => {
-    getField(params.id).then((foundField) => {
+    getField({ supabase, id: params.id }).then((foundField) => {
       setField(foundField)
     })
   })
@@ -45,7 +47,7 @@ export const FieldDetail = () => {
           <IonButtons slot="start">
             <IonBackButton text="Fields" defaultHref="/fields"></IonBackButton>
           </IonButtons>
-          {!loading && field && <IonTitle>Field A</IonTitle>}
+          {!loading && field && <IonTitle>{field.name}</IonTitle>}
         </IonToolbar>
       </IonHeader>
 
@@ -58,7 +60,7 @@ export const FieldDetail = () => {
               <>
                 <IonHeader collapse="condense">
                   <IonToolbar>
-                    <IonTitle size="large">Field A</IonTitle>
+                    <IonTitle size="large">{field.name}</IonTitle>
                   </IonToolbar>
                 </IonHeader>
                 <div className="ion-padding col gap-4">

@@ -44,7 +44,6 @@ export const SupabaseProvider: React.FC<PropsWithChildren> = ({ children }) => {
     // First log out of supabase:
     await supabase.auth.signOut()
 
-    console.log('Redirect to ', import.meta.env.VITE_PUBLIC_REDIRECT_URL)
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
