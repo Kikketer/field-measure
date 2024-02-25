@@ -10,7 +10,7 @@ import {
 } from '../utilities/lineLabels'
 import { FieldSize } from '../utilities/types'
 import { SIZES } from '../utilities/constants'
-import './Field.css'
+import './FieldSketch.css'
 
 type FieldProps = {
   fieldSize: FieldSize
@@ -50,28 +50,28 @@ export const FieldSketch: React.FC<FieldProps> = ({
   return (
     <div id="field-drawing">
       {getSoccerFieldImage(fieldSize)}
-      {/*{getLabelsForField(fieldSize).map((label) => (*/}
-      {/*  <Fragment key={label.id}>*/}
-      {/*    {!!label.getLength({*/}
-      {/*      fieldSize,*/}
-      {/*      fieldWidth: customWidth,*/}
-      {/*      fieldLength: customLength,*/}
-      {/*    }) && (*/}
-      {/*      <div*/}
-      {/*        className="label"*/}
-      {/*        style={{ left: `${label.x}%`, top: `${label.y}%` }}*/}
-      {/*      >*/}
-      {/*        {convertToFeet(*/}
-      {/*          label.getLength({*/}
-      {/*            fieldSize,*/}
-      {/*            fieldWidth: customWidth,*/}
-      {/*            fieldLength: customLength,*/}
-      {/*          }),*/}
-      {/*        )}*/}
-      {/*      </div>*/}
-      {/*    )}*/}
-      {/*  </Fragment>*/}
-      {/*))}*/}
+      {getLabelsForField(fieldSize).map((label) => (
+        <Fragment key={label.id}>
+          {!!label.getLength({
+            fieldSize,
+            fieldWidth: customWidth,
+            fieldLength: customLength,
+          }) && (
+            <div
+              className="label"
+              style={{ left: `${label.x}%`, top: `${label.y}%` }}
+            >
+              {convertToFeet(
+                label.getLength({
+                  fieldSize,
+                  fieldWidth: customWidth,
+                  fieldLength: customLength,
+                }),
+              )}
+            </div>
+          )}
+        </Fragment>
+      ))}
       <div className="label" style={{ left: '20%', top: '90%', width: '60%' }}>
         {fieldSize}: {customLength ?? SIZES[fieldSize].recommendedMaxLength}L x{' '}
         {customWidth ?? SIZES[fieldSize].recommendedMaxWidth}W
