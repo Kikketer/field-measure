@@ -1,12 +1,26 @@
+import { vi, expect } from 'vitest'
 import {
   getFieldWithAdjustedRainFactorAndDryDays,
   getPredictedDaysUntilPaint,
 } from './predictNextPainting'
+import { Field, PaintHistory } from './types'
+
+const mockField: Field = {
+  markedUnplayable: new Date('2023-10-01'),
+  name: 'Mock Field',
+  paintTeamId: 0,
+  size: 'full',
+  sortOrder: 0,
+  maxDryDays: 14,
+  lastPainted: new Date('2023-10-01'),
+  rainfallDays: 0,
+  rainfallFactor: 1,
+}
 
 describe('Calculate Conditions', () => {
   beforeEach(() => {
-    jest.useFakeTimers()
-    jest.setSystemTime(new Date('2023-10-01'))
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2023-10-01'))
   })
 
   describe('Get Predicted Days Until Paint', () => {
@@ -59,6 +73,7 @@ describe('Calculate Conditions', () => {
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
+          ...mockField,
           maxDryDays,
           rainfallDays,
           rainfallFactor,
@@ -86,6 +101,7 @@ describe('Calculate Conditions', () => {
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
+          ...mockField,
           maxDryDays,
           rainfallDays,
           rainfallFactor,
@@ -109,6 +125,7 @@ describe('Calculate Conditions', () => {
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
+          ...mockField,
           maxDryDays,
           rainfallDays,
           rainfallFactor,
@@ -128,10 +145,11 @@ describe('Calculate Conditions', () => {
       const rainfallDays = 0
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
-      const paintHistory = []
+      const paintHistory: PaintHistory[] = []
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
+          ...mockField,
           maxDryDays,
           rainfallDays,
           rainfallFactor,
@@ -154,12 +172,13 @@ describe('Calculate Conditions', () => {
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
       // The previous period was dry as well:
-      const paintHistory = [
+      const paintHistory: PaintHistory[] = [
         // { rainfallDays: 0, rainfallFactor: 1, daysUnpainted: 5 },
       ]
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
+          ...mockField,
           maxDryDays,
           rainfallDays,
           rainfallFactor,
@@ -185,10 +204,13 @@ describe('Calculate Conditions', () => {
       const rainfallFactor = 1
       const lastPainted = new Date('2023-10-01')
       // Previous is ignored since we hae rainfall days this period
-      const paintHistory = [{ rainfallFactor: 1, daysUnpainted: 5 }]
+      const paintHistory: PaintHistory[] = [
+        { rainfallFactor: 1, daysUnpainted: 5, rainfallDays: 0 },
+      ]
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
+          ...mockField,
           maxDryDays,
           rainfallDays,
           rainfallFactor,
@@ -215,6 +237,7 @@ describe('Calculate Conditions', () => {
 
       const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
         currentField: {
+          ...mockField,
           maxDryDays,
           rainfallDays,
           rainfallFactor,

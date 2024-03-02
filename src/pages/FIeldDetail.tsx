@@ -79,18 +79,6 @@ export const FieldDetail = () => {
                       <tr>
                         <td>
                           <IonLabel style={{ fontWeight: 'bold' }}>
-                            Last painted
-                          </IonLabel>
-                        </td>
-                        <td>
-                          <IonLabel slot="end">
-                            {field.lastPainted.toLocaleDateString()}
-                          </IonLabel>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>
-                          <IonLabel style={{ fontWeight: 'bold' }}>
                             Predicted
                           </IonLabel>
                         </td>
@@ -102,6 +90,18 @@ export const FieldDetail = () => {
                               new Date(),
                             )}
                             )
+                          </IonLabel>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <IonLabel style={{ fontWeight: 'bold' }}>
+                            Last painted
+                          </IonLabel>
+                        </td>
+                        <td>
+                          <IonLabel slot="end">
+                            {field.lastPainted.toLocaleDateString()}
                           </IonLabel>
                         </td>
                       </tr>
@@ -209,9 +209,12 @@ export const FieldDetail = () => {
       </IonFooter>
       <ConfirmPaint
         show={showConfirmPaint}
-        daysRemaining={10}
+        daysRemaining={differenceInCalendarDays(
+          new Date(field?.predictedNextPaint ?? new Date()),
+          new Date(),
+        )}
         onPaint={() => {}}
-        reasonableLimitOfOverdueDays={10}
+        reasonableLimitOfOverdueDays={(field?.maxDryDays || 12) * 2}
         onCancel={() => setShowConfirmPaint(false)}
       />
     </IonPage>

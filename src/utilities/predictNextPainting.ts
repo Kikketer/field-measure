@@ -21,10 +21,7 @@ export const getFieldWithAdjustedRainFactorAndDryDays = ({
   markUnplayableOn,
   paintHistory,
 }: {
-  currentField: Pick<
-    Field,
-    'maxDryDays' | 'rainfallDays' | 'rainfallFactor' | 'lastPainted'
-  >
+  currentField: Field
   markUnplayableOn: Date
   paintHistory: Array<Pick<PaintHistory, 'rainfallFactor' | 'daysUnpainted'>>
 }): Field => {

@@ -52,32 +52,8 @@ const overduePrompt = (
   ],
 })
 
-// const OverduePrompt = (props) => {
-//   return (
-//     <article className={styles.Col}>
-//       <p>
-//         This field was overdue by{' '}
-//         <strong>{-(props.daysRemaining?.() ?? 0)}</strong> days. Was it playable
-//         until today or was it unplayable for {-(props.daysRemaining?.() ?? 0)}{' '}
-//         days?
-//       </p>
-//       <div>
-//         <button onClick={() => props.onPaint({ shouldAdjustFactor: true })}>
-//           Was Playable Until Today
-//         </button>
-//         <button onClick={() => props.onPaint({ shouldAdjustFactor: false })}>
-//           Was Not Playable {-(props.daysRemaining?.() ?? 0)} Days Ago
-//         </button>
-//         <button className="secondary" onClick={() => props.onCancel}>
-//           Cancel
-//         </button>
-//       </div>
-//     </article>
-//   )
-// }
-
 const wayOverduePrompt = (
-  onPaint: (T: { shouldAdjustFactor?: boolean }) => void,
+  onPaint: (T: { shouldAdjustFactor: boolean }) => void,
 ) => ({
   heading: 'Way Overdue',
   message:
@@ -96,23 +72,6 @@ const wayOverduePrompt = (
     },
   ],
 })
-
-// {/*<Switch>*/}
-//       {/*  <Match*/}
-//       {/*    when={*/}
-//       {/*      props.daysRemaining?.() &&*/}
-//       {/*      props.daysRemaining() < -props.reasonableLimitOfOverdueDays()*/}
-//       {/*    }*/}
-//       {/*  >*/}
-//       {/*    <WayOverduePrompt {...props} />*/}
-//       {/*  </Match>*/}
-//       {/*  <Match when={props.daysRemaining?.() && props.daysRemaining() < 0}>*/}
-//       {/*    <OverduePrompt {...props} />*/}
-//       {/*  </Match>*/}
-//       {/*  <Match when={true}>*/}
-//       {/*    <StandardUnplayablePrompt {...props} />*/}
-//       {/*  </Match>*/}
-//       {/*</Switch>*/}
 
 export const ConfirmPaint: React.FC<{
   show: boolean
