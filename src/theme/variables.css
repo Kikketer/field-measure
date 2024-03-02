@@ -9,6 +9,9 @@ http://ionicframework.com/docs/theming/ */
   --primary: #98b06f;
   --secondary: #ece9eb;
   --white: #fdfdff;
+  --success: #388e3c;
+  --warning: #f7a278;
+  --danger: #c62828;
 
   --ion-background-color: var(--white);
   --ion-border-color: var(--border);

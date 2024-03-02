@@ -1,0 +1,24 @@
+.StatusContainer {
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.StatusPill {
+  text-align: center;
+  border-radius: 1rem;
+  padding: 0 0.875rem;
+  display: inline-block;
+  width: auto;
+}
+
+.StatusGreen {
+  background: green;
+  color: white;
+}
+
+.StatusRed {
+  background: #9b0000;
+  color: white;
+}

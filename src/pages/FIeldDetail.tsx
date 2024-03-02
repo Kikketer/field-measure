@@ -1,5 +1,4 @@
 import {
-  IonAlert,
   IonBackButton,
   IonButton,
   IonButtons,
@@ -8,7 +7,6 @@ import {
   IonHeader,
   IonItem,
   IonLabel,
-  IonList,
   IonNote,
   IonPage,
   IonSkeletonText,
@@ -16,15 +14,18 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
+import { differenceInCalendarDays } from 'date-fns'
 import React, { useState } from 'react'
 import { useParams } from 'react-router'
 import { ConfirmPaint } from '../components/ConfirmPaint'
+import { DaysLeftChip } from '../components/DaysLeftChip'
+import { FieldSketch } from '../components/FieldSketch'
 import { useSupabase } from '../components/SupabaseProvider'
-import { getField } from '../utilities/data'
 import { SIZES } from '../utilities/constants'
+import { getField } from '../utilities/data'
 import { Field, FieldSize } from '../utilities/types'
 import './FieldDetail.css'
-import { FieldSketch } from '../components/FieldSketch'
+import { StatusLabel } from '../components/StatusLabel'
 
 export const FieldDetail = () => {
   const isOnline = true
@@ -69,8 +70,7 @@ export const FieldDetail = () => {
                       <IonNote>{field.description}</IonNote>
                     </IonLabel>
                     <IonLabel slot="end">
-                      Status
-                      {/*<StatusLabel field={thisField} />*/}
+                      <StatusLabel field={field} />
                     </IonLabel>
                   </IonItem>
 
@@ -96,13 +96,13 @@ export const FieldDetail = () => {
                         </td>
                         <td>
                           <IonLabel slot="end">
-                            10
-                            {/*{field.predictedNextPaint?.toLocaleDateString()}*/}
+                            {field.predictedNextPaint?.toLocaleDateString()} (
+                            {differenceInCalendarDays(
+                              new Date(field.predictedNextPaint ?? new Date()),
+                              new Date(),
+                            )}
+                            )
                           </IonLabel>
-                          {/*<DaysLeftChip*/}
-                          {/*  predictedNextPaint={field.predictedNextPaint}*/}
-                          {/*  lastPainted={field.lastPainted}*/}
-                          {/*/>*/}
                         </td>
                       </tr>
                       <tr>
@@ -144,7 +144,9 @@ export const FieldDetail = () => {
                           </IonLabel>
                         </td>
                         <td>
-                          <IonLabel slot="end">{field.maxDryDays}</IonLabel>
+                          <IonLabel slot="end">
+                            {field.maxDryDays} days
+                          </IonLabel>
                         </td>
                       </tr>
                       <tr>
@@ -154,7 +156,9 @@ export const FieldDetail = () => {
                           </IonLabel>
                         </td>
                         <td>
-                          <IonLabel slot="end">{field.rainfallDays}</IonLabel>
+                          <IonLabel slot="end">
+                            {field.rainfallDays} days
+                          </IonLabel>
                         </td>
                       </tr>
                       <tr>
