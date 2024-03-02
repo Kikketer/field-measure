@@ -195,13 +195,20 @@ export const FieldDetail = () => {
           <IonButton
             slot="primary"
             onClick={() => setShowConfirmPaint(true)}
-            // disabled={
-            //   !isOnline ||
-            //   differenceInCalendarDays(
-            //     new Date(),
-            //     field.lastPainted ?? new Date(),
-            //   ) < 3
-            // }
+            fill={
+              differenceInCalendarDays(
+                new Date(),
+                field?.lastPainted ?? new Date(),
+              ) < 3
+                ? 'outline'
+                : 'solid'
+            }
+            disabled={
+              differenceInCalendarDays(
+                new Date(),
+                field?.lastPainted ?? new Date(),
+              ) < 3
+            }
           >
             Mark Painted
           </IonButton>

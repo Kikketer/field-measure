@@ -1,9 +1,13 @@
 import React from 'react'
 import { IonAlert } from '@ionic/react'
 
-const standardUnplayablePrompt = (
-  onPaint: (T: { shouldAdjustFactor: boolean }) => void,
-) => ({
+type PromptConfigProps = {
+  daysRemaining?: number
+  onPaint: (T: { shouldAdjustFactor: boolean }) => void
+}
+
+const standardUnplayablePrompt = ({ onPaint }: PromptConfigProps) => ({
+  heading: 'Paint Field',
   message: 'Was this field unplayable when you painted it?',
   buttons: [
     {
@@ -26,18 +30,16 @@ const standardUnplayablePrompt = (
   ],
 })
 
-const overduePrompt = (
-  onPaint: (T: { shouldAdjustFactor: boolean }) => void,
-) => ({
+const overduePrompt = ({ daysRemaining, onPaint }: PromptConfigProps) => ({
   header: 'Overdue Field',
-  message: `This field is overdue`,
+  message: 'Mark this field as painted',
   buttons: [
     {
       text: 'Cancel',
       role: 'cancel',
     },
     {
-      text: 'Was not playable before today',
+      text: `Was unplayable ${Math.abs(daysRemaining ?? 0)} days ago`,
       handler: () => {
         onPaint({ shouldAdjustFactor: false })
       },
@@ -52,12 +54,9 @@ const overduePrompt = (
   ],
 })
 
-const wayOverduePrompt = (
-  onPaint: (T: { shouldAdjustFactor: boolean }) => void,
-) => ({
+const wayOverduePrompt = ({ onPaint }: PromptConfigProps) => ({
   heading: 'Way Overdue',
-  message:
-    "This field is way overdue. Painting it now will not update it's predicted dates.",
+  message: 'This field is way overdue. Predictions will not be adjusted',
   buttons: [
     {
       text: 'Cancel',
@@ -86,14 +85,17 @@ export const ConfirmPaint: React.FC<{
   reasonableLimitOfOverdueDays,
   onPaint,
 }) => {
-  let resultingConfig = standardUnplayablePrompt(onPaint)
+  let resultingConfig = standardUnplayablePrompt({
+    daysRemaining,
+    onPaint,
+  })
 
   if (daysRemaining < -reasonableLimitOfOverdueDays) {
     // The field is beyond a reasonable amount of time, so it's WAY overdue (start of season?)
-    resultingConfig = wayOverduePrompt(onPaint)
+    resultingConfig = wayOverduePrompt({ daysRemaining, onPaint })
   } else if (daysRemaining < 0) {
     // The field is just averagely out of date
-    resultingConfig = overduePrompt(onPaint)
+    resultingConfig = overduePrompt({ daysRemaining, onPaint })
   }
 
   return (
