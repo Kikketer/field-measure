@@ -12,7 +12,10 @@ export const FieldListItem = ({ field }: { field: Field }) => {
           predictedNextPaint={field.predictedNextPaint}
         />
       </div>
-      <IonLabel className="ion-text-wrap">{field.name}</IonLabel>
+      <IonLabel className="ion-text-wrap">
+        <h2>{field.name}</h2>
+        <p>{field.description}</p>
+      </IonLabel>
     </IonItem>
   )
 }

@@ -29,7 +29,6 @@ import { Field, FieldSize } from '../utilities/types'
 import './FieldDetail.css'
 
 export const FieldDetail = () => {
-  const isOnline = true
   const [loading, setLoading] = useState(false)
   const [showConfirmPaint, setShowConfirmPaint] = useState(false)
   const [field, setField] = useState<Field>()
@@ -37,8 +36,10 @@ export const FieldDetail = () => {
   const { supabase } = useSupabase()
 
   useIonViewWillEnter(() => {
+    setLoading(true)
     getField({ supabase, id: params.id }).then((foundField) => {
       setField(foundField)
+      setLoading(false)
     })
   })
 
@@ -236,5 +237,70 @@ export const FieldDetail = () => {
 }
 
 const FieldDetailSkeleton = () => {
-  return <IonSkeletonText animated={true} style={{ width: 80 }} />
+  return (
+    <div className="ion-padding">
+      <IonSkeletonText
+        animated={true}
+        style={{ height: '2rem', width: '50%', marginBottom: '3rem' }}
+      />
+      <IonSkeletonText
+        animated={true}
+        style={{ height: '1rem', width: '50%', marginBottom: '2rem' }}
+      />
+      <table aria-description="Field information">
+        <tbody>
+          <tr>
+            <td>
+              <IonLabel style={{ fontWeight: 'bold' }}>Predicted</IonLabel>
+            </td>
+            <td>
+              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <IonLabel style={{ fontWeight: 'bold' }}>Last painted</IonLabel>
+            </td>
+            <td>
+              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <IonLabel style={{ fontWeight: 'bold' }}>Size</IonLabel>
+            </td>
+            <td>
+              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <IonLabel style={{ fontWeight: 'bold' }}>Max dry days</IonLabel>
+            </td>
+            <td>
+              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <IonLabel style={{ fontWeight: 'bold' }}>Rainfall days</IonLabel>
+            </td>
+            <td>
+              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <IonLabel style={{ fontWeight: 'bold' }}>
+                Rainfall factor
+              </IonLabel>
+            </td>
+            <td>
+              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  )
 }

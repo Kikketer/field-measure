@@ -2,9 +2,11 @@ import {
   IonContent,
   IonHeader,
   IonList,
+  IonLoading,
   IonPage,
   IonRefresher,
   IonRefresherContent,
+  IonSpinner,
   IonTitle,
   IonToolbar,
   useIonViewWillEnter,
@@ -16,51 +18,69 @@ import { getFields } from '../utilities/data'
 import { Field } from '../utilities/types'
 
 const Fields: React.FC = () => {
+  const [loading, setLoading] = useState(true)
   const [fields, setFields] = useState<Field[]>([])
   const { supabase } = useSupabase()
 
   useIonViewWillEnter(() => {
     if (supabase) {
-      console.log('Getting fields')
       getFields({ supabase }).then((fields) => {
-        console.log('Got new fields', fields)
         setFields(fields)
+        setLoading(false)
       })
     }
   })
 
   const refresh = (e: CustomEvent) => {
-    getFields({ supabase }).then((fields) => {
-      console.log('Got new fields', fields)
-      setFields(fields)
-      e.detail.complete()
-    })
+    getFields({ supabase })
+      .then((fields) => {
+        setFields(fields)
+        e.detail.complete()
+      })
+      .catch(() => e.detail.complete())
   }
 
   return (
     <IonPage id="fields-page">
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Fields</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonRefresher slot="fixed" onIonRefresh={refresh}>
-          <IonRefresherContent></IonRefresherContent>
-        </IonRefresher>
+      {loading ? (
+        <IonContent fullscreen>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+            }}
+          >
+            <IonSpinner />
+          </div>
+        </IonContent>
+      ) : (
+        <>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Fields</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent fullscreen>
+            <IonRefresher slot="fixed" onIonRefresh={refresh}>
+              <IonRefresherContent></IonRefresherContent>
+            </IonRefresher>
 
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Fields</IonTitle>
-          </IonToolbar>
-        </IonHeader>
+            <IonHeader collapse="condense">
+              <IonToolbar>
+                <IonTitle size="large">Fields</IonTitle>
+              </IonToolbar>
+            </IonHeader>
 
-        <IonList>
-          {fields.map((field) => (
-            <FieldListItem key={field.id} field={field} />
-          ))}
-        </IonList>
-      </IonContent>
+            <IonList>
+              {fields.map((field) => (
+                <FieldListItem key={field.id} field={field} />
+              ))}
+            </IonList>
+          </IonContent>
+        </>
+      )}
     </IonPage>
   )
 }
