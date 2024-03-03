@@ -1,6 +1,9 @@
 import {
   IonContent,
   IonHeader,
+  IonItemDivider,
+  IonItemGroup,
+  IonLabel,
   IonList,
   IonLoading,
   IonPage,
@@ -16,16 +19,17 @@ import { FieldListItem } from '../components/FieldListItem'
 import { useSupabase } from '../components/SupabaseProvider'
 import { getFields } from '../utilities/data'
 import { Field } from '../utilities/types'
+import { groupFields } from '../utilities/utils'
 
 const Fields: React.FC = () => {
   const [loading, setLoading] = useState(true)
-  const [fields, setFields] = useState<Field[]>([])
+  const [fields, setFields] = useState<{ [groupName: string]: Field[] }>([])
   const { supabase } = useSupabase()
 
   useIonViewWillEnter(() => {
     if (supabase) {
       getFields({ supabase }).then((fields) => {
-        setFields(fields)
+        setFields(groupFields(fields))
         setLoading(false)
       })
     }
@@ -34,7 +38,7 @@ const Fields: React.FC = () => {
   const refresh = (e: CustomEvent) => {
     getFields({ supabase })
       .then((fields) => {
-        setFields(fields)
+        setFields(groupFields(fields))
         e.detail.complete()
       })
       .catch(() => e.detail.complete())
@@ -74,9 +78,19 @@ const Fields: React.FC = () => {
             </IonHeader>
 
             <IonList>
-              {fields.map((field) => (
-                <FieldListItem key={field.id} field={field} />
+              {Object.keys(fields).map((groupName) => (
+                <IonItemGroup>
+                  <IonItemDivider>
+                    <IonLabel>{groupName}</IonLabel>
+                  </IonItemDivider>
+                  {fields[groupName].map((field) => (
+                    <FieldListItem key={field.id} field={field} />
+                  ))}
+                </IonItemGroup>
               ))}
+              {/*{fields.map((field) => (*/}
+              {/*  <FieldListItem key={field.id} field={field} />*/}
+              {/*))}*/}
             </IonList>
           </IonContent>
         </>
