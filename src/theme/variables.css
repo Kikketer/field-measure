@@ -10,8 +10,14 @@ http://ionicframework.com/docs/theming/ */
   --secondary: #ece9eb;
   --white: #fdfdff;
   --success: #388e3c;
+  --success-light: #50ad55;
+  --success-contrast: white;
   --warning: #f7a278;
+  --warning-contrast: black;
+  --warning-light: #efa281;
   --danger: #c62828;
+  --danger-contrast: white;
+  --danger-light: #ce3838;
 
   --ion-background-color: var(--white);
   --ion-border-color: var(--border);

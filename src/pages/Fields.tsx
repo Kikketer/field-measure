@@ -21,14 +21,20 @@ const Fields: React.FC = () => {
 
   useIonViewWillEnter(() => {
     if (supabase) {
-      getFields({ supabase }).then((fields) => setFields(fields))
+      console.log('Getting fields')
+      getFields({ supabase }).then((fields) => {
+        console.log('Got new fields', fields)
+        setFields(fields)
+      })
     }
   })
 
   const refresh = (e: CustomEvent) => {
-    setTimeout(() => {
+    getFields({ supabase }).then((fields) => {
+      console.log('Got new fields', fields)
+      setFields(fields)
       e.detail.complete()
-    }, 3000)
+    })
   }
 
   return (

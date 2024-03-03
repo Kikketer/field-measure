@@ -45,6 +45,7 @@ export const FieldDetail = () => {
   const onPaint = async ({ adjustFactor }: { adjustFactor: boolean }) => {
     if (!field) return
     const resultingField = await paintField({ field, adjustFactor, supabase })
+    setField(resultingField)
   }
 
   return (

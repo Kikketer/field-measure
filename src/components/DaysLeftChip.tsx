@@ -9,19 +9,32 @@ const getColorAtPercentage = (percentage: number) => {
   return 'var(--danger)'
 }
 
+// Slightly lighter to allow us to see the text and slice
+const getOffColorAtPercentage = (percentage: number) => {
+  if (percentage < 50) return 'var(--success-light)'
+  if (percentage < 75) return 'var(--warning-light)'
+  return 'var(--danger-light)'
+}
+
+const getColorContrast = (percentage: number) => {
+  if (percentage < 50) return 'var(--success-contrast)'
+  if (percentage < 75) return 'var(--warning-contrast)'
+  return 'var(--danger-contrast)'
+}
+
 export const DaysLeftChip: React.FC<{
   predictedNextPaint: Field['predictedNextPaint']
   lastPainted: Field['lastPainted']
-}> = (props) => {
-  if (!props.predictedNextPaint || !props.lastPainted) return null
+}> = ({ predictedNextPaint, lastPainted }) => {
+  if (!predictedNextPaint || !lastPainted) return null
 
   const percentage = useMemo(() => {
     const totalDaysPredicted = differenceInCalendarDays(
-      props.predictedNextPaint ?? new Date(),
-      props.lastPainted,
+      predictedNextPaint ?? new Date(),
+      lastPainted,
     )
     const daysLeft = differenceInCalendarDays(
-      props.predictedNextPaint ?? new Date(),
+      predictedNextPaint ?? new Date(),
       new Date(),
     )
 
@@ -39,7 +52,7 @@ export const DaysLeftChip: React.FC<{
 
     // Also flip it, 99% = basically gone
     return percentageGone
-  }, [])
+  }, [predictedNextPaint, lastPainted])
 
   return (
     <div>
@@ -50,12 +63,16 @@ export const DaysLeftChip: React.FC<{
             // @ts-ignore
             '--current': `${percentage}%`,
             '--currentColor': getColorAtPercentage(percentage),
+            '--currentContrast': getColorContrast(percentage),
+            '--currentOffColor': getOffColorAtPercentage(percentage),
           }}
-        />
+        >
+          {differenceInCalendarDays(predictedNextPaint, new Date())}
+        </span>
       ) : (
         <div className={styles.Total} />
       )}
-      {/*{differenceInCalendarDays(props.predictedNextPaint, new Date())}*/}
+      {/*{differenceInCalendarDays(predictedNextPaint, new Date())}*/}
     </div>
   )
 }
