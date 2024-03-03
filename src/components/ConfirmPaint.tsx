@@ -3,7 +3,7 @@ import { IonAlert } from '@ionic/react'
 
 type PromptConfigProps = {
   daysRemaining?: number
-  onPaint: (T: { shouldAdjustFactor: boolean }) => void
+  onPaint: (T: { adjustFactor: boolean }) => void
 }
 
 const standardUnplayablePrompt = ({ onPaint }: PromptConfigProps) => ({
@@ -17,21 +17,21 @@ const standardUnplayablePrompt = ({ onPaint }: PromptConfigProps) => ({
     {
       text: 'Playable but painted anyway',
       handler: () => {
-        onPaint({ shouldAdjustFactor: false })
+        onPaint({ adjustFactor: false })
       },
     },
     {
       text: 'Unplayable',
       role: 'confirm',
       handler: () => {
-        onPaint({ shouldAdjustFactor: true })
+        onPaint({ adjustFactor: true })
       },
     },
   ],
 })
 
 const overduePrompt = ({ daysRemaining, onPaint }: PromptConfigProps) => ({
-  header: 'Overdue Field',
+  heading: 'Overdue Field',
   message: 'Mark this field as painted',
   buttons: [
     {
@@ -41,14 +41,14 @@ const overduePrompt = ({ daysRemaining, onPaint }: PromptConfigProps) => ({
     {
       text: `Was unplayable ${Math.abs(daysRemaining ?? 0)} days ago`,
       handler: () => {
-        onPaint({ shouldAdjustFactor: false })
+        onPaint({ adjustFactor: false })
       },
     },
     {
       text: 'Was playable until today',
       role: 'confirm',
       handler: () => {
-        onPaint({ shouldAdjustFactor: true })
+        onPaint({ adjustFactor: true })
       },
     },
   ],
@@ -66,7 +66,7 @@ const wayOverduePrompt = ({ onPaint }: PromptConfigProps) => ({
       text: 'Mark Painted',
       role: 'confirm',
       handler: () => {
-        onPaint({ shouldAdjustFactor: false })
+        onPaint({ adjustFactor: false })
       },
     },
   ],
@@ -75,7 +75,7 @@ const wayOverduePrompt = ({ onPaint }: PromptConfigProps) => ({
 export const ConfirmPaint: React.FC<{
   show: boolean
   daysRemaining: number
-  onPaint: (T: { shouldAdjustFactor: boolean }) => void
+  onPaint: (T: { adjustFactor: boolean }) => void
   reasonableLimitOfOverdueDays: number
   onCancel?: () => void
 }> = ({

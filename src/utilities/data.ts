@@ -1,30 +1,20 @@
 import { SupabaseClient } from '@supabase/supabase-js'
-import { Field } from './types'
-import { getFields as getFieldsFromDb } from './FieldStore'
-
-const data: Field[] = [
-  {
-    id: '1',
-    name: 'Field A',
-    description:
-      'South side of the park with a really long description that you may not see all of it',
-    size: 'Full',
-    maxDryDays: 7,
-    rainfallDays: 0,
-    rainfallFactor: 1,
-    lastPainted: new Date('2021-01-01'),
-    markedUnplayable: new Date('2021-01-01'),
-    sortOrder: 1,
-    paintTeamId: 1,
-  },
-]
+import { Field, PaintHistory } from './types'
+import { convertUnderscoreToCamelCase, mapFields } from './utils'
 
 export const getFields = async ({
   supabase,
 }: {
   supabase: SupabaseClient
 }): Promise<Field[]> => {
-  return getFieldsFromDb({ supabase, isOnline: true })
+  const result = await supabase
+    ?.from('fields')
+    .select('*')
+    .eq('active', true)
+    .eq('deleted', false)
+    .order('name')
+
+  return mapFields(result?.data ?? [])
 }
 
 export const getField = async ({
@@ -34,7 +24,32 @@ export const getField = async ({
   supabase: SupabaseClient
   id: string
 }): Promise<Field | undefined> => {
-  const fields = await getFieldsFromDb({ supabase, isOnline: true })
+  const fields = await supabase
+    ?.from('fields')
+    .select('*')
+    .eq('id', id)
+    .limit(1)
 
-  return fields.find((field) => field.id === id)
+  return mapFields(fields.data ?? [])?.[0]
+}
+
+export const getPaintHistory = async ({
+  fieldId,
+  supabase,
+}: {
+  fieldId: Field['id']
+  supabase: SupabaseClient
+}): Promise<PaintHistory[] | undefined> => {
+  const result = await supabase
+    ?.from('paint_history')
+    .select('*')
+    .eq('field_id', fieldId)
+    .order('created_at')
+    .limit(3)
+
+  if (result?.data?.length) {
+    return result.data.map((historyItem) =>
+      convertUnderscoreToCamelCase(historyItem),
+    )
+  }
 }

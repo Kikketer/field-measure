@@ -18,14 +18,15 @@ import { differenceInCalendarDays } from 'date-fns'
 import React, { useState } from 'react'
 import { useParams } from 'react-router'
 import { ConfirmPaint } from '../components/ConfirmPaint'
-import { DaysLeftChip } from '../components/DaysLeftChip'
 import { FieldSketch } from '../components/FieldSketch'
+import { StatusLabel } from '../components/StatusLabel'
 import { useSupabase } from '../components/SupabaseProvider'
+import { paintField } from '../utilities/actions'
 import { SIZES } from '../utilities/constants'
-import { getField } from '../utilities/data'
+import { getField, getPaintHistory } from '../utilities/data'
+import { getFieldWithAdjustedRainFactorAndDryDays } from '../utilities/predictNextPainting'
 import { Field, FieldSize } from '../utilities/types'
 import './FieldDetail.css'
-import { StatusLabel } from '../components/StatusLabel'
 
 export const FieldDetail = () => {
   const isOnline = true
@@ -40,6 +41,11 @@ export const FieldDetail = () => {
       setField(foundField)
     })
   })
+
+  const onPaint = async ({ adjustFactor }: { adjustFactor: boolean }) => {
+    if (!field) return
+    const resultingField = await paintField({ field, adjustFactor, supabase })
+  }
 
   return (
     <IonPage id="field-detail-page">
@@ -220,7 +226,7 @@ export const FieldDetail = () => {
           new Date(field?.predictedNextPaint ?? new Date()),
           new Date(),
         )}
-        onPaint={() => {}}
+        onPaint={onPaint}
         reasonableLimitOfOverdueDays={(field?.maxDryDays || 12) * 2}
         onCancel={() => setShowConfirmPaint(false)}
       />
