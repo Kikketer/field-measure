@@ -1,5 +1,4 @@
 import {
-  IonButton,
   IonButtons,
   IonContent,
   IonHeader,
@@ -8,7 +7,6 @@ import {
   IonItemGroup,
   IonLabel,
   IonList,
-  IonLoading,
   IonPage,
   IonRefresher,
   IonRefresherContent,
@@ -17,17 +15,17 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
-import { useEffect, useState } from 'react'
+import { add } from 'ionicons/icons'
+import { useState } from 'react'
 import { FieldListItem } from '../components/FieldListItem'
 import { useSupabase } from '../components/SupabaseProvider'
 import { getFields } from '../utilities/data'
 import { Field } from '../utilities/types'
 import { groupFields } from '../utilities/utils'
-import { add } from 'ionicons/icons'
 
 const Fields: React.FC = () => {
   const [loading, setLoading] = useState(true)
-  const [fields, setFields] = useState<{ [groupName: string]: Field[] }>([])
+  const [fields, setFields] = useState<Record<string, Field[]>>()
   const { supabase } = useSupabase()
 
   useIonViewWillEnter(() => {
@@ -85,12 +83,12 @@ const Fields: React.FC = () => {
             </IonHeader>
 
             <IonList>
-              {Object.keys(fields).map((groupName) => (
+              {Object.keys(fields ?? {})?.map((groupName) => (
                 <IonItemGroup>
                   <IonItemDivider>
                     <IonLabel>{groupName}</IonLabel>
                   </IonItemDivider>
-                  {fields[groupName].map((field, index) => (
+                  {fields?.[groupName]?.map((field, index) => (
                     <FieldListItem
                       key={field.id}
                       field={field}
@@ -99,9 +97,6 @@ const Fields: React.FC = () => {
                   ))}
                 </IonItemGroup>
               ))}
-              {/*{fields.map((field) => (*/}
-              {/*  <FieldListItem key={field.id} field={field} />*/}
-              {/*))}*/}
             </IonList>
           </IonContent>
         </>
