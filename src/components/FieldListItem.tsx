@@ -3,9 +3,18 @@ import React from 'react'
 import { Field } from '../utilities/types'
 import { DaysLeftChip } from './DaysLeftChip'
 
-export const FieldListItem = ({ field }: { field: Field }) => {
+export const FieldListItem = ({
+  field,
+  isLast,
+}: {
+  field: Field
+  isLast?: boolean
+}) => {
   return (
-    <IonItem routerLink={`/fields/${field.id}`}>
+    <IonItem
+      routerLink={`/fields/${field.id}`}
+      lines={isLast ? 'none' : 'inset'}
+    >
       <div slot="start">
         <DaysLeftChip
           lastPainted={field.lastPainted}

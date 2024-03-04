@@ -1,6 +1,9 @@
 import {
+  IonButton,
+  IonButtons,
   IonContent,
   IonHeader,
+  IonIcon,
   IonItemDivider,
   IonItemGroup,
   IonLabel,
@@ -20,6 +23,7 @@ import { useSupabase } from '../components/SupabaseProvider'
 import { getFields } from '../utilities/data'
 import { Field } from '../utilities/types'
 import { groupFields } from '../utilities/utils'
+import { add } from 'ionicons/icons'
 
 const Fields: React.FC = () => {
   const [loading, setLoading] = useState(true)
@@ -64,6 +68,9 @@ const Fields: React.FC = () => {
           <IonHeader>
             <IonToolbar>
               <IonTitle>Fields</IonTitle>
+              <IonButtons slot="end">
+                <IonIcon slot="icon-only" icon={add} aria-label="Add Field" />
+              </IonButtons>
             </IonToolbar>
           </IonHeader>
           <IonContent fullscreen>
@@ -83,8 +90,12 @@ const Fields: React.FC = () => {
                   <IonItemDivider>
                     <IonLabel>{groupName}</IonLabel>
                   </IonItemDivider>
-                  {fields[groupName].map((field) => (
-                    <FieldListItem key={field.id} field={field} />
+                  {fields[groupName].map((field, index) => (
+                    <FieldListItem
+                      key={field.id}
+                      field={field}
+                      isLast={index >= fields[groupName].length - 1}
+                    />
                   ))}
                 </IonItemGroup>
               ))}

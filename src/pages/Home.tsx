@@ -9,9 +9,11 @@ export const Home = () => {
     <IonPage id="home-page">
       <IonContent fullscreen>
         <div className="grd">
-          <div>
-            <IonText>Test</IonText>
-          </div>
+          <h1>
+            Line-up
+            <br />
+            Field Manager
+          </h1>
           <div className="button-block">
             <IonButton color="secondary">Sign Up</IonButton>
             <IonButton onClick={signIn}>Log In</IonButton>
