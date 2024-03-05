@@ -14,7 +14,10 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({ fieldSize, type }) => {
   const hasRecommendedSize = useMemo(() => {
     // We just check to see if the minWidth === the recommended one to see that it's different
     // And if it IS different, the field has a recommended size
-    return SIZES[fieldSize].recommendedMinWidth !== SIZES[fieldSize].minWidth
+    return (
+      SIZES[fieldSize].recommendedMinLength !== SIZES[fieldSize].minLength ||
+      SIZES[fieldSize].recommendedMinWidth !== SIZES[fieldSize].minWidth
+    )
   }, [fieldSize])
 
   // const currentPercentage = useMemo(() => {
@@ -60,13 +63,13 @@ export const SizeSlider: React.FC<SizeSliderProps> = ({ fieldSize, type }) => {
               ? SIZES[fieldSize].recommendedMaxLength
               : SIZES[fieldSize].recommendedMaxWidth}
           </div>
-          <div className="label" style={{ left: 'calc(100% - 1.2rem)' }}>
-            {type === 'length'
-              ? SIZES[fieldSize].maxLength
-              : SIZES[fieldSize].maxWidth}
-          </div>
         </>
       )}
+      <div className="label" style={{ left: 'calc(100% - 1.2rem)' }}>
+        {type === 'length'
+          ? SIZES[fieldSize].maxLength
+          : SIZES[fieldSize].maxWidth}
+      </div>
     </div>
   )
 }

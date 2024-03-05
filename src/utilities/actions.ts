@@ -50,7 +50,26 @@ export const paintField = async ({
     .upsert(unmapField(resultingField))
     .select()
 
-  console.log('Final field ', savedField)
+  return mapFields(savedField.data ?? [])[0]
+}
+
+export const saveField = async ({
+  field,
+  supabase,
+}: {
+  field: Partial<Field>
+  supabase: SupabaseClient
+}) => {
+  if (!field.name) {
+    throw new Error('Invalid field')
+  }
+
+  const savedField = await supabase
+    ?.from('fields')
+    .upsert(unmapField(field))
+    .select()
+
+  console.log('Saved field ', savedField)
 
   return mapFields(savedField.data ?? [])[0]
 }

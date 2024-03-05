@@ -3,4 +3,9 @@
     margin-left: 1rem;
     border-bottom: 1px solid var(--border);
   }
+
+  .optional-heading {
+    width: 100%;
+    padding-top: 0.25rem;
+  }
 }

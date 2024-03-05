@@ -12,23 +12,31 @@ import {
   IonPage,
   IonSelect,
   IonSelectOption,
+  IonText,
   IonTitle,
   IonToolbar,
 } from '@ionic/react'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
+import { FieldSketch } from '../components/FieldSketch'
 import { SizeSlider } from '../components/SizeSlider'
+import { useSupabase } from '../components/SupabaseProvider'
+import { saveField } from '../utilities/actions'
 import { SIZES } from '../utilities/constants'
 import { FieldSize } from '../utilities/types'
 import './FieldAdd.css'
 
 export const FieldAdd = () => {
+  const { supabase } = useSupabase()
   const [size, setSize] = useState<FieldSize>(FieldSize.full)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string>()
   const [customWidth, setCustomWidth] = useState(
     SIZES[size].recommendedMaxWidth,
   )
   const [customLength, setCustomLength] = useState(
     SIZES[size].recommendedMaxLength,
   )
+  const form = useRef<any>()
 
   const onSizeChange = (e: any) => {
     setSize(e.detail.value)
@@ -37,9 +45,37 @@ export const FieldAdd = () => {
     ;(document.activeElement as HTMLInputElement)?.blur()
   }
 
-  const onSave = (e: any) => {
+  const submitForm = () => {
+    setError(undefined)
+    const valid = form.current?.checkValidity()
+    if (valid) {
+      form.current?.dispatchEvent(new Event('submit', { bubbles: true }))
+    } else {
+      form.current?.reportValidity()
+    }
+  }
+
+  const onSave = async (e: any) => {
+    console.log('Saving form')
     e.preventDefault()
     ;(document.activeElement as HTMLInputElement)?.blur()
+
+    const formData = new FormData(e.target)
+
+    try {
+      await saveField({
+        field: {
+          name: formData.get('name') as string,
+          size: formData.get('size') as FieldSize,
+          description: formData.get('description') as string,
+          group: formData.get('group') as string,
+        },
+        supabase,
+      })
+    } catch (err) {
+      console.error(err)
+      setError('Error saving field')
+    }
   }
 
   return (
@@ -53,7 +89,8 @@ export const FieldAdd = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <form onSubmit={onSave}>
+        <form onSubmit={onSave} ref={form}>
+          {error && <IonText color="danger">{error}</IonText>}
           <IonItem>
             <IonInput label="Field Name" name="name" type="text" required />
           </IonItem>
@@ -62,6 +99,8 @@ export const FieldAdd = () => {
               label="Field Size"
               interface="popover"
               name="size"
+              value={size}
+              onIonChange={onSizeChange}
               defaultValue={FieldSize.full}
             >
               <IonSelectOption value={FieldSize.full}>Full</IonSelectOption>
@@ -74,9 +113,9 @@ export const FieldAdd = () => {
               </IonSelectOption>
             </IonSelect>
           </IonItem>
-          <IonItemDivider>
+          <div className="optional-heading">
             <IonLabel>Optional:</IonLabel>
-          </IonItemDivider>
+          </div>
           <IonItem>
             <IonInput label="Description" name="description" type="text" />
           </IonItem>
@@ -85,17 +124,17 @@ export const FieldAdd = () => {
           </IonItem>
           <div className="slider-item">
             <IonInput
-              label="Custom Length:"
+              label="Custom Width:"
               type="number"
-              value={customLength}
-              onIonChange={(e) => setCustomLength(Number(e.detail.value!))}
-              defaultValue={SIZES[size].recommendedMaxLength}
+              value={customWidth}
+              onIonChange={(e) => setCustomWidth(Number(e.detail.value!))}
+              defaultValue={SIZES[size].recommendedMaxWidth}
               autocomplete="off"
             ></IonInput>
             <SizeSlider
               fieldSize={size}
-              type="length"
-              currentValue={customLength}
+              type="width"
+              currentValue={customWidth}
             />
           </div>
           <div className="slider-item">
@@ -113,12 +152,24 @@ export const FieldAdd = () => {
               currentValue={customLength}
             />
           </div>
+          <div className="ion-margin-top">
+            <FieldSketch
+              fieldSize={size}
+              customLength={customLength}
+              customWidth={customWidth}
+            />
+          </div>
           <button type="submit" className="ion-hidden" />
         </form>
       </IonContent>
       <IonFooter translucent collapse="fade">
         <IonToolbar>
-          <IonButton type="button" slot="primary">
+          <IonButton
+            type="button"
+            slot="primary"
+            onClick={submitForm}
+            disabled={saving}
+          >
             Save
           </IonButton>
         </IonToolbar>
