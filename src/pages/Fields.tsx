@@ -2,11 +2,12 @@ import {
   IonButtons,
   IonContent,
   IonHeader,
-  IonIcon,
   IonItemDivider,
   IonItemGroup,
   IonLabel,
   IonList,
+  IonMenu,
+  IonMenuButton,
   IonPage,
   IonRefresher,
   IonRefresherContent,
@@ -15,9 +16,9 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
-import { add } from 'ionicons/icons'
 import { useState } from 'react'
 import { FieldListItem } from '../components/FieldListItem'
+import { Menu } from '../components/Menu'
 import { useSupabase } from '../components/SupabaseProvider'
 import { getFields } from '../utilities/data'
 import { Field } from '../utilities/types'
@@ -47,61 +48,65 @@ const Fields: React.FC = () => {
   }
 
   return (
-    <IonPage id="fields-page">
-      {loading ? (
-        <IonContent fullscreen>
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-            }}
-          >
-            <IonSpinner />
-          </div>
-        </IonContent>
-      ) : (
-        <>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>Fields</IonTitle>
-              <IonButtons slot="end">
-                <IonIcon slot="icon-only" icon={add} aria-label="Add Field" />
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent fullscreen>
-            <IonRefresher slot="fixed" onIonRefresh={refresh}>
-              <IonRefresherContent></IonRefresherContent>
-            </IonRefresher>
+    <>
+      <Menu contentId="fields-page" />
 
-            <IonHeader collapse="condense">
+      <IonPage id="fields-page">
+        {loading ? (
+          <IonContent fullscreen>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%',
+              }}
+            >
+              <IonSpinner />
+            </div>
+          </IonContent>
+        ) : (
+          <>
+            <IonHeader>
               <IonToolbar>
-                <IonTitle size="large">Fields</IonTitle>
+                <IonTitle>Fields</IonTitle>
+                <IonButtons slot="end">
+                  <IonMenuButton></IonMenuButton>
+                </IonButtons>
               </IonToolbar>
             </IonHeader>
+            <IonContent fullscreen>
+              <IonRefresher slot="fixed" onIonRefresh={refresh}>
+                <IonRefresherContent></IonRefresherContent>
+              </IonRefresher>
 
-            <IonList>
-              {Object.keys(fields ?? {})?.map((groupName) => (
-                <IonItemGroup>
-                  <IonItemDivider>
-                    <IonLabel>{groupName}</IonLabel>
-                  </IonItemDivider>
-                  {fields?.[groupName]?.map((field, index) => (
-                    <FieldListItem
-                      key={field.id}
-                      field={field}
-                      isLast={index >= fields[groupName].length - 1}
-                    />
-                  ))}
-                </IonItemGroup>
-              ))}
-            </IonList>
-          </IonContent>
-        </>
-      )}
-    </IonPage>
+              <IonHeader collapse="condense">
+                <IonToolbar>
+                  <IonTitle size="large">Fields</IonTitle>
+                </IonToolbar>
+              </IonHeader>
+
+              <IonList>
+                {Object.keys(fields ?? {})?.map((groupName) => (
+                  <IonItemGroup>
+                    <IonItemDivider>
+                      <IonLabel>{groupName}</IonLabel>
+                    </IonItemDivider>
+                    {fields?.[groupName]?.map((field, index) => (
+                      <FieldListItem
+                        key={field.id}
+                        field={field}
+                        isLast={index >= fields[groupName].length - 1}
+                      />
+                    ))}
+                  </IonItemGroup>
+                ))}
+              </IonList>
+            </IonContent>
+          </>
+        )}
+      </IonPage>
+    </>
   )
 }
 

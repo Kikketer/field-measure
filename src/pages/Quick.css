@@ -1,0 +1,11 @@
+#quick-field {
+  form > div {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .size-line {
+    background: orange;
+    height: 4px;
+    margin-bottom: 0.5rem;
+  }
+}

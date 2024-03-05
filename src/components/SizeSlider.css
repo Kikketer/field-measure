@@ -1,0 +1,38 @@
+.size-slider {
+  border: 1px solid var(--border);
+  background: var(--warning);
+  height: 0.5rem;
+  position: relative;
+  margin-bottom: 2.5rem;
+
+  .green {
+    background: var(--success);
+  }
+
+  .recommended {
+    background: var(--success);
+    position: absolute;
+    height: 100%;
+    top: 0;
+    left: 25%;
+  }
+
+  .spot {
+    border: 1px solid black;
+    background: white;
+    border-radius: 50%;
+    width: 0.5rem;
+    height: 0.5rem;
+    position: absolute;
+    left: 50%;
+    top: -2px;
+  }
+
+  .label {
+    display: inline-block;
+    transform: rotate(90deg);
+    position: absolute;
+    top: 0.8rem;
+    left: 0;
+  }
+}
