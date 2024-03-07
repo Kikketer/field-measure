@@ -22,6 +22,7 @@ import { SizeSlider } from '../components/SizeSlider'
 import { useSupabase } from '../components/SupabaseProvider'
 import { saveField } from '../utilities/actions'
 import { SIZES } from '../utilities/constants'
+import { getUser } from '../utilities/data'
 import { FieldSize } from '../utilities/types'
 import './FieldAdd.css'
 
@@ -63,12 +64,14 @@ export const FieldAdd = () => {
     const formData = new FormData(e.target)
 
     try {
+      const user = await getUser({ supabase })
       await saveField({
         field: {
           name: formData.get('name') as string,
           size: formData.get('size') as FieldSize,
           description: formData.get('description') as string,
           group: formData.get('group') as string,
+          paintTeamId: user.paintTeam.id,
         },
         supabase,
       })

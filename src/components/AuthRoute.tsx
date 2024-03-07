@@ -1,6 +1,11 @@
 import { PropsWithChildren } from 'react'
-import { UserProvider } from './UserProvider'
 
 export const AuthRoute: React.FC<PropsWithChildren> = ({ children }) => {
-  return <UserProvider>{children}</UserProvider>
+  // Just check to see if we are logged in, but don't use this for anything real
+  // as it's not secure:
+  if (!localStorage.getItem('provider_token')) {
+    window.location.href = '/login'
+  }
+
+  return <>{children}</>
 }

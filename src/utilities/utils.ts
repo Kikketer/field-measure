@@ -28,6 +28,8 @@ export const getStartOfDate = (day?: string): Date => {
 }
 
 export const convertUnderscoreToCamelCase = (obj: any) => {
+  if (!obj) return obj
+
   const duplicateObj: any = { ...obj }
   Object.keys(duplicateObj).forEach((key) => {
     const newKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase())

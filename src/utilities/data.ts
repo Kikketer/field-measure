@@ -2,6 +2,24 @@ import { SupabaseClient } from '@supabase/supabase-js'
 import { Field, PaintHistory } from './types'
 import { convertUnderscoreToCamelCase, mapFields } from './utils'
 
+export const getUser = async ({ supabase }: { supabase: SupabaseClient }) => {
+  const result = await supabase
+    .from('users')
+    .select(
+      `
+      *,
+      paintTeam: paint_team_id (
+        *
+      )
+    `,
+    )
+    .limit(1)
+
+  const paintTeam = convertUnderscoreToCamelCase(result.data?.[0]?.paintTeam)
+  const user = convertUnderscoreToCamelCase(result.data?.[0])
+  return { ...user, paintTeam }
+}
+
 export const getFields = async ({
   supabase,
 }: {

@@ -14,8 +14,9 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
+import * as console from 'console'
 import { differenceInCalendarDays } from 'date-fns'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { ConfirmPaint } from '../components/ConfirmPaint'
 import { FieldSketch } from '../components/FieldSketch'
@@ -23,14 +24,15 @@ import { StatusLabel } from '../components/StatusLabel'
 import { useSupabase } from '../components/SupabaseProvider'
 import { paintField } from '../utilities/actions'
 import { SIZES } from '../utilities/constants'
-import { getField } from '../utilities/data'
-import { Field, FieldSize } from '../utilities/types'
+import { getField, getUser } from '../utilities/data'
+import { Field, FieldSize, User } from '../utilities/types'
 import './FieldDetail.css'
 
 export const FieldDetail = () => {
   const [loading, setLoading] = useState(false)
   const [showConfirmPaint, setShowConfirmPaint] = useState(false)
   const [field, setField] = useState<Field>()
+  const [user, setUser] = useState<User>()
   const params = useParams<{ id: string }>()
   const { supabase } = useSupabase()
 
@@ -39,6 +41,9 @@ export const FieldDetail = () => {
     getField({ supabase, id: params.id }).then((foundField) => {
       setField(foundField)
       setLoading(false)
+    })
+    getUser({ supabase }).then((foundUser) => {
+      setUser(foundUser)
     })
   })
 
@@ -197,7 +202,7 @@ export const FieldDetail = () => {
           </>
         )}
       </IonContent>
-      <IonFooter translucent collapse="fade">
+      <IonFooter translucent>
         <IonToolbar>
           <IonButton
             slot="primary"
@@ -214,7 +219,7 @@ export const FieldDetail = () => {
               differenceInCalendarDays(
                 new Date(),
                 field?.lastPainted ?? new Date(),
-              ) < 3
+              ) < 3 || !user
             }
           >
             Mark Painted

@@ -48,7 +48,7 @@ export const SupabaseProvider: React.FC<PropsWithChildren> = ({ children }) => {
       provider: 'google',
       options: {
         // Read only for all spreadsheets so we can get the field data:
-        scopes: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+        // scopes: 'https://www.googleapis.com/auth/spreadsheets.readonly',
         redirectTo: `${import.meta.env.VITE_PUBLIC_REDIRECT_URL}/fields`,
       },
     })

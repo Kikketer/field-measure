@@ -58,3 +58,8 @@ export type PaintTeam = {
   scheduleSheetDateColumn?: string
   scheduleSheetFieldNameColumn?: string
 }
+
+export type User = {
+  id: string
+  paintTeam: PaintTeam
+}
