@@ -64,6 +64,17 @@ export const saveField = async ({
     throw new Error('Invalid field')
   }
 
+  // If we don't provide a last painted, we make it 99 days in the past
+  // 99 because that makes the UI mark it as painted but not affect the factor
+  if (!field.lastPainted) {
+    field.lastPainted = new Date()
+    field.lastPainted.setDate(field.lastPainted.getDate() - 99)
+
+    // Make make the predicted date 99 days ago as well for this same reason
+    field.predictedNextPaint = new Date()
+    field.predictedNextPaint.setDate(field.predictedNextPaint.getDate() - 99)
+  }
+
   const savedField = await supabase
     ?.from('fields')
     .upsert(unmapField(field))

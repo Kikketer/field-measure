@@ -15,6 +15,7 @@ import {
   IonText,
   IonTitle,
   IonToolbar,
+  useIonRouter,
 } from '@ionic/react'
 import React, { useRef, useState } from 'react'
 import { FieldSketch } from '../components/FieldSketch'
@@ -38,6 +39,7 @@ export const FieldAdd = () => {
     SIZES[size].recommendedMaxLength,
   )
   const form = useRef<any>()
+  const { goBack, canGoBack, push } = useIonRouter()
 
   const onSizeChange = (e: any) => {
     setSize(e.detail.value)
@@ -75,6 +77,12 @@ export const FieldAdd = () => {
         },
         supabase,
       })
+
+      if (canGoBack()) {
+        goBack()
+      } else {
+        push('/fields')
+      }
     } catch (err) {
       console.error(err)
       setError('Error saving field')
