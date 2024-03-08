@@ -32,6 +32,9 @@ import './FieldAdd.css'
 export const FieldAdd = () => {
   const { supabase } = useSupabase()
   const [loading, setLoading] = useState(true)
+  const [name, setName] = useState<string>()
+  const [description, setDescription] = useState<string>()
+  const [group, setGroup] = useState<string>()
   const [size, setSize] = useState<FieldSize>(FieldSize.full)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string>()
@@ -52,6 +55,9 @@ export const FieldAdd = () => {
       getField({ supabase, id: fieldId }).then((field) => {
         console.log('loaded field ', field)
         currentField.current = field
+        setName(field?.name ?? '')
+        setDescription(field?.description ?? '')
+        setGroup(field?.group ?? '')
         setSize((field?.size as FieldSize) ?? FieldSize.full)
         setCustomWidth(
           field?.customWidth ?? SIZES[FieldSize.full].recommendedMaxWidth,
@@ -95,10 +101,12 @@ export const FieldAdd = () => {
       await saveField({
         field: {
           ...(currentField.current ?? {}),
-          name: formData.get('name') as string,
-          size: formData.get('size') as FieldSize,
-          description: formData.get('description') as string,
-          group: formData.get('group') as string,
+          name,
+          size,
+          description,
+          group,
+          customWidth,
+          customLength,
           paintTeamId: user.paintTeam.id,
         },
         supabase,
@@ -137,7 +145,8 @@ export const FieldAdd = () => {
                 name="name"
                 type="text"
                 required
-                value={currentField.current?.name}
+                value={name}
+                onIonInput={(e) => setName(e.detail.value!)}
               />
             </IonItem>
             <IonItem className="ion-margin-bottom">
@@ -168,7 +177,8 @@ export const FieldAdd = () => {
                 label="Description"
                 name="description"
                 type="text"
-                value={currentField.current?.description ?? ''}
+                value={description}
+                onIonInput={(e) => setDescription(e.detail.value!)}
               />
             </IonItem>
             <IonItem>
@@ -176,7 +186,8 @@ export const FieldAdd = () => {
                 label="Group"
                 name="group"
                 type="text"
-                value={currentField.current?.group ?? ''}
+                value={group}
+                onIonInput={(e) => setGroup(e.detail.value!)}
               />
             </IonItem>
             <div className="slider-item">
@@ -184,7 +195,7 @@ export const FieldAdd = () => {
                 label="Custom Width:"
                 type="number"
                 value={customWidth}
-                onIonChange={(e) => setCustomWidth(Number(e.detail.value!))}
+                onIonInput={(e) => setCustomWidth(Number(e.detail.value!))}
                 autocomplete="off"
               ></IonInput>
               <SizeSlider
@@ -198,7 +209,7 @@ export const FieldAdd = () => {
                 label="Custom Length:"
                 type="number"
                 value={customLength}
-                onIonChange={(e) => setCustomLength(Number(e.detail.value!))}
+                onIonInput={(e) => setCustomLength(Number(e.detail.value!))}
                 autocomplete="off"
               ></IonInput>
               <SizeSlider
