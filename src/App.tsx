@@ -42,7 +42,17 @@ const App: React.FC = () => (
           <Route path="/quick" exact={true}>
             <Quick />
           </Route>
+          <Route path="/field/:id" exact={true}>
+            <AuthRoute>
+              <FieldDetail />
+            </AuthRoute>
+          </Route>
           <Route path="/field/add" exact={true}>
+            <AuthRoute>
+              <FieldAdd />
+            </AuthRoute>
+          </Route>
+          <Route path="/field/:fieldId/edit" exact={true}>
             <AuthRoute>
               <FieldAdd />
             </AuthRoute>
@@ -50,11 +60,6 @@ const App: React.FC = () => (
           <Route path="/fields" exact={true}>
             <AuthRoute>
               <Fields />
-            </AuthRoute>
-          </Route>
-          <Route path="/fields/:id" exact={true}>
-            <AuthRoute>
-              <FieldDetail />
             </AuthRoute>
           </Route>
         </IonRouterOutlet>

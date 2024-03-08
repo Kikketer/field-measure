@@ -5,6 +5,7 @@ import {
   IonContent,
   IonFooter,
   IonHeader,
+  IonIcon,
   IonItem,
   IonLabel,
   IonNote,
@@ -14,9 +15,9 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
-import * as console from 'console'
+import { createOutline } from 'ionicons/icons'
 import { differenceInCalendarDays } from 'date-fns'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router'
 import { ConfirmPaint } from '../components/ConfirmPaint'
 import { FieldSketch } from '../components/FieldSketch'
@@ -61,6 +62,14 @@ export const FieldDetail = () => {
             <IonBackButton text="Fields" defaultHref="/fields"></IonBackButton>
           </IonButtons>
           {!loading && field && <IonTitle>{field.name}</IonTitle>}
+          <IonButtons slot="end">
+            <IonButton
+              aria-label="Edit Field"
+              routerLink={`/field/${params.id}/edit`}
+            >
+              <IonIcon icon={createOutline} aria-hidden="true" />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
 

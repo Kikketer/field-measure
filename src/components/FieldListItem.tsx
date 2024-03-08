@@ -12,7 +12,7 @@ export const FieldListItem = ({
 }) => {
   return (
     <IonItem
-      routerLink={`/fields/${field.id}`}
+      routerLink={`/field/${field.id}`}
       lines={isLast ? 'none' : 'inset'}
     >
       <div slot="start">
