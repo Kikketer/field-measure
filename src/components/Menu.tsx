@@ -10,7 +10,6 @@ export const Menu = ({ contentId }: { contentId: string }) => {
   const signout = async () => {
     try {
       await supabase.auth.signOut()
-      window.location.href = '/'
     } catch (err) {
       console.error(err)
     }

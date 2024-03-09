@@ -1,11 +1,19 @@
-import { PropsWithChildren } from 'react'
+import React from 'react'
+import { Redirect, Route, RouteProps } from 'react-router-dom'
+import { useSupabase } from './SupabaseProvider'
 
-export const AuthRoute: React.FC<PropsWithChildren> = ({ children }) => {
-  // Just check to see if we are logged in, but don't use this for anything real
-  // as it's not secure:
-  // if (!localStorage.getItem('provider_token')) {
-  //   window.location.href = '/'
-  // }
+export const AuthRoute: React.FC<{ component: any } & RouteProps> = ({
+  component: Component,
+  ...rest
+}) => {
+  const { user } = useSupabase()
 
-  return <>{children}</>
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        user ? <Component {...props} /> : <Redirect to="/" />
+      }
+    />
+  )
 }

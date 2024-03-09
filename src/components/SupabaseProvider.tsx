@@ -6,6 +6,7 @@ import React, {
   PropsWithChildren,
 } from 'react'
 import { createClient, Session, SupabaseClient } from '@supabase/supabase-js'
+import { FullLoader } from './FullLoader'
 
 const supabaseUrl = import.meta.env.VITE_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY!
@@ -15,22 +16,23 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey)
 // And the provider code:
 const SupabaseContext = createContext<{
   supabase: SupabaseClient
-  session: Session | null
+  user?: Session['user']
   signIn: () => Promise<void>
 } | null>(null)
 
 export const SupabaseProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [session, setSession] = useState<Session | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<Session['user']>()
 
   useEffect(() => {
+    supabase.auth.getSession().then((session) => {
+      setUser(session?.data?.session?.user)
+      setLoading(false)
+    })
+
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        if (session?.provider_token) {
-          // Set the provider_token as we use this to use the google sheets API:
-          localStorage.setItem('provider_token', session.provider_token ?? '')
-        }
-
-        setSession(session)
+        setUser(session?.user)
       },
     )
 
@@ -44,6 +46,7 @@ export const SupabaseProvider: React.FC<PropsWithChildren> = ({ children }) => {
     // First log out of supabase:
     await supabase.auth.signOut()
 
+    setLoading(true)
     await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -55,9 +58,15 @@ export const SupabaseProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }
 
   return (
-    <SupabaseContext.Provider value={{ supabase, session, signIn }}>
-      {children}
-    </SupabaseContext.Provider>
+    <>
+      {loading ? (
+        <FullLoader />
+      ) : (
+        <SupabaseContext.Provider value={{ supabase, user, signIn }}>
+          {children}
+        </SupabaseContext.Provider>
+      )}
+    </>
   )
 }
 
