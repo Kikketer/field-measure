@@ -17,7 +17,7 @@ import {
 } from '@ionic/react'
 import { createOutline } from 'ionicons/icons'
 import { differenceInCalendarDays } from 'date-fns'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { ConfirmPaint } from '../components/ConfirmPaint'
 import { FieldSketch } from '../components/FieldSketch'
@@ -26,6 +26,11 @@ import { useSupabase } from '../components/SupabaseProvider'
 import { paintField } from '../utilities/actions'
 import { SIZES } from '../utilities/constants'
 import { getField, getUser } from '../utilities/data'
+import {
+  getColorAtPercentage,
+  getColorContrast,
+  getPercentage,
+} from '../utilities/percentageColors'
 import { Field, FieldSize, User } from '../utilities/types'
 import './FieldDetail.css'
 
@@ -53,6 +58,15 @@ export const FieldDetail = () => {
     const resultingField = await paintField({ field, adjustFactor, supabase })
     setField(resultingField)
   }
+
+  const percentage = useMemo(() => {
+    if (field) {
+      return getPercentage({
+        predictedNextPaint: field?.predictedNextPaint,
+        lastPainted: field?.lastPainted,
+      })
+    }
+  }, [field])
 
   return (
     <IonPage id="field-detail-page">
@@ -103,8 +117,14 @@ export const FieldDetail = () => {
                             Predicted
                           </IonLabel>
                         </td>
-                        <td>
-                          <IonLabel slot="end">
+                        <td
+                          style={{
+                            background: getColorAtPercentage(percentage),
+                            color: getColorContrast(percentage),
+                            borderTopRightRadius: 'var(--border-radius)',
+                          }}
+                        >
+                          <IonLabel>
                             {field.predictedNextPaint?.toLocaleDateString()} (
                             {differenceInCalendarDays(
                               new Date(field.predictedNextPaint ?? new Date()),
