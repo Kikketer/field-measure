@@ -3,6 +3,7 @@ import { IonReactRouter } from '@ionic/react-router'
 import { Route } from 'react-router-dom'
 import { AuthRoute } from './components/AuthRoute'
 import { SupabaseProvider } from './components/SupabaseProvider'
+import { VisibleProvider } from './components/VisibleProvider'
 import { FieldAdd } from './pages/FieldAdd'
 import { FieldDetail } from './pages/FIeldDetail'
 import Fields from './pages/Fields'
@@ -34,20 +35,22 @@ setupIonicReact()
 const App: React.FC = () => (
   <IonApp>
     <SupabaseProvider>
-      <IonReactRouter>
-        <IonRouterOutlet>
-          <Route path="/" exact={true} component={Home} />
-          <Route path="/quick" exact={true} component={Quick} />
-          <AuthRoute path="/field/:id" exact={true} component={FieldDetail} />
-          <AuthRoute path="/field/add" exact={true} component={FieldAdd} />
-          <AuthRoute
-            path="/field/:fieldId/edit"
-            exact={true}
-            component={FieldAdd}
-          />
-          <AuthRoute path="/fields" exact={true} component={Fields} />
-        </IonRouterOutlet>
-      </IonReactRouter>
+      <VisibleProvider>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route path="/" exact={true} component={Home} />
+            <Route path="/quick" exact={true} component={Quick} />
+            <AuthRoute path="/field/:id" exact={true} component={FieldDetail} />
+            <AuthRoute path="/field/add" exact={true} component={FieldAdd} />
+            <AuthRoute
+              path="/field/:fieldId/edit"
+              exact={true}
+              component={FieldAdd}
+            />
+            <AuthRoute path="/fields" exact={true} component={Fields} />
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </VisibleProvider>
     </SupabaseProvider>
   </IonApp>
 )

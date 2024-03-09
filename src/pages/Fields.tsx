@@ -16,11 +16,12 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FieldListItem } from '../components/FieldListItem'
 import { FullLoader } from '../components/FullLoader'
 import { Menu } from '../components/Menu'
 import { useSupabase } from '../components/SupabaseProvider'
+import { useVisible } from '../components/VisibleProvider'
 import { getFields, getUser } from '../utilities/data'
 import { Field, User } from '../utilities/types'
 import { groupFields } from '../utilities/utils'
@@ -30,6 +31,7 @@ const Fields: React.FC = () => {
   const [fields, setFields] = useState<Record<string, Field[]>>()
   const [user, setUser] = useState<User>()
   const { supabase } = useSupabase()
+  const isVisible = useVisible()
 
   useIonViewWillEnter(() => {
     if (supabase) {
@@ -44,14 +46,20 @@ const Fields: React.FC = () => {
     }
   })
 
-  const refresh = (e: CustomEvent) => {
+  const refresh = (e?: CustomEvent) => {
     getFields({ supabase })
       .then((fields) => {
         setFields(groupFields(fields))
-        e.detail.complete()
+        e?.detail.complete()
       })
-      .catch(() => e.detail.complete())
+      .catch(() => e?.detail.complete())
   }
+
+  useEffect(() => {
+    if (isVisible) {
+      refresh()
+    }
+  }, [isVisible])
 
   return (
     <>

@@ -17,12 +17,13 @@ import {
 } from '@ionic/react'
 import { createOutline } from 'ionicons/icons'
 import { differenceInCalendarDays } from 'date-fns'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router'
 import { ConfirmPaint } from '../components/ConfirmPaint'
 import { FieldSketch } from '../components/FieldSketch'
 import { StatusLabel } from '../components/StatusLabel'
 import { useSupabase } from '../components/SupabaseProvider'
+import { useVisible } from '../components/VisibleProvider'
 import { paintField } from '../utilities/actions'
 import { SIZES } from '../utilities/constants'
 import { getField, getUser } from '../utilities/data'
@@ -41,17 +42,29 @@ export const FieldDetail = () => {
   const [user, setUser] = useState<User>()
   const params = useParams<{ id: string }>()
   const { supabase } = useSupabase()
+  const isVisible = useVisible()
 
-  useIonViewWillEnter(() => {
-    setLoading(true)
-    getField({ supabase, id: params.id }).then((foundField) => {
-      setField(foundField)
-      setLoading(false)
-    })
+  const fetch = async () => {
+    getField({ supabase, id: params.id })
+      .then((foundField) => {
+        setField(foundField)
+      })
+      .finally(() => setLoading(false))
     getUser({ supabase }).then((foundUser) => {
       setUser(foundUser)
     })
+  }
+
+  useIonViewWillEnter(() => {
+    setLoading(true)
+    fetch().catch((err) => console.error(err))
   })
+
+  useEffect(() => {
+    if (isVisible) {
+      fetch().catch((err) => console.error(err))
+    }
+  }, [isVisible])
 
   const onPaint = async ({ adjustFactor }: { adjustFactor: boolean }) => {
     if (!field) return
@@ -119,8 +132,8 @@ export const FieldDetail = () => {
                         </td>
                         <td
                           style={{
-                            background: getColorAtPercentage(percentage),
-                            color: getColorContrast(percentage),
+                            background: getColorAtPercentage(percentage ?? 0),
+                            color: getColorContrast(percentage ?? 0),
                             borderTopRightRadius: 'var(--border-radius)',
                           }}
                         >
