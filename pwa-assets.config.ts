@@ -20,5 +20,5 @@ export const minimalPresetNoPadding: Preset = {
 
 export default defineConfig({
   preset: minimalPresetNoPadding,
-  images: ['public/logo.svg'],
+  images: ['public/LineUpLogo.svg'],
 })
