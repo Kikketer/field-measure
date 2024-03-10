@@ -1,7 +1,15 @@
-import { IonContent, IonItem, IonLabel, IonList, IonMenu } from '@ionic/react'
+import {
+  IonContent,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonMenu,
+  IonText,
+} from '@ionic/react'
 import { useRef } from 'react'
 import './Menu.css'
 import { useSupabase } from './SupabaseProvider'
+import { version } from '../../package.json'
 
 export const Menu = ({ contentId }: { contentId: string }) => {
   const menuRef = useRef<any>()
@@ -37,6 +45,15 @@ export const Menu = ({ contentId }: { contentId: string }) => {
           <IonList>
             <IonItem onClick={signout}>
               <IonLabel>Sign Out</IonLabel>
+            </IonItem>
+            <IonItem lines="none">
+              <IonText
+                slot="end"
+                color="medium"
+                style={{ fontSize: '.875rem' }}
+              >
+                v{version}
+              </IonText>
             </IonItem>
           </IonList>
         </div>

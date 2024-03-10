@@ -1,6 +1,7 @@
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
-import { Route } from 'react-router-dom'
+import React from 'react'
+import { Redirect, Route } from 'react-router-dom'
 import { AuthRoute } from './components/AuthRoute'
 import { SupabaseProvider } from './components/SupabaseProvider'
 import { VisibleProvider } from './components/VisibleProvider'
@@ -48,6 +49,7 @@ const App: React.FC = () => (
               component={FieldAdd}
             />
             <AuthRoute path="/fields" exact={true} component={Fields} />
+            <Route render={() => <Redirect to={'/'} />} />
           </IonRouterOutlet>
         </IonReactRouter>
       </VisibleProvider>
