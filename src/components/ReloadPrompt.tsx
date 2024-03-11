@@ -1,4 +1,4 @@
-import { IonButton, IonButtons } from '@ionic/react'
+import { IonButton } from '@ionic/react'
 import React, { useEffect, useRef } from 'react'
 import './ReloadPrompt.css'
 
@@ -8,11 +8,11 @@ import { useVisible } from './VisibleProvider'
 
 function ReloadPrompt() {
   const isVisible = useVisible()
-  const registration = useRef<any>(null)
+  const registration = useRef<ServiceWorkerRegistration | null>(null)
 
   useEffect(() => {
-    if (isVisible) {
-      registration.current?.update()
+    if (isVisible && registration.current) {
+      registration.current?.update?.()
     }
   }, [isVisible])
 
@@ -21,8 +21,8 @@ function ReloadPrompt() {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegisteredSW(r: any) {
-      console.log('SW Registered')
+    onRegisteredSW(r: ServiceWorkerRegistration) {
+      console.log('SW Registered', r)
       registration.current = r
     },
     onRegisterError(error: Error) {
