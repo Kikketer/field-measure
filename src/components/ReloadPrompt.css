@@ -1,0 +1,26 @@
+.ReloadPrompt-container {
+  padding: 0;
+  margin: 0;
+  width: 0;
+  height: 0;
+}
+
+.ReloadPrompt-toast {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  right: 0;
+  bottom: 0;
+  padding: 1rem;
+  border: 1px solid var(--ion-border-color);
+  border-radius: 4px;
+  z-index: 1;
+  background-color: var(--ion-background-color);
+}
+
+.ReloadPrompt-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}

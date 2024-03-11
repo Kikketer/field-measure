@@ -3,6 +3,7 @@ import { IonReactRouter } from '@ionic/react-router'
 import React from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import { AuthRoute } from './components/AuthRoute'
+import ReloadPrompt from './components/ReloadPrompt'
 import { SupabaseProvider } from './components/SupabaseProvider'
 import { VisibleProvider } from './components/VisibleProvider'
 import { FieldAdd } from './pages/FieldAdd'
@@ -35,6 +36,7 @@ setupIonicReact()
 
 const App: React.FC = () => (
   <IonApp>
+    <ReloadPrompt />
     <SupabaseProvider>
       <VisibleProvider>
         <IonReactRouter>
