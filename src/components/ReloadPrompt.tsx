@@ -2,6 +2,7 @@ import { IonButton, IonButtons } from '@ionic/react'
 import React from 'react'
 import './ReloadPrompt.css'
 
+// @ts-ignore
 import { useRegisterSW } from 'virtual:pwa-register/react'
 
 function ReloadPrompt() {
