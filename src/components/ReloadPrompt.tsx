@@ -12,6 +12,7 @@ function ReloadPrompt() {
 
   useEffect(() => {
     if (isVisible && registration.current) {
+      console.log('Checking SW', registration.current?.update)
       registration.current?.update?.()
     }
   }, [isVisible])
