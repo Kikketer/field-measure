@@ -28,7 +28,7 @@ export const Home = () => {
               Field Manager
             </h1>
             <div className="button-block">
-              <IonButton color="secondary">Sign Up</IonButton>
+              {/*<IonButton color="secondary">Sign Up</IonButton>*/}
               <IonButton onClick={signIn}>Log In</IonButton>
             </div>
           </div>
