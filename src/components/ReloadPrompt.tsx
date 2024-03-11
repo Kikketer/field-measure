@@ -23,7 +23,7 @@ function ReloadPrompt() {
     updateServiceWorker,
   } = useRegisterSW({
     onRegisteredSW(r: ServiceWorkerRegistration) {
-      console.log('SW Registered', r)
+      console.log('SW Registered 1', r)
       // registration.current = r
     },
     onRegisterError(error: Error) {
