@@ -1,18 +1,29 @@
 import { IonButton, IonButtons } from '@ionic/react'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import './ReloadPrompt.css'
 
 // @ts-ignore
 import { useRegisterSW } from 'virtual:pwa-register/react'
+import { useVisible } from './VisibleProvider'
 
 function ReloadPrompt() {
+  const isVisible = useVisible()
+  const registration = useRef<any>(null)
+
+  useEffect(() => {
+    if (isVisible) {
+      registration.current?.update()
+    }
+  }, [isVisible])
+
   const {
     offlineReady: [offlineReady, setOfflineReady],
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW({
-    onRegisteredSW(r: string) {
-      console.log('SW Registered: ' + r)
+    onRegisteredSW(r: any) {
+      console.log('SW Registered')
+      registration.current = r
     },
     onRegisterError(error: Error) {
       console.log('SW registration error', error)

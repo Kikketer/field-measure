@@ -36,9 +36,9 @@ setupIonicReact()
 
 const App: React.FC = () => (
   <IonApp>
-    <ReloadPrompt />
     <SupabaseProvider>
       <VisibleProvider>
+        <ReloadPrompt />
         <IonReactRouter>
           <IonRouterOutlet>
             <Route path="/" exact={true} component={Home} />
