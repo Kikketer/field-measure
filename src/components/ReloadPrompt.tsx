@@ -7,15 +7,15 @@ import { useRegisterSW } from 'virtual:pwa-register/react'
 import { useVisible } from './VisibleProvider'
 
 function ReloadPrompt() {
-  const isVisible = useVisible()
-  const registration = useRef<ServiceWorkerRegistration | null>(null)
+  // const isVisible = useVisible()
+  // const registration = useRef<ServiceWorkerRegistration | null>(null)
 
-  useEffect(() => {
-    if (isVisible && registration.current) {
-      console.log('Checking SW', registration.current?.update)
-      registration.current?.update?.()
-    }
-  }, [isVisible])
+  // useEffect(() => {
+  //   if (isVisible && registration.current) {
+  //     console.log('Checking SW', registration.current?.update)
+  //     registration.current?.update?.()
+  //   }
+  // }, [isVisible])
 
   const {
     offlineReady: [offlineReady, setOfflineReady],
@@ -24,7 +24,7 @@ function ReloadPrompt() {
   } = useRegisterSW({
     onRegisteredSW(r: ServiceWorkerRegistration) {
       console.log('SW Registered', r)
-      registration.current = r
+      // registration.current = r
     },
     onRegisterError(error: Error) {
       console.log('SW registration error', error)
