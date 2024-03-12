@@ -24,9 +24,9 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showguides="true"
-     inkscape:zoom="0.84096521"
-     inkscape:cx="162.31349"
-     inkscape:cy="225.93087"
+     inkscape:zoom="1.1893044"
+     inkscape:cx="130.7487"
+     inkscape:cy="147.98566"
      inkscape:window-width="1440"
      inkscape:window-height="805"
      inkscape:window-x="0"
@@ -49,16 +49,29 @@
      id="layer1"
      transform="translate(-21.314164,-43.337466)">
     <rect
-       style="fill:#ddf4ff;fill-opacity:1;stroke:none;stroke-width:0.159808;stroke-linecap:round"
+       style="fill:#a8e3ff;fill-opacity:1;stroke:none;stroke-width:0.159808;stroke-linecap:round"
        id="rect1"
        width="76.766945"
        height="76.766945"
        x="21.394068"
        y="43.41737" />
     <path
-       style="fill:#388e3c;fill-opacity:1;stroke:#a7a7a7;stroke-width:0.159808;stroke-linecap:round"
-       d="M 46.326346,48.843291 59.854947,75.428566 74.956641,48.843291 Z"
-       id="path7" />
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.159808;stroke-linecap:round"
+       d="m 68.438926,108.30481 c 2.259352,-9.157002 -0.831571,-13.132493 -5.577675,-15.828819 1.385612,3.814171 3.492309,8.279299 -2.214264,15.177619 -2.214264,-8.826767 -3.93888,-12.253024 -9.541733,-16.438838 2.377982,6.594173 3.108336,10.276388 -2.910222,17.304038 z"
+       id="path10"
+       sodipodi:nodetypes="cccccc" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:73.3081px;line-height:1;font-family:Chalkboard;-inkscape-font-specification:'Chalkboard Bold';text-align:center;text-anchor:middle;display:none;fill:#931621;fill-opacity:1;stroke:none;stroke-width:1.38368;stroke-linecap:round"
+       x="55.305462"
+       y="103.60435"
+       id="text12"
+       inkscape:label="L Logo"><tspan
+         sodipodi:role="line"
+         id="tspan12"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Chalkboard;-inkscape-font-specification:'Chalkboard Bold';fill:#931621;fill-opacity:1;stroke-width:1.38368"
+         x="55.305462"
+         y="103.60435">L</tspan></text>
     <path
        id="path8"
        style="fill:#388e3c;fill-opacity:1;stroke:none;stroke-width:0.164013;stroke-linecap:round"
@@ -96,5 +109,15 @@
        cy="111.68874"
        rx="2.2142642"
        ry="1.5850267" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.159808;stroke-linecap:round"
+       d="m 49.253366,90.062593 c -6.218736,4.860888 -7.986569,9.67449 -5.818931,16.694047 -1.615123,-0.47114 -2.332056,-0.41553 -5.652026,-0.0251 2.801252,-10.574558 5.643731,-14.015102 11.470957,-16.668947 z"
+       id="path11"
+       sodipodi:nodetypes="ccccc" />
+    <path
+       style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0.159808;stroke-linecap:round"
+       d="m 80.844546,90.296432 c -5.584309,2.442328 -7.77938,4.679467 -9.711345,8.03453 -1.664437,2.890468 -2.658451,9.816548 -2.658451,9.816548 l 3.596855,0.0201 c -0.719632,-9.125366 3.229192,-13.319245 8.772941,-17.871178 z"
+       id="path12"
+       sodipodi:nodetypes="csccc" />
   </g>
 </svg>
