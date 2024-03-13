@@ -10,7 +10,7 @@
     "test.e2e": "cypress run",
     "test.unit": "vitest",
     "lint": "eslint",
-    "icons": "pwa-assets-generator -c ./pwa-assets.config.ts  public/LineUpIcon.svg"
+    "icons": "pwa-assets-generator -c ./pwa-assets.config.ts  public/LineUpLogo3.svg"
   },
   "dependencies": {
     "@capacitor/app": "5.0.7",

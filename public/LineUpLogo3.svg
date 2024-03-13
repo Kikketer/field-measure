@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="76.92675mm"
+   height="76.92675mm"
+   viewBox="0 0 76.92675 76.92675"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   sodipodi:docname="LineUpLogo3.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showguides="true"
+     inkscape:zoom="1.1893044"
+     inkscape:cx="155.97353"
+     inkscape:cy="155.55311"
+     inkscape:window-width="1440"
+     inkscape:window-height="805"
+     inkscape:window-x="0"
+     inkscape:window-y="23"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 38.463375 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="76.92675 : 38.463375 : 1"
+       inkscape:persp3d-origin="38.463375 : 25.64225 : 1"
+       id="perspective2" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-21.314164,-43.337466)">
+    <rect
+       style="fill:#a8e3ff;fill-opacity:1;stroke:none;stroke-width:0.159808;stroke-linecap:round"
+       id="rect1"
+       width="76.766945"
+       height="76.766945"
+       x="21.394068"
+       y="43.41737" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:73.3081px;line-height:1;font-family:Chalkboard;-inkscape-font-specification:'Chalkboard Bold';text-align:center;text-anchor:middle;display:none;fill:#931621;fill-opacity:1;stroke:none;stroke-width:1.38368;stroke-linecap:round"
+       x="55.305462"
+       y="103.60435"
+       id="text12"
+       inkscape:label="L Logo"><tspan
+         sodipodi:role="line"
+         id="tspan12"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:Chalkboard;-inkscape-font-specification:'Chalkboard Bold';fill:#931621;fill-opacity:1;stroke-width:1.38368"
+         x="55.305462"
+         y="103.60435">L</tspan></text>
+    <path
+       id="path8"
+       style="fill:#388e3c;fill-opacity:1;stroke:none;stroke-width:0.164013;stroke-linecap:round"
+       d="m 95.400338,63.517308 c -14.560289,3.140777 -16.925306,13.683335 -16.925306,13.683335 0,0 -3.402741,-4.889883 2.2257,-11.953543 -8.740496,3.452568 -11.530512,9.231211 -12.3202,17.772413 L 47.99505,83.019083 C 43.434842,74.093712 46.738743,68.498446 50.4868,63.989114 43.470779,67.956709 40.432643,70.763693 37.55994,81.603543 32.035514,71.071732 28.333758,69.709008 19.826139,67.76356 c 7.871295,6.128655 8.836465,13.820833 8.120952,13.368173 0,0 -2.347894,-9.402353 -10.938351,-9.436113 4.334538,4.377713 4.811233,7.836913 2.559017,12.426633 h -5.082894 v 14.78669 H 103.05 v -14.78669 h -4.337203 c -1.30299,-4.21576 -1.350861,-9.321448 4.808493,-14.943275 -12.871923,3.564877 -16.241387,14.469405 -16.241387,14.469405 0,0 -3.632829,-11.679586 8.120435,-20.131075 z"
+       sodipodi:nodetypes="ccccccccccccccccccc" />
+    <rect
+       style="fill:#388e3c;stroke-width:0.159808;stroke-linecap:round;fill-opacity:1"
+       id="rect4"
+       width="76.766945"
+       height="24.450371"
+       x="21.394068"
+       y="95.73394" />
+    <path
+       d="M 82.128921,107.95912 H 41.092 V 51.06529 h 14.672419 v 45.889518 h 26.364502 z"
+       id="text1"
+       style="font-weight:bold;font-size:78.2529px;line-height:1;font-family:'Corsiva Hebrew';-inkscape-font-specification:'Corsiva Hebrew Bold';text-align:center;text-anchor:middle;fill:#ffffff;stroke-width:1.47702;stroke-linecap:round"
+       aria-label="L" />
+    <path
+       style="fill:#388e3c;fill-opacity:1;stroke-width:0.159808;stroke-linecap:round"
+       d="M 71.087155,84.513737 C 68.215237,78.321674 66.03497,72.43263 60.782088,69.844086 c 2.404958,4.877755 2.109469,7.693058 0.348289,9.795947 -1.352838,-5.73484 -4.25734,-9.675185 -10.412056,-11.412156 2.865105,3.70133 5.475008,5.430412 5.010846,16.364542 z"
+       id="path4"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:#388e3c;fill-opacity:1;stroke-width:0.159808;stroke-linecap:round"
+       d="m 62.407327,110.55473 c -2.530691,-3.78285 -2.066265,-7.3167 0.849793,-11.252514 -2.962222,1.337134 -4.617616,2.810084 -6.409162,6.698464 -3.274596,-4.40025 -5.092771,-5.57041 -10.892141,-7.091737 3.741259,3.784027 7.037134,6.084567 3.158874,11.409817 z"
+       id="path5"
+       sodipodi:nodetypes="cccccc" />
+    <path
+       style="fill:#388e3c;fill-opacity:1;stroke-width:0.159808;stroke-linecap:round"
+       d="m 76.451082,109.48604 c 1.273747,-4.75535 2.799945,-6.14517 5.348516,-8.57336 -0.976986,3.3035 -2.080925,5.26986 0.865201,8.4947 z"
+       id="path6"
+       sodipodi:nodetypes="cccc" />
+  </g>
+</svg>
