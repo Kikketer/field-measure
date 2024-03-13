@@ -229,7 +229,7 @@ export const FieldAdd = () => {
           </form>
         </IonContent>
       )}
-      <IonFooter translucent collapse="fade">
+      <IonFooter translucent>
         <IonToolbar>
           <IonButton
             type="button"

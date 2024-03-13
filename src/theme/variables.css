@@ -12,12 +12,13 @@ http://ionicframework.com/docs/theming/ */
   --success: #388e3c;
   --success-light: #50ad55;
   --success-contrast: white;
-  --warning: #f7a278;
+  --warning: #f4a259;
   --warning-contrast: black;
   --warning-light: #efa281;
-  --danger: #c62828;
+  --danger: #bc4b51;
   --danger-contrast: white;
   --danger-light: #ce3838;
+  /* #373737 */
 
   --ion-background-color: var(--white);
   --ion-border-color: var(--border);
@@ -29,7 +30,7 @@ http://ionicframework.com/docs/theming/ */
   --border-radius: 14px;
 
   /** primary **/
-  --ion-color-primary: var(--accent);
+  --ion-color-primary: var(--success);
   --ion-color-primary-rgb: 56, 128, 255;
   --ion-color-primary-contrast: #ffffff;
   --ion-color-primary-contrast-rgb: 255, 255, 255;
