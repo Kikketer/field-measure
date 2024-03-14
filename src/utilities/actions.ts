@@ -84,3 +84,34 @@ export const saveField = async ({
 
   return mapFields(savedField.data ?? [])[0]
 }
+
+export const joinTeam = async ({
+  joinCode,
+  supabase,
+}: {
+  joinCode: string
+  supabase: SupabaseClient
+}) => {
+  if (!joinCode) {
+    throw new Error('Invalid join code')
+  }
+
+  const team = await supabase
+    .from('paint_team')
+    .select()
+    .eq('join_code', joinCode)
+    .limit(1)
+
+  if (team?.data && team.data.length > 0) {
+    const user = await supabase.auth.getUser()
+    await supabase
+      .from('users')
+      .upsert({
+        user_id: user.data.user?.id,
+        paint_team_id: team.data[0].id,
+      })
+      .select()
+  } else {
+    throw new Error('Invalid join code')
+  }
+}

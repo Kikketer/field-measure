@@ -11,6 +11,8 @@ export const Home = () => {
 
   useEffect(() => {
     if (user) {
+      // The user may not have a team yet, but 99% of the time they will
+      // So we land on fields first but then redirect to team-select in that off case
       replace('/fields')
     }
   }, [user])

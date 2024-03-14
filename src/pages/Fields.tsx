@@ -17,6 +17,7 @@ import {
   useIonViewWillEnter,
 } from '@ionic/react'
 import { useEffect, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { FieldListItem } from '../components/FieldListItem'
 import { FullLoader } from '../components/FullLoader'
 import { Menu } from '../components/Menu'
@@ -32,17 +33,22 @@ const Fields: React.FC = () => {
   const [user, setUser] = useState<User>()
   const { supabase } = useSupabase()
   const isVisible = useVisible()
+  const { replace } = useHistory()
 
   useIonViewWillEnter(() => {
     if (supabase) {
-      Promise.all([
-        getUser({ supabase }).then((user) => setUser(user)),
-        getFields({ supabase }).then((fields) => {
-          setFields(groupFields(fields))
-        }),
-      ]).then(() => {
-        setLoading(false)
-      })
+      Promise.all([getUser({ supabase }), getFields({ supabase })]).then(
+        ([foundUser, foundFields]) => {
+          if (!foundUser?.paintTeam) {
+            // If the user doesn't have a team and somehow got here
+            replace('/team-select')
+          } else {
+            setUser(foundUser)
+            setFields(groupFields(foundFields))
+            setLoading(false)
+          }
+        },
+      )
     }
   })
 
@@ -107,7 +113,7 @@ const Fields: React.FC = () => {
               </IonList>
               <div className="ion-padding">
                 <IonText color="medium">
-                  {user ? user.paintTeam.name : <IonSkeletonText />}
+                  {user?.paintTeam ? user.paintTeam.name : <IonSkeletonText />}
                 </IonText>
               </div>
             </IonContent>

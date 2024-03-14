@@ -31,6 +31,7 @@ import './theme/variables.css'
 import './theme/globals.css'
 import { Home } from './pages/Home'
 import { Quick } from './pages/Quick'
+import { TeamSelect } from './pages/TeamSelect'
 
 setupIonicReact()
 
@@ -43,6 +44,11 @@ const App: React.FC = () => (
           <IonRouterOutlet>
             <Route path="/" exact={true} component={Home} />
             <Route path="/quick" exact={true} component={Quick} />
+            <AuthRoute
+              path="/team-select"
+              exact={true}
+              component={TeamSelect}
+            />
             <AuthRoute path="/field/:id" exact={true} component={FieldDetail} />
             <AuthRoute path="/field/add" exact={true} component={FieldAdd} />
             <AuthRoute
