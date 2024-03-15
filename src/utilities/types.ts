@@ -23,6 +23,7 @@ export type Field = {
    */
   rainfallFactor: number
   lastPainted: Date
+  lastMowed?: Date
   predictedNextPaint?: Date
   /**
    * The date the field was marked unplayable

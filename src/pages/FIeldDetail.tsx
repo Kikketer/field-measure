@@ -1,4 +1,5 @@
 import {
+  IonAlert,
   IonBackButton,
   IonButton,
   IonButtons,
@@ -17,14 +18,14 @@ import {
 } from '@ionic/react'
 import { createOutline } from 'ionicons/icons'
 import { differenceInCalendarDays } from 'date-fns'
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { ConfirmPaint } from '../components/ConfirmPaint'
 import { FieldSketch } from '../components/FieldSketch'
 import { StatusLabel } from '../components/StatusLabel'
 import { useSupabase } from '../components/SupabaseProvider'
 import { useVisible } from '../components/VisibleProvider'
-import { paintField } from '../utilities/actions'
+import { mowField, paintField } from '../utilities/actions'
 import { SIZES } from '../utilities/constants'
 import { getField, getUser } from '../utilities/data'
 import {
@@ -35,16 +36,22 @@ import {
 import { Field, FieldSize, User } from '../utilities/types'
 import './FieldDetail.css'
 
+const THROTTLE_TIME = 500
+
 export const FieldDetail = () => {
   const [loading, setLoading] = useState(false)
   const [showConfirmPaint, setShowConfirmPaint] = useState(false)
+  const [showConfirmMow, setShowConfirmMow] = useState(false)
   const [field, setField] = useState<Field>()
   const [user, setUser] = useState<User>()
   const params = useParams<{ id: string }>()
   const { supabase } = useSupabase()
   const isVisible = useVisible()
+  const throttleTimer = useRef<any | undefined>()
 
   const fetch = async () => {
+    if (throttleTimer.current) return
+
     getField({ supabase, id: params.id })
       .then((foundField) => {
         setField(foundField)
@@ -53,6 +60,11 @@ export const FieldDetail = () => {
     getUser({ supabase }).then((foundUser) => {
       setUser(foundUser)
     })
+
+    throttleTimer.current = setTimeout(() => {
+      clearTimeout(throttleTimer.current)
+      throttleTimer.current = undefined
+    }, THROTTLE_TIME)
   }
 
   useIonViewWillEnter(() => {
@@ -69,6 +81,12 @@ export const FieldDetail = () => {
   const onPaint = async ({ adjustFactor }: { adjustFactor: boolean }) => {
     if (!field) return
     const resultingField = await paintField({ field, adjustFactor, supabase })
+    setField(resultingField)
+  }
+
+  const onMow = async () => {
+    if (!field) return
+    const resultingField = await mowField({ field, supabase })
     setField(resultingField)
   }
 
@@ -162,6 +180,26 @@ export const FieldDetail = () => {
                       <tr>
                         <td>
                           <IonLabel style={{ fontWeight: 'bold' }}>
+                            Last mowed
+                          </IonLabel>
+                        </td>
+                        <td>
+                          <IonLabel slot="end">
+                            {field.lastMowed && (
+                              <>
+                                {differenceInCalendarDays(
+                                  new Date(),
+                                  field.lastMowed ?? new Date(),
+                                )}{' '}
+                                days ago
+                              </>
+                            )}
+                          </IonLabel>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <IonLabel style={{ fontWeight: 'bold' }}>
                             Size
                           </IonLabel>
                         </td>
@@ -247,12 +285,12 @@ export const FieldDetail = () => {
       <IonFooter translucent>
         <IonToolbar>
           <IonButton
-            slot="primary"
-            onClick={() => setShowConfirmPaint(true)}
+            slot="secondary"
+            onClick={() => setShowConfirmMow(true)}
             fill={
               differenceInCalendarDays(
                 new Date(),
-                field?.lastPainted ?? new Date(),
+                field?.lastMowed ?? new Date('2024-01-01'),
               ) < 3
                 ? 'outline'
                 : 'solid'
@@ -260,7 +298,27 @@ export const FieldDetail = () => {
             disabled={
               differenceInCalendarDays(
                 new Date(),
-                field?.lastPainted ?? new Date(),
+                field?.lastMowed ?? new Date('2024-01-01'),
+              ) < 3 || !user
+            }
+          >
+            Mark Mowed
+          </IonButton>
+          <IonButton
+            slot="primary"
+            onClick={() => setShowConfirmPaint(true)}
+            fill={
+              differenceInCalendarDays(
+                new Date(),
+                field?.lastPainted ?? new Date('2024-01-01'),
+              ) < 3
+                ? 'outline'
+                : 'solid'
+            }
+            disabled={
+              differenceInCalendarDays(
+                new Date(),
+                field?.lastPainted ?? new Date('2024-01-01'),
               ) < 3 || !user
             }
           >
@@ -277,6 +335,24 @@ export const FieldDetail = () => {
         onPaint={onPaint}
         reasonableLimitOfOverdueDays={(field?.maxDryDays || 12) * 2}
         onCancel={() => setShowConfirmPaint(false)}
+      />
+      <IonAlert
+        isOpen={showConfirmMow}
+        header="Confirm Mowing"
+        onDidDismiss={() => setShowConfirmMow(false)}
+        buttons={[
+          {
+            text: 'Cancel',
+            role: 'cancel',
+          },
+          {
+            text: 'Mark Mowed',
+            role: 'confirm',
+            handler: () => {
+              onMow()
+            },
+          },
+        ]}
       />
     </IonPage>
   )

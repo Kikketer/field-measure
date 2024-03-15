@@ -12,15 +12,6 @@ export const getIsFieldPlayable = (field?: Field) => {
   )
 }
 
-export const formatDate = (date?: Date) => {
-  if (!date) return ''
-
-  return date.toLocaleDateString('en-US', {
-    day: 'numeric',
-    month: 'short',
-  })
-}
-
 export const getStartOfDate = (day?: string): Date => {
   if (!day) return startOfDay(new Date())
 
@@ -60,6 +51,7 @@ export const mapFields = (fields: any[]): Field[] => {
     field.lastPainted = field.lastPainted
       ? new Date(field.lastPainted)
       : undefined
+    field.lastMowed = field.lastMowed ? new Date(field.lastMowed) : undefined
     field.modified = field.modified ? new Date(field.modified) : undefined
     field.predictedNextPaint = field.predictedNextPaint
       ? new Date(field.predictedNextPaint)

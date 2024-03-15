@@ -31,6 +31,7 @@ import './theme/variables.css'
 import './theme/globals.css'
 import { Home } from './pages/Home'
 import { Quick } from './pages/Quick'
+import { TeamInvite } from './pages/TeamInvite'
 import { TeamSelect } from './pages/TeamSelect'
 
 setupIonicReact()
@@ -48,6 +49,11 @@ const App: React.FC = () => (
               path="/team-select"
               exact={true}
               component={TeamSelect}
+            />
+            <AuthRoute
+              component={TeamInvite}
+              path="/team-invite"
+              exact={true}
             />
             <AuthRoute path="/field/:id" exact={true} component={FieldDetail} />
             <AuthRoute path="/field/add" exact={true} component={FieldAdd} />

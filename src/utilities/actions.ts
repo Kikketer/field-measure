@@ -53,6 +53,28 @@ export const paintField = async ({
   return mapFields(savedField.data ?? [])[0]
 }
 
+export const mowField = async ({
+  field,
+  supabase,
+}: {
+  field: Field
+  supabase: SupabaseClient
+}) => {
+  // Update the fields "last_mowed" column to today:
+  const savedField = await supabase
+    ?.from('fields')
+    .update({ last_mowed: new Date() })
+    .eq('id', field.id)
+    .select()
+
+  // Log this mow (used for averages later...)
+  await supabase?.from('mow_history').insert({
+    field_id: field.id,
+  })
+
+  return mapFields(savedField.data ?? [])[0]
+}
+
 export const saveField = async ({
   field,
   supabase,

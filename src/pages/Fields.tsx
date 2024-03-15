@@ -16,7 +16,7 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { FieldListItem } from '../components/FieldListItem'
 import { FullLoader } from '../components/FullLoader'
@@ -27,6 +27,8 @@ import { getFields, getUser } from '../utilities/data'
 import { Field, User } from '../utilities/types'
 import { groupFields } from '../utilities/utils'
 
+const THROTTLE_TIME = 500
+
 const Fields: React.FC = () => {
   const [loading, setLoading] = useState(true)
   const [fields, setFields] = useState<Record<string, Field[]>>()
@@ -34,36 +36,39 @@ const Fields: React.FC = () => {
   const { supabase } = useSupabase()
   const isVisible = useVisible()
   const { replace } = useHistory()
+  const throttleTimer = useRef<any | undefined>()
+
+  const fetch = async () => {
+    if (throttleTimer.current) return
+
+    Promise.all([getUser({ supabase }), getFields({ supabase })]).then(
+      ([foundUser, foundFields]) => {
+        if (!foundUser?.paintTeam) {
+          // If the user doesn't have a team and somehow got here
+          replace('/team-select')
+        } else {
+          setUser(foundUser)
+          setFields(groupFields(foundFields))
+          setLoading(false)
+        }
+      },
+    )
+
+    throttleTimer.current = setTimeout(() => {
+      clearTimeout(throttleTimer.current)
+      throttleTimer.current = undefined
+    }, THROTTLE_TIME)
+  }
 
   useIonViewWillEnter(() => {
     if (supabase) {
-      Promise.all([getUser({ supabase }), getFields({ supabase })]).then(
-        ([foundUser, foundFields]) => {
-          if (!foundUser?.paintTeam) {
-            // If the user doesn't have a team and somehow got here
-            replace('/team-select')
-          } else {
-            setUser(foundUser)
-            setFields(groupFields(foundFields))
-            setLoading(false)
-          }
-        },
-      )
+      fetch().catch((err) => console.error(err))
     }
   })
 
-  const refresh = (e?: CustomEvent) => {
-    getFields({ supabase })
-      .then((fields) => {
-        setFields(groupFields(fields))
-        e?.detail.complete()
-      })
-      .catch(() => e?.detail.complete())
-  }
-
   useEffect(() => {
     if (isVisible) {
-      refresh()
+      fetch().catch((err) => console.error(err))
     }
   }, [isVisible])
 
@@ -85,7 +90,13 @@ const Fields: React.FC = () => {
               </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
-              <IonRefresher slot="fixed" onIonRefresh={refresh}>
+              <IonRefresher
+                slot="fixed"
+                onIonRefresh={async (e) => {
+                  await fetch()
+                  e.detail.complete()
+                }}
+              >
                 <IonRefresherContent></IonRefresherContent>
               </IonRefresher>
 
