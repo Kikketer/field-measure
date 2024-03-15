@@ -43,7 +43,7 @@ Deno.serve(async (req: Request) => {
     // the fields in that group
     // Right now ZIP is at a paint team level, so we use that for now
     const paintteams: { data: PaintTeam[] } = await supabaseClient
-      .from('paintteam')
+      .from('paint_team')
       .select('*')
 
     const twentyHoursAgo = new Date().getTime() - 20 * 60 * 60 * 1000
@@ -72,6 +72,7 @@ Deno.serve(async (req: Request) => {
       if (weather.precipitation.total > 4) {
         console.log(`Rainfall will be incremented for ${paintTeam.zipcode}`)
         // Increment the rainfall for the fields in this zipcode:
+        // "rpc" being the database stored procedure
         const { error } = await supabaseClient.rpc('increment_rainfall', {
           paint_team_id: paintTeam.id,
           zipcode: paintTeam.zipcode,
