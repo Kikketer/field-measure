@@ -3,6 +3,7 @@ import { IonReactRouter } from '@ionic/react-router'
 import React from 'react'
 import { Redirect, Route } from 'react-router-dom'
 import { AuthRoute } from './components/AuthRoute'
+import { MessagingProvider } from './components/MessagingProvider'
 import ReloadPrompt from './components/ReloadPrompt'
 import { SupabaseProvider } from './components/SupabaseProvider'
 import { VisibleProvider } from './components/VisibleProvider'
@@ -39,34 +40,40 @@ setupIonicReact()
 const App: React.FC = () => (
   <IonApp>
     <SupabaseProvider>
-      <VisibleProvider>
-        <ReloadPrompt />
-        <IonReactRouter>
-          <IonRouterOutlet>
-            <Route path="/" exact={true} component={Home} />
-            <Route path="/quick" exact={true} component={Quick} />
-            <AuthRoute
-              path="/team-select"
-              exact={true}
-              component={TeamSelect}
-            />
-            <AuthRoute
-              component={TeamInvite}
-              path="/team-invite"
-              exact={true}
-            />
-            <AuthRoute path="/field/:id" exact={true} component={FieldDetail} />
-            <AuthRoute path="/field/add" exact={true} component={FieldAdd} />
-            <AuthRoute
-              path="/field/:fieldId/edit"
-              exact={true}
-              component={FieldAdd}
-            />
-            <AuthRoute path="/fields" exact={true} component={Fields} />
-            <Route render={() => <Redirect to={'/'} />} />
-          </IonRouterOutlet>
-        </IonReactRouter>
-      </VisibleProvider>
+      <MessagingProvider>
+        <VisibleProvider>
+          <ReloadPrompt />
+          <IonReactRouter>
+            <IonRouterOutlet>
+              <Route path="/" exact={true} component={Home} />
+              <Route path="/quick" exact={true} component={Quick} />
+              <AuthRoute
+                path="/team-select"
+                exact={true}
+                component={TeamSelect}
+              />
+              <AuthRoute
+                component={TeamInvite}
+                path="/team-invite"
+                exact={true}
+              />
+              <AuthRoute
+                path="/field/:id"
+                exact={true}
+                component={FieldDetail}
+              />
+              <AuthRoute path="/field/add" exact={true} component={FieldAdd} />
+              <AuthRoute
+                path="/field/:fieldId/edit"
+                exact={true}
+                component={FieldAdd}
+              />
+              <AuthRoute path="/fields" exact={true} component={Fields} />
+              <Route render={() => <Redirect to={'/'} />} />
+            </IonRouterOutlet>
+          </IonReactRouter>
+        </VisibleProvider>
+      </MessagingProvider>
     </SupabaseProvider>
   </IonApp>
 )
