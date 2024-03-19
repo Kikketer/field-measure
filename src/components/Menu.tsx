@@ -8,12 +8,14 @@ import {
 } from '@ionic/react'
 import { useRef } from 'react'
 import './Menu.css'
+import { useMessaging } from './MessagingProvider'
 import { useSupabase } from './SupabaseProvider'
 import { version } from '../../package.json'
 
 export const Menu = ({ contentId }: { contentId: string }) => {
   const menuRef = useRef<any>()
   const { supabase } = useSupabase()
+  const { log } = useMessaging()
 
   const signout = async () => {
     try {
@@ -42,6 +44,9 @@ export const Menu = ({ contentId }: { contentId: string }) => {
               <IonLabel>Add Field</IonLabel>
             </IonItem>
           </IonList>
+          <div>
+            <pre>{log}</pre>
+          </div>
           <IonList>
             <IonItem onClick={signout}>
               <IonLabel>Sign Out</IonLabel>

@@ -63,4 +63,5 @@ export type PaintTeam = {
 export type User = {
   id: string
   paintTeam: PaintTeam
+  shouldNotify: boolean
 }
