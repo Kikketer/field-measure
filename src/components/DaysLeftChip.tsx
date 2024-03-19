@@ -40,7 +40,7 @@ export const DaysLeftChip: React.FC<{
         </span>
       ) : (
         <span className={styles.Total}>
-          {differenceInDays > -9 && differenceInDays}
+          {differenceInDays > -9 ? differenceInDays : '!'}
         </span>
       )}
     </div>
