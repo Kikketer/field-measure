@@ -133,10 +133,10 @@ export const FieldAdd = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      {loading ? (
-        <FullLoader />
-      ) : (
-        <IonContent className="ion-padding">
+      <IonContent className="ion-padding">
+        {loading ? (
+          <FullLoader />
+        ) : (
           <form onSubmit={onSave} ref={form}>
             {error && <IonText color="danger">{error}</IonText>}
             <IonItem>
@@ -227,8 +227,9 @@ export const FieldAdd = () => {
             </div>
             <button type="submit" className="ion-hidden" />
           </form>
-        </IonContent>
-      )}
+        )}
+      </IonContent>
+
       <IonFooter translucent>
         <IonToolbar>
           <IonButton

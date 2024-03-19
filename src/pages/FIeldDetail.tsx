@@ -102,20 +102,25 @@ export const FieldDetail = () => {
   return (
     <IonPage id="field-detail-page">
       <IonHeader translucent>
-        <IonToolbar>
-          <IonButtons slot="start">
-            <IonBackButton text="Fields" defaultHref="/fields"></IonBackButton>
-          </IonButtons>
-          {!loading && field && <IonTitle>{field.name}</IonTitle>}
-          <IonButtons slot="end">
-            <IonButton
-              aria-label="Edit Field"
-              routerLink={`/field/${params.id}/edit`}
-            >
-              <IonIcon icon={createOutline} aria-hidden="true" />
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
+        {loading ? null : (
+          <IonToolbar>
+            <IonButtons slot="start">
+              <IonBackButton
+                text="Fields"
+                defaultHref="/fields"
+              ></IonBackButton>
+            </IonButtons>
+            {!loading && field && <IonTitle>{field.name}</IonTitle>}
+            <IonButtons slot="end">
+              <IonButton
+                aria-label="Edit Field"
+                routerLink={`/field/${params.id}/edit`}
+              >
+                <IonIcon icon={createOutline} aria-hidden="true" />
+              </IonButton>
+            </IonButtons>
+          </IonToolbar>
+        )}
       </IonHeader>
 
       <IonContent fullscreen>
@@ -123,13 +128,18 @@ export const FieldDetail = () => {
           <FieldDetailSkeleton />
         ) : (
           <>
+            <IonHeader collapse="condense">
+              <IonToolbar>
+                <IonTitle size="large">AMT-99</IonTitle>
+              </IonToolbar>
+            </IonHeader>
             {field ? (
               <>
-                <IonHeader collapse="condense">
-                  <IonToolbar>
-                    <IonTitle size="large">{field.name}</IonTitle>
-                  </IonToolbar>
-                </IonHeader>
+                {/*<IonHeader collapse="condense">*/}
+                {/*  <IonToolbar>*/}
+                {/*    <IonTitle size="large">{field.name}</IonTitle>*/}
+                {/*  </IonToolbar>*/}
+                {/*</IonHeader>*/}
                 <div className="ion-padding col gap-4">
                   <IonItem lines="none" style={{ alignItems: 'start' }}>
                     <IonLabel>
@@ -360,7 +370,7 @@ export const FieldDetail = () => {
 
 const FieldDetailSkeleton = () => {
   return (
-    <div className="ion-padding">
+    <div className="ion-padding" style={{ marginTop: '2rem' }}>
       <IonSkeletonText
         animated={true}
         style={{ height: '2rem', width: '50%', marginBottom: '3rem' }}

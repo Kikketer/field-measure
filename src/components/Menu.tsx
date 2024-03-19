@@ -44,9 +44,6 @@ export const Menu = ({ contentId }: { contentId: string }) => {
               <IonLabel>Add Field</IonLabel>
             </IonItem>
           </IonList>
-          <div>
-            <pre>{log}</pre>
-          </div>
           <IonList>
             <IonItem onClick={signout}>
               <IonLabel>Sign Out</IonLabel>

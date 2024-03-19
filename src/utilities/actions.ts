@@ -20,14 +20,11 @@ export const paintField = async ({
       fieldId: field.id,
       supabase,
     })
-    console.log('Getting the paint history ', paintHistory)
     resultingField = getFieldWithAdjustedRainFactorAndDryDays({
       currentField: field,
       markUnplayableOn: new Date(),
       paintHistory: paintHistory ?? [],
     })
-
-    console.log('field with adjusted factor: ', resultingField)
 
     // Log the paint history only if this will adjust the factor
     await supabase?.from('paint_history').insert({

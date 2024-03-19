@@ -60,7 +60,6 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
     if (!import.meta.env.VITE_PUBLIC_PUSH_APP_ID) return
     if (!user) return
 
-    console.log('Setting up messaging')
     setLog(log + `\nSetting up messaging`)
     initializeSignal().then()
   }, [user])

@@ -1,4 +1,3 @@
-import admin from 'https://esm.sh/firebase-admin'
 import { corsHeaders } from '../shared/_cors.ts'
 
 console.log('Starting push-notifications function...')
@@ -20,41 +19,9 @@ Deno.serve(async (req) => {
     })
   }
 
-  // Get the google auth keys from our "file"
-  const keysEnvVar = Deno.env.get('GOOGLE_CLOUD_KEYS')
-  if (!keysEnvVar) {
-    throw new Error('The proper environment variable was not found!')
-  }
-  const keys = JSON.parse(keysEnvVar)
-
-  // Find all users that have fields that need painting today and have not yet received a notification today
-
-  // Perform the push for those users
-  console.log('Doing the keys ', keys.project_id)
-  admin
-    .initializeApp({
-      credential: admin.credential.cert(keys),
-    })
-    .messaging()
-    .send({
-      token:
-        'dJNmEiyKRse1PjFdQ8_Y3S:APA91bEI88wqnodStf3gY5dlYjQIhNqIxP-hzm8hDAY4_fiyT8BP3-eIiAYWePELw3kqiWRTZlH-ZefIptoFf9PzUa9467vl507lkb5D9Ot237e3fYH-4IR8N4Hm9noDn8qmft_06QQi',
-      notification: {
-        title: 'Test from CLI',
-        body: 'Hello World!',
-      },
-      webpush: {
-        fcmOptions: {
-          link: 'https://localhost:3000',
-        },
-      },
-    })
-    .then((r) => {
-      console.log('Result:', r)
-    })
-    .catch((e) => {
-      console.error('Error:', e)
-    })
+  // Check if there are any fields that are < 1 day remaining
+  // For each field, notify the users with "should_push" that share the same team as that field
+  // There should only be one push for each user regardless of how many fields
 
   // Record the push in the database so we don't send it again in the same day
 
