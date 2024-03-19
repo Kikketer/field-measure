@@ -22,8 +22,11 @@
 .Total {
   width: 2rem;
   height: 2rem;
-  display: inline-block;
   border-radius: 50%;
-  /*border: 1px solid var(--border);*/
+  display: flex;
+  font-weight: bold;
+  align-items: center;
+  justify-content: center;
   background-color: var(--danger);
+  color: var(--danger-contrast);
 }

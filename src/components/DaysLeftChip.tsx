@@ -19,6 +19,10 @@ export const DaysLeftChip: React.FC<{
     return getPercentage({ predictedNextPaint, lastPainted })
   }, [predictedNextPaint, lastPainted])
 
+  const differenceInDays = useMemo(() => {
+    return differenceInCalendarDays(predictedNextPaint, new Date())
+  }, [predictedNextPaint])
+
   return (
     <div>
       {percentage < 100 ? (
@@ -32,10 +36,12 @@ export const DaysLeftChip: React.FC<{
             '--currentOffColor': getOffColorAtPercentage(percentage),
           }}
         >
-          {differenceInCalendarDays(predictedNextPaint, new Date())}
+          {differenceInDays}
         </span>
       ) : (
-        <div className={styles.Total} />
+        <span className={styles.Total}>
+          {differenceInDays > -9 ? differenceInDays : '!'}
+        </span>
       )}
     </div>
   )
