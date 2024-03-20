@@ -16,7 +16,7 @@ type MessagingProvider = {
   resetPush: () => void
 }
 
-const MessagingContext = createContext<MessagingProvider>()
+const MessagingContext = createContext<MessagingProvider>(undefined as any)
 
 export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
   const { user, supabase } = useSupabase()

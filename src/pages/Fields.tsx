@@ -43,10 +43,10 @@ const Fields: React.FC = () => {
 
     Promise.all([getUser({ supabase }), getFields({ supabase })]).then(
       ([foundUser, foundFields]) => {
-        if (!foundUser?.paintTeam) {
+        if (foundUser && !foundUser.paintTeam) {
           // If the user doesn't have a team and somehow got here
           replace('/team-select')
-        } else {
+        } else if (foundUser) {
           setUser(foundUser)
           setFields(groupFields(foundFields))
           setLoading(false)
