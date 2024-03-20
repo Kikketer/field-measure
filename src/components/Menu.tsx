@@ -15,7 +15,7 @@ import { version } from '../../package.json'
 export const Menu = ({ contentId }: { contentId: string }) => {
   const menuRef = useRef<any>()
   const { supabase } = useSupabase()
-  const { log } = useMessaging()
+  const { resetPush } = useMessaging()
 
   const signout = async () => {
     try {
@@ -45,6 +45,14 @@ export const Menu = ({ contentId }: { contentId: string }) => {
             </IonItem>
           </IonList>
           <IonList>
+            <IonItem
+              onClick={() => {
+                resetPush()
+                menuRef.current.close()
+              }}
+            >
+              <IonLabel>Reset Push</IonLabel>
+            </IonItem>
             <IonItem onClick={signout}>
               <IonLabel>Sign Out</IonLabel>
             </IonItem>

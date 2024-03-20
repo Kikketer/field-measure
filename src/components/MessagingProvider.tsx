@@ -13,9 +13,10 @@ import { useSupabase } from './SupabaseProvider'
 
 type MessagingProvider = {
   log?: string
+  resetPush: () => void
 }
 
-const MessagingContext = createContext<MessagingProvider>(undefined as any)
+const MessagingContext = createContext<MessagingProvider>()
 
 export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
   const { user, supabase } = useSupabase()
@@ -24,10 +25,9 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const checkAndPrompt = () => {
     const isSupported = OneSignal.Notifications.isPushSupported()
-    const alreadyOpted = OneSignal.User.PushSubscription.optedIn
     const alreadyPrompted = localStorage.getItem('push-prompted')
 
-    if (isSupported && !alreadyOpted && !alreadyPrompted) {
+    if (isSupported && !alreadyPrompted) {
       setTimeout(() => {
         setShowPrompt(true)
       }, 2000)
@@ -36,14 +36,21 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
 
   const initializeSignal = async () => {
     try {
+      const actualUser = await getUser({ supabase })
+
+      OneSignal.User.PushSubscription.addEventListener('change', (event) => {
+        if (event.current.token) {
+          // This only fires when we opt in, and sets the external ID of this user
+          OneSignal.login(actualUser.userId)
+        }
+      })
+
       await OneSignal.init({
         appId: import.meta.env.VITE_PUBLIC_PUSH_APP_ID,
         allowLocalhostAsSecureOrigin: location.hostname === 'localhost',
         serviceWorkerParam: { scope: '/push/onesignal/' },
         serviceWorkerPath: 'push/onesignal/OneSignalSDKWorker.js',
       })
-
-      const actualUser = await getUser({ supabase })
 
       if (actualUser?.shouldNotify) {
         checkAndPrompt()
@@ -53,6 +60,12 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
       console.error(err)
       setLog(log + `\nFailed ${err}`)
     }
+  }
+
+  const resetPush = () => {
+    localStorage.removeItem('push-prompted')
+    localStorage.removeItem('onesignal-notification-prompt')
+    checkAndPrompt()
   }
 
   // Setup the messaging on initial load
@@ -68,6 +81,7 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
     <MessagingContext.Provider
       value={{
         log,
+        resetPush,
       }}
     >
       {children}
@@ -88,8 +102,8 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
             text: 'Yes',
             handler: () => {
               setShowPrompt(false)
-              OneSignal.Notifications.requestPermission()
               OneSignal.User.PushSubscription.optIn()
+              OneSignal.Notifications.requestPermission()
               localStorage.setItem('push-prompted', 'true')
             },
           },
