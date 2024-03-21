@@ -16,6 +16,7 @@
   border: 1px solid var(--ion-border-color);
   border-radius: 4px;
   z-index: 1;
+  color: var(--ion-color-dark);
   background-color: var(--ion-background-color);
 }
 
