@@ -128,18 +128,13 @@ export const FieldDetail = () => {
           <FieldDetailSkeleton />
         ) : (
           <>
-            <IonHeader collapse="condense">
-              <IonToolbar>
-                <IonTitle size="large">AMT-99</IonTitle>
-              </IonToolbar>
-            </IonHeader>
             {field ? (
               <>
-                {/*<IonHeader collapse="condense">*/}
-                {/*  <IonToolbar>*/}
-                {/*    <IonTitle size="large">{field.name}</IonTitle>*/}
-                {/*  </IonToolbar>*/}
-                {/*</IonHeader>*/}
+                <IonHeader collapse="condense">
+                  <IonToolbar>
+                    <IonTitle size="large">{field.name}</IonTitle>
+                  </IonToolbar>
+                </IonHeader>
                 <div className="ion-padding col gap-4">
                   <IonItem lines="none" style={{ alignItems: 'start' }}>
                     <IonLabel>
