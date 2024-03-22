@@ -2,6 +2,7 @@ import { IonItem, IonLabel } from '@ionic/react'
 import React from 'react'
 import { Field } from '../utilities/types'
 import { DaysLeftChip } from './DaysLeftChip'
+import './FieldListItem.css'
 
 export const FieldListItem = ({
   field,
@@ -14,6 +15,7 @@ export const FieldListItem = ({
     <IonItem
       routerLink={`/field/${field.id}`}
       lines={isLast ? 'none' : 'inset'}
+      className="field-list-item"
     >
       <div slot="start">
         <DaysLeftChip
