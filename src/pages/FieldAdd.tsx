@@ -7,7 +7,6 @@ import {
   IonHeader,
   IonInput,
   IonItem,
-  IonItemDivider,
   IonLabel,
   IonPage,
   IonSelect,
@@ -27,7 +26,6 @@ import { saveField } from '../utilities/actions'
 import { SIZES } from '../utilities/constants'
 import { getField, getUser } from '../utilities/data'
 import { getDateFromPartialDate } from '../utilities/getDateFromPartialDate'
-import { setTimeOnDate } from '../utilities/setTimeOnDate'
 import { Field, FieldSize } from '../utilities/types'
 import './FieldAdd.css'
 
