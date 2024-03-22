@@ -127,7 +127,7 @@ export const FieldAdd = () => {
     <IonPage id="add-field">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Add Field</IonTitle>
+          <IonTitle>{fieldId ? 'Edit' : 'Add'} Field</IonTitle>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/fields" />
           </IonButtons>
