@@ -26,6 +26,8 @@ import { useSupabase } from '../components/SupabaseProvider'
 import { saveField } from '../utilities/actions'
 import { SIZES } from '../utilities/constants'
 import { getField, getUser } from '../utilities/data'
+import { getDateFromPartialDate } from '../utilities/getDateFromPartialDate'
+import { setTimeOnDate } from '../utilities/setTimeOnDate'
 import { Field, FieldSize } from '../utilities/types'
 import './FieldAdd.css'
 
@@ -44,6 +46,7 @@ export const FieldAdd = () => {
   const [customLength, setCustomLength] = useState(
     SIZES[size].recommendedMaxLength,
   )
+  const [lastPainted, setLastPainted] = useState<Date>()
   const form = useRef<any>()
   const { goBack, canGoBack, push } = useIonRouter()
   const { fieldId } = useParams<{ fieldId?: string }>()
@@ -65,6 +68,7 @@ export const FieldAdd = () => {
         setCustomLength(
           field?.customLength ?? SIZES[FieldSize.full].recommendedMaxLength,
         )
+        setLastPainted(field?.lastPainted)
         setLoading(false)
       })
     } else {
@@ -94,8 +98,6 @@ export const FieldAdd = () => {
     e.preventDefault()
     ;(document.activeElement as HTMLInputElement)?.blur()
 
-    const formData = new FormData(e.target)
-
     try {
       const user = await getUser({ supabase })
       await saveField({
@@ -108,6 +110,7 @@ export const FieldAdd = () => {
           customWidth,
           customLength,
           paintTeamId: user.paintTeam.id,
+          lastPainted,
         },
         supabase,
       })
@@ -225,6 +228,21 @@ export const FieldAdd = () => {
                 customWidth={customWidth}
               />
             </div>
+
+            <div className="ion-padding">
+              <details>
+                <summary>Advanced Edits</summary>
+                <IonInput
+                  label="Last Painted"
+                  type="date"
+                  value={lastPainted?.toISOString().split('T')[0]}
+                  onIonInput={(e) =>
+                    setLastPainted(getDateFromPartialDate(e.detail.value))
+                  }
+                />
+              </details>
+            </div>
+
             <button type="submit" className="ion-hidden" />
           </form>
         )}
