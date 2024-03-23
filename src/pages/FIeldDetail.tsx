@@ -16,16 +16,17 @@ import {
   IonToolbar,
   useIonViewWillEnter,
 } from '@ionic/react'
-import { createOutline } from 'ionicons/icons'
 import { differenceInCalendarDays } from 'date-fns'
+import { createOutline } from 'ionicons/icons'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { ConfirmPaint } from '../components/ConfirmPaint'
+import { ConfirmUnplayable } from '../components/ConfirmUnplayable'
 import { FieldSketch } from '../components/FieldSketch'
 import { StatusLabel } from '../components/StatusLabel'
 import { useSupabase } from '../components/SupabaseProvider'
 import { useVisible } from '../components/VisibleProvider'
-import { mowField, paintField } from '../utilities/actions'
+import { markFieldUnplayable, mowField, paintField } from '../utilities/actions'
 import { SIZES } from '../utilities/constants'
 import { getField, getUser } from '../utilities/data'
 import {
@@ -42,6 +43,7 @@ export const FieldDetail = () => {
   const [loading, setLoading] = useState(false)
   const [showConfirmPaint, setShowConfirmPaint] = useState(false)
   const [showConfirmMow, setShowConfirmMow] = useState(false)
+  const [showConfirmUnplayable, setShowConfirmUnplayable] = useState(false)
   const [field, setField] = useState<Field>()
   const [user, setUser] = useState<User>()
   const params = useParams<{ id: string }>()
@@ -87,6 +89,14 @@ export const FieldDetail = () => {
   const onMow = async () => {
     if (!field) return
     const resultingField = await mowField({ field, supabase })
+    setField(resultingField)
+  }
+
+  const onMarkUnplayable = async () => {
+    if (!field) return
+
+    console.log('marking unplayable')
+    const resultingField = await markFieldUnplayable({ field, supabase })
     setField(resultingField)
   }
 
@@ -291,6 +301,26 @@ export const FieldDetail = () => {
         <IonToolbar>
           <IonButton
             slot="secondary"
+            fill="outline"
+            onClick={() => setShowConfirmUnplayable(true)}
+            disabled={
+              differenceInCalendarDays(
+                new Date(),
+                field?.lastPainted ?? new Date('2024-01-01'),
+              ) < 3 ||
+              // If the predicted next paint is WAAAY in the past, then disable
+              differenceInCalendarDays(
+                new Date(field?.predictedNextPaint ?? new Date()),
+                new Date(),
+              ) <
+                -(field?.maxDryDays || 12) * 2 ||
+              !user
+            }
+          >
+            Unplayable
+          </IonButton>
+          <IonButton
+            slot="primary"
             onClick={() => setShowConfirmMow(true)}
             fill={
               differenceInCalendarDays(
@@ -307,7 +337,7 @@ export const FieldDetail = () => {
               ) < 3 || !user
             }
           >
-            Mark Mowed
+            Mow
           </IonButton>
           <IonButton
             slot="primary"
@@ -327,7 +357,7 @@ export const FieldDetail = () => {
               ) < 3 || !user
             }
           >
-            Mark Painted
+            Paint
           </IonButton>
         </IonToolbar>
       </IonFooter>
@@ -358,6 +388,15 @@ export const FieldDetail = () => {
             },
           },
         ]}
+      />
+      <ConfirmUnplayable
+        show={showConfirmUnplayable}
+        daysRemaining={differenceInCalendarDays(
+          new Date(field?.predictedNextPaint ?? new Date()),
+          new Date(),
+        )}
+        onMarkUnplayable={onMarkUnplayable}
+        onCancel={() => setShowConfirmUnplayable(false)}
       />
     </IonPage>
   )

@@ -14,7 +14,7 @@ export const paintField = async ({
   adjustFactor?: boolean
   supabase: SupabaseClient
 }) => {
-  let resultingField = field
+  let resultingField = { ...field }
   if (adjustFactor) {
     const paintHistory = await getPaintHistory({
       fieldId: field.id,
@@ -48,6 +48,36 @@ export const paintField = async ({
     .select()
 
   return mapFields(savedField.data ?? [])[0]
+}
+
+/**
+ * Used to mark the field unplayable on a date so that it's due to be painted
+ * this does not mark the field painted.
+ */
+export const markFieldUnplayable = async ({
+  field,
+  supabase,
+  unplayableOn,
+}: {
+  field: Field
+  supabase: SupabaseClient
+  unplayableOn?: Date
+}): Promise<Field> => {
+  const paintHistory = await getPaintHistory({
+    fieldId: field.id,
+    supabase,
+  })
+  const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
+    currentField: field,
+    markUnplayableOn: unplayableOn ?? new Date(),
+    paintHistory: paintHistory ?? [],
+  })
+
+  resultingField.rainfallDays = 0
+
+  console.log('Resulting field ', resultingField)
+
+  // return await saveField({ field: resultingField, supabase })
 }
 
 export const mowField = async ({
@@ -98,8 +128,6 @@ export const saveField = async ({
     ?.from('fields')
     .upsert(unmapField(field))
     .select()
-
-  console.log('Saved field ', savedField)
 
   return mapFields(savedField.data ?? [])[0]
 }
