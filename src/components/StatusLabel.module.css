@@ -14,11 +14,11 @@
 }
 
 .StatusGreen {
-  background: green;
-  color: white;
+  background: var(--success);
+  color: var(--success-contrast);
 }
 
 .StatusRed {
-  background: #9b0000;
-  color: white;
+  background: var(--danger);
+  color: var(--danger-contrast);
 }

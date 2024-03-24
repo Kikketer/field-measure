@@ -51,6 +51,9 @@ export const mapFields = (fields: any[]): Field[] => {
     field.lastPainted = field.lastPainted
       ? new Date(field.lastPainted)
       : undefined
+    field.markedUnplayable = field.markedUnplayable
+      ? new Date(field.markedUnplayable)
+      : undefined
     field.lastMowed = field.lastMowed ? new Date(field.lastMowed) : undefined
     field.modified = field.modified ? new Date(field.modified) : undefined
     field.predictedNextPaint = field.predictedNextPaint

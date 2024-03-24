@@ -8,7 +8,7 @@ import ReloadPrompt from './components/ReloadPrompt'
 import { SupabaseProvider } from './components/SupabaseProvider'
 import { VisibleProvider } from './components/VisibleProvider'
 import { FieldAdd } from './pages/FieldAdd'
-import { FieldDetail } from './pages/FIeldDetail'
+import { FieldDetail } from './pages/FieldDetail'
 import Fields from './pages/Fields'
 
 /* Core CSS required for Ionic components to work properly */

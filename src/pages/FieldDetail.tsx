@@ -96,7 +96,11 @@ export const FieldDetail = () => {
     if (!field) return
 
     console.log('marking unplayable')
-    const resultingField = await markFieldUnplayable({ field, supabase })
+    const resultingField = await markFieldUnplayable({
+      field,
+      supabase,
+      unplayableOn: new Date(),
+    })
     setField(resultingField)
   }
 
@@ -299,26 +303,27 @@ export const FieldDetail = () => {
       </IonContent>
       <IonFooter translucent>
         <IonToolbar>
-          <IonButton
-            slot="secondary"
-            fill="outline"
-            onClick={() => setShowConfirmUnplayable(true)}
-            disabled={
-              differenceInCalendarDays(
-                new Date(),
-                field?.lastPainted ?? new Date('2024-01-01'),
-              ) < 3 ||
-              // If the predicted next paint is WAAAY in the past, then disable
-              differenceInCalendarDays(
-                new Date(field?.predictedNextPaint ?? new Date()),
-                new Date(),
-              ) <
-                -(field?.maxDryDays || 12) * 2 ||
-              !user
-            }
-          >
-            Unplayable
-          </IonButton>
+          {/* Come back to this feature when you adjust the factor in the db to use the unplayable date */}
+          {/*<IonButton*/}
+          {/*  slot="secondary"*/}
+          {/*  fill="outline"*/}
+          {/*  onClick={() => setShowConfirmUnplayable(true)}*/}
+          {/*  disabled={*/}
+          {/*    differenceInCalendarDays(*/}
+          {/*      new Date(),*/}
+          {/*      field?.lastPainted ?? new Date('2024-01-01'),*/}
+          {/*    ) < 3 ||*/}
+          {/*    // If the predicted next paint is WAAAY in the past, then disable*/}
+          {/*    differenceInCalendarDays(*/}
+          {/*      new Date(field?.predictedNextPaint ?? new Date()),*/}
+          {/*      new Date(),*/}
+          {/*    ) <*/}
+          {/*      -(field?.maxDryDays || 12) * 2 ||*/}
+          {/*    !user*/}
+          {/*  }*/}
+          {/*>*/}
+          {/*  Unplayable*/}
+          {/*</IonButton>*/}
           <IonButton
             slot="primary"
             onClick={() => setShowConfirmMow(true)}
@@ -415,56 +420,16 @@ const FieldDetailSkeleton = () => {
       />
       <table aria-description="Field information">
         <tbody>
-          <tr>
-            <td>
-              <IonLabel style={{ fontWeight: 'bold' }}>Predicted</IonLabel>
-            </td>
-            <td>
-              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <IonLabel style={{ fontWeight: 'bold' }}>Last painted</IonLabel>
-            </td>
-            <td>
-              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <IonLabel style={{ fontWeight: 'bold' }}>Size</IonLabel>
-            </td>
-            <td>
-              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <IonLabel style={{ fontWeight: 'bold' }}>Max dry days</IonLabel>
-            </td>
-            <td>
-              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <IonLabel style={{ fontWeight: 'bold' }}>Rainfall days</IonLabel>
-            </td>
-            <td>
-              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <IonLabel style={{ fontWeight: 'bold' }}>
-                Rainfall factor
-              </IonLabel>
-            </td>
-            <td>
-              <IonSkeletonText animated={true} style={{ width: '5rem' }} />
-            </td>
-          </tr>
+          {new Array(7).fill('').map((_, i) => (
+            <tr key={i}>
+              <td>
+                <IonSkeletonText animated={true} style={{ width: '5rem' }} />
+              </td>
+              <td>
+                <IonSkeletonText animated={true} style={{ width: '5rem' }} />
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

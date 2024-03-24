@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 import { differenceInCalendarDays } from 'date-fns'
 import { getPaintHistory } from './data'
+import { getFieldAsUnplayable } from './getFieldAsUnplayable'
 import { getFieldWithAdjustedRainFactorAndDryDays } from './predictNextPainting'
 import { Field } from './types'
 import { mapFields, unmapField } from './utils'
@@ -63,21 +64,11 @@ export const markFieldUnplayable = async ({
   supabase: SupabaseClient
   unplayableOn?: Date
 }): Promise<Field> => {
-  const paintHistory = await getPaintHistory({
-    fieldId: field.id,
-    supabase,
+  const resultingField = getFieldAsUnplayable({
+    field,
+    unplayableOn: unplayableOn ?? new Date(),
   })
-  const resultingField = getFieldWithAdjustedRainFactorAndDryDays({
-    currentField: field,
-    markUnplayableOn: unplayableOn ?? new Date(),
-    paintHistory: paintHistory ?? [],
-  })
-
-  resultingField.rainfallDays = 0
-
-  console.log('Resulting field ', resultingField)
-
-  // return await saveField({ field: resultingField, supabase })
+  return await saveField({ field: resultingField, supabase })
 }
 
 export const mowField = async ({
