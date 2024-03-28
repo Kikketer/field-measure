@@ -10,6 +10,7 @@ const setCache = (key: 'user' | 'fields' | 'paintTeam', data: any) => {
 
 const getFromCache = (key: 'user' | 'fields' | 'paintTeam') => {
   const data = localStorage.getItem(key)
+  console.log('Getting cache ', key, data)
   return data ? JSON.parse(data) : undefined
 }
 
@@ -39,8 +40,11 @@ export const getUser = async ({
       )
       .limit(1)
 
-    setCache('paintTeam', result.data?.[0]?.paintTeam)
-    setCache('user', result.data?.[0])
+    setCache(
+      'paintTeam',
+      result.data?.[0]?.paintTeam ?? getFromCache('paintTeam'),
+    )
+    setCache('user', result.data?.[0] ?? getFromCache('user'))
 
     paintTeam = convertUnderscoreToCamelCase(result.data?.[0]?.paintTeam)
     user = convertUnderscoreToCamelCase(result.data?.[0])
@@ -68,7 +72,7 @@ export const getFields = async ({
       .order('name')
     result = data
 
-    setCache('fields', result)
+    setCache('fields', result ?? getFromCache('fields'))
   }
 
   return mapFields(result ?? [])
@@ -85,8 +89,8 @@ export const getField = async ({
 }): Promise<Field | undefined> => {
   let result
   if (useCache) {
-    const allTeams = getFromCache('fields')
-    result = allTeams?.find((field: Field) => field.id === id)
+    const allFields = getFromCache('fields')
+    result = [allFields?.find((field: Field) => field.id === id)]
   } else {
     const { data } = await supabase
       ?.from('fields')

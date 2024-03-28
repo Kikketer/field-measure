@@ -9,6 +9,7 @@ import React, {
 } from 'react'
 import OneSignal from 'react-onesignal'
 import { getUser } from '../utilities/data'
+import { useOnlineStatus } from './OnlineProvider'
 import { useSupabase } from './SupabaseProvider'
 
 type MessagingProvider = {
@@ -22,6 +23,7 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
   const { user, supabase } = useSupabase()
   const [log, setLog] = useState('')
   const [showPrompt, setShowPrompt] = useState(false)
+  const isOnline = useOnlineStatus()
 
   const checkAndPrompt = () => {
     const isSupported = OneSignal.Notifications.isPushSupported()
@@ -71,11 +73,11 @@ export const MessagingProvider: FC<PropsWithChildren> = ({ children }) => {
   // Setup the messaging on initial load
   useEffect(() => {
     if (!import.meta.env.VITE_PUBLIC_PUSH_APP_ID) return
-    if (!user) return
+    if (!user || !isOnline) return
 
     setLog(log + `\nSetting up messaging`)
     initializeSignal().then()
-  }, [user])
+  }, [user, isOnline])
 
   return (
     <MessagingContext.Provider

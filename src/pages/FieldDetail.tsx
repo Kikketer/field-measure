@@ -23,6 +23,7 @@ import { useParams } from 'react-router'
 import { ConfirmPaint } from '../components/ConfirmPaint'
 import { ConfirmUnplayable } from '../components/ConfirmUnplayable'
 import { FieldSketch } from '../components/FieldSketch'
+import { useOnlineStatus } from '../components/OnlineProvider'
 import { StatusLabel } from '../components/StatusLabel'
 import { useSupabase } from '../components/SupabaseProvider'
 import { useVisible } from '../components/VisibleProvider'
@@ -49,17 +50,18 @@ export const FieldDetail = () => {
   const params = useParams<{ id: string }>()
   const { supabase } = useSupabase()
   const isVisible = useVisible()
+  const isOnline = useOnlineStatus()
   const throttleTimer = useRef<any | undefined>()
 
   const fetch = async () => {
     if (throttleTimer.current) return
 
-    getField({ supabase, id: params.id })
+    getField({ supabase, id: params.id, useCache: !isOnline })
       .then((foundField) => {
         setField(foundField)
       })
       .finally(() => setLoading(false))
-    getUser({ supabase }).then((foundUser) => {
+    getUser({ supabase, useCache: !isOnline }).then((foundUser) => {
       setUser(foundUser)
     })
 
@@ -78,7 +80,7 @@ export const FieldDetail = () => {
     if (isVisible) {
       fetch().catch((err) => console.error(err))
     }
-  }, [isVisible])
+  }, [isVisible, isOnline])
 
   const onPaint = async ({ adjustFactor }: { adjustFactor: boolean }) => {
     if (!field) return
@@ -339,7 +341,9 @@ export const FieldDetail = () => {
               differenceInCalendarDays(
                 new Date(),
                 field?.lastMowed ?? new Date('2024-01-01'),
-              ) < 3 || !user
+              ) < 3 ||
+              !user ||
+              !isOnline
             }
           >
             Mow
@@ -359,7 +363,9 @@ export const FieldDetail = () => {
               differenceInCalendarDays(
                 new Date(),
                 field?.lastPainted ?? new Date('2024-01-01'),
-              ) < 3 || !user
+              ) < 3 ||
+              !user ||
+              !isOnline
             }
           >
             Paint

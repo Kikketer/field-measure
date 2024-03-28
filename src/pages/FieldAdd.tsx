@@ -20,6 +20,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { FieldSketch } from '../components/FieldSketch'
 import { FullLoader } from '../components/FullLoader'
+import { useOnlineStatus } from '../components/OnlineProvider'
 import { SizeSlider } from '../components/SizeSlider'
 import { useSupabase } from '../components/SupabaseProvider'
 import { saveField } from '../utilities/actions'
@@ -49,6 +50,14 @@ export const FieldAdd = () => {
   const { goBack, canGoBack, push } = useIonRouter()
   const { fieldId } = useParams<{ fieldId?: string }>()
   const currentField = useRef<Field>()
+  const isOnline = useOnlineStatus()
+
+  // Redirect to fields if we are offline
+  useEffect(() => {
+    if (!isOnline) {
+      push('/fields')
+    }
+  }, [isOnline, push])
 
   useEffect(() => {
     if (fieldId) {
@@ -92,7 +101,6 @@ export const FieldAdd = () => {
   }
 
   const onSave = async (e: any) => {
-    console.log('Saving form')
     e.preventDefault()
     ;(document.activeElement as HTMLInputElement)?.blur()
 

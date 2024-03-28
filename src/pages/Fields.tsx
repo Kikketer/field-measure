@@ -21,6 +21,7 @@ import { useHistory } from 'react-router-dom'
 import { FieldListItem } from '../components/FieldListItem'
 import { FullLoader } from '../components/FullLoader'
 import { Menu } from '../components/Menu'
+import { useOnlineStatus } from '../components/OnlineProvider'
 import { useSupabase } from '../components/SupabaseProvider'
 import { useVisible } from '../components/VisibleProvider'
 import { getFields, getUser } from '../utilities/data'
@@ -35,24 +36,26 @@ const Fields: React.FC = () => {
   const [user, setUser] = useState<User>()
   const { supabase } = useSupabase()
   const isVisible = useVisible()
+  const isOnline = useOnlineStatus()
   const { replace } = useHistory()
   const throttleTimer = useRef<any | undefined>()
 
   const fetch = async () => {
     if (throttleTimer.current) return
 
-    Promise.all([getUser({ supabase }), getFields({ supabase })]).then(
-      ([foundUser, foundFields]) => {
-        if (foundUser && !foundUser.paintTeam) {
-          // If the user doesn't have a team and somehow got here
-          replace('/team-select')
-        } else if (foundUser) {
-          setUser(foundUser)
-          setFields(groupFields(foundFields))
-          setLoading(false)
-        }
-      },
-    )
+    Promise.all([
+      getUser({ supabase, useCache: !isOnline }),
+      getFields({ supabase, useCache: !isOnline }),
+    ]).then(([foundUser, foundFields]) => {
+      if (foundUser && !foundUser.paintTeam) {
+        // If the user doesn't have a team and somehow got here
+        replace('/team-select')
+      } else if (foundUser) {
+        setUser(foundUser)
+        setFields(groupFields(foundFields))
+        setLoading(false)
+      }
+    })
 
     throttleTimer.current = setTimeout(() => {
       clearTimeout(throttleTimer.current)
@@ -70,7 +73,7 @@ const Fields: React.FC = () => {
     if (isVisible) {
       fetch().catch((err) => console.error(err))
     }
-  }, [isVisible])
+  }, [isVisible, isOnline])
 
   return (
     <>

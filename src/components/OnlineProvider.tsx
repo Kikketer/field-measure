@@ -9,7 +9,7 @@ type OnlineStatusProvider = {
   children: JSX.Element
 }
 
-export const OnlineContext = createContext<boolean>(true)
+export const OnlineContext = createContext<boolean | undefined>(undefined)
 
 export const OnlineStatusProvider = (props: OnlineStatusProvider) => {
   const [isOnline, setIsOnline] = useState(true)
@@ -39,6 +39,11 @@ export const OnlineStatusProvider = (props: OnlineStatusProvider) => {
     // When we get back online, verify we actually are by pinging the endpoint
     pingEndpoint()
   })
+
+  // Don't show anything until we've determined we are online or offline
+  if (isOnline == null) {
+    return null
+  }
 
   return (
     <OnlineContext.Provider value={isOnline}>
